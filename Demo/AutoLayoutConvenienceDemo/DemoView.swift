@@ -38,7 +38,6 @@ class DemoView: UIView {
 		//	- and finally make the titles scroll vertically if needed
 		//
 		//	- the buttons are vertically stacked at the bottom, but will auto switch to a horizontal stack on vertical compact devices
-		//subLabel.setContentCompressionResistancePriority(.required, for: .vertical)
 		let content = UIView.verticallyStacked(
 			UIView.verticallyStacked(titleLabel, subLabel, spacing: 4).verticallyCentered().verticallyScrollable(),
 			UIView.autoAdjustingVerticallyStacked(actionButton, cancelButton, spacing: 8)

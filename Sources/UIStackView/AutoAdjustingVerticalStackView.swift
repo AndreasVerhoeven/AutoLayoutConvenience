@@ -43,14 +43,3 @@ class AutoAdjustingVerticalStackView: UIStackView {
 		updateForContentCategory()
 	}
 }
-
-
-extension UIView {
-	static func autoAdjustingVerticallyStacked(_ views: UIView..., spacing: CGFloat = 0, insets: NSDirectionalEdgeInsets? = .zero) -> UIStackView {
-		return autoAdjustingVerticallyStacked(views, spacing: spacing, insets: insets)
-	}
-
-	static func autoAdjustingVerticallyStacked(_ views: [UIView], spacing: CGFloat = 0, insets: NSDirectionalEdgeInsets? = .zero) -> UIStackView {
-		return AutoAdjustingVerticalStackView(with: views, spacing: spacing, insets: insets)
-	}
-}

@@ -19,6 +19,7 @@ class ViewController: UIViewController {
 		demoView.cancelButton.addAction(UIAction(handler: { _ in
 			demoView.setSubTitleAnimated(String(repeating: "Sub label with a lot of text. ", count: 10))
 		}), for: .touchUpInside)
+		
 		view.addSubview(demoView, filling: .superview)
 	}
 }

@@ -25,7 +25,7 @@
 		49CD6B5B263972520024C330 /* UIView+StackViewHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CD6B46263972520024C330 /* UIView+StackViewHelpers.swift */; };
 		49CD6B5C263972520024C330 /* AutoAdjustingVerticalStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CD6B47263972520024C330 /* AutoAdjustingVerticalStackView.swift */; };
 		49CD6B5D263972520024C330 /* UIStackView+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CD6B49263972520024C330 /* UIStackView+Convenience.swift */; };
-		49CD6B5E263972520024C330 /* NSDirectionEdgeInsets+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CD6B4A263972520024C330 /* NSDirectionEdgeInsets+Convenience.swift */; };
+		49CD6B5E263972520024C330 /* NSDirectionalEdgeInsets+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CD6B4A263972520024C330 /* NSDirectionalEdgeInsets+Convenience.swift */; };
 		49CD6B5F263972520024C330 /* NSLayoutConstraint+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CD6B4B263972520024C330 /* NSLayoutConstraint+Convenience.swift */; };
 		49CD6B60263972520024C330 /* UILayoutPriority+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CD6B4C263972520024C330 /* UILayoutPriority+Convenience.swift */; };
 		49CD6B61263972520024C330 /* LayoutBasisHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CD6B4E263972520024C330 /* LayoutBasisHelper.swift */; };
@@ -59,7 +59,7 @@
 		49CD6B46263972520024C330 /* UIView+StackViewHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+StackViewHelpers.swift"; sourceTree = "<group>"; };
 		49CD6B47263972520024C330 /* AutoAdjustingVerticalStackView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutoAdjustingVerticalStackView.swift; sourceTree = "<group>"; };
 		49CD6B49263972520024C330 /* UIStackView+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIStackView+Convenience.swift"; sourceTree = "<group>"; };
-		49CD6B4A263972520024C330 /* NSDirectionEdgeInsets+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDirectionEdgeInsets+Convenience.swift"; sourceTree = "<group>"; };
+		49CD6B4A263972520024C330 /* NSDirectionalEdgeInsets+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDirectionalEdgeInsets+Convenience.swift"; sourceTree = "<group>"; };
 		49CD6B4B263972520024C330 /* NSLayoutConstraint+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSLayoutConstraint+Convenience.swift"; sourceTree = "<group>"; };
 		49CD6B4C263972520024C330 /* UILayoutPriority+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UILayoutPriority+Convenience.swift"; sourceTree = "<group>"; };
 		49CD6B4E263972520024C330 /* LayoutBasisHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LayoutBasisHelper.swift; sourceTree = "<group>"; };
@@ -102,16 +102,11 @@
 		49CD6B20263971900024C330 /* AutoLayoutConvenienceDemo */ = {
 			isa = PBXGroup;
 			children = (
+				49CD6B792639A7D50024C330 /* Boilerplate */,
 				49CD6B37263972520024C330 /* Sources */,
-				49CD6B21263971900024C330 /* AppDelegate.swift */,
-				49CD6B23263971900024C330 /* SceneDelegate.swift */,
 				49CD6B65263972730024C330 /* DemoView.swift */,
 				49CD6B7326397B340024C330 /* PlatterButton.swift */,
 				49CD6B25263971900024C330 /* ViewController.swift */,
-				49CD6B27263971900024C330 /* Main.storyboard */,
-				49CD6B2A263971910024C330 /* Assets.xcassets */,
-				49CD6B2C263971910024C330 /* LaunchScreen.storyboard */,
-				49CD6B2F263971910024C330 /* Info.plist */,
 			);
 			path = AutoLayoutConvenienceDemo;
 			sourceTree = "<group>";
@@ -176,7 +171,7 @@
 			isa = PBXGroup;
 			children = (
 				49CD6B49263972520024C330 /* UIStackView+Convenience.swift */,
-				49CD6B4A263972520024C330 /* NSDirectionEdgeInsets+Convenience.swift */,
+				49CD6B4A263972520024C330 /* NSDirectionalEdgeInsets+Convenience.swift */,
 				49CD6B4B263972520024C330 /* NSLayoutConstraint+Convenience.swift */,
 				49CD6B4C263972520024C330 /* UILayoutPriority+Convenience.swift */,
 			);
@@ -191,6 +186,19 @@
 				49CD6B50263972520024C330 /* ConstraintsList.swift */,
 			);
 			path = Base;
+			sourceTree = "<group>";
+		};
+		49CD6B792639A7D50024C330 /* Boilerplate */ = {
+			isa = PBXGroup;
+			children = (
+				49CD6B27263971900024C330 /* Main.storyboard */,
+				49CD6B2A263971910024C330 /* Assets.xcassets */,
+				49CD6B2C263971910024C330 /* LaunchScreen.storyboard */,
+				49CD6B2F263971910024C330 /* Info.plist */,
+				49CD6B21263971900024C330 /* AppDelegate.swift */,
+				49CD6B23263971900024C330 /* SceneDelegate.swift */,
+			);
+			path = Boilerplate;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -274,7 +282,7 @@
 				49CD6B7426397B340024C330 /* PlatterButton.swift in Sources */,
 				49CD6B63263972520024C330 /* ConstraintsList.swift in Sources */,
 				49CD6B6A263975CE0024C330 /* UIView+Scrollable.swift in Sources */,
-				49CD6B5E263972520024C330 /* NSDirectionEdgeInsets+Convenience.swift in Sources */,
+				49CD6B5E263972520024C330 /* NSDirectionalEdgeInsets+Convenience.swift in Sources */,
 				49CD6B56263972520024C330 /* UIView+PinningVerticalEdge.swift in Sources */,
 				49CD6B22263971900024C330 /* AppDelegate.swift in Sources */,
 				49CD6B61263972520024C330 /* LayoutBasisHelper.swift in Sources */,
@@ -437,7 +445,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = P4CZV2X6XB;
-				INFOPLIST_FILE = AutoLayoutConvenienceDemo/Info.plist;
+				INFOPLIST_FILE = AutoLayoutConvenienceDemo/Boilerplate/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -456,7 +464,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = P4CZV2X6XB;
-				INFOPLIST_FILE = AutoLayoutConvenienceDemo/Info.plist;
+				INFOPLIST_FILE = AutoLayoutConvenienceDemo/Boilerplate/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
