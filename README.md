@@ -69,6 +69,9 @@ backgroundView.addSubview(closeButton.constrain(size: buttonSize), pinning: .cen
 
 ```
 
+![Layout](https://user-images.githubusercontent.com/168214/116421501-2f020680-a83f-11eb-9c8e-2b6af8f5c6a7.png)
+![Buttons Automatically Adjust](https://user-images.githubusercontent.com/168214/116421494-2e697000-a83f-11eb-91e9-00487df4186c.png)
+![Automatically scrollable](https://user-images.githubusercontent.com/168214/116421505-2f9a9d00-a83f-11eb-93be-660689a63e1e.png)
 
 
 ## Usage
