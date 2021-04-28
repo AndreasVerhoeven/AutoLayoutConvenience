@@ -39,7 +39,7 @@ class DemoView: UIView {
 		//
 		//	- the buttons are vertically stacked at the bottom, but will auto switch to a horizontal stack on vertical compact devices
 		let content = UIView.verticallyStacked(
-			UIView.verticallyStacked(titleLabel, subLabel, spacing: 4).verticallyCentered().verticallyScrollable(),
+			UIView.verticallyStacked(titleLabel, subLabel, spacing: 4, insets: .all(16)).verticallyCentered().verticallyScrollable(),
 			UIView.autoAdjustingVerticallyStacked(actionButton, cancelButton, spacing: 8)
 		)
 
