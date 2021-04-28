@@ -1,0 +1,194 @@
+//
+//  UIView+AutoLayout.swift
+//  AutoLayoutConvenience
+//
+//  Created by Andreas Verhoeven on 23/04/2021.
+//
+
+import UIKit
+
+extension UIView {
+	/// Adds a `subview` to `self` for use with **AutoLayout**
+	/// and returns self for use in chaining calls
+	///
+	/// - Parameters:
+	/// 	- subview the subview to add for use with **AutoLayout**
+	///
+	/// - Returns: `subview`, useful for chaining with contraint calls
+	@discardableResult func addSubviewForAutoLayout<ViewType: UIView>(_ subview: ViewType) -> ViewType {
+		subview.translatesAutoresizingMaskIntoConstraints = false
+		addSubview(subview)
+		return subview
+	}
+}
+
+extension UIView {
+	/// Constraints the size of this view to constant values
+	///
+	/// - Parameters:
+	/// 	- size: the size to constraint this view to
+	///
+	/// - Returns: returns `self`, useful for chaining
+	@discardableResult @objc func constrain(size: CGSize) -> Self {
+		return constrain(width: size.width, height: size.height)
+	}
+
+	/// Constraints the width and/or height of this view to constant values
+	///
+	/// - Parameters:
+	/// 	- width: **optional** the width to constraint to, if set
+	/// 	- height: **optional** the height to constraint to, if set
+	///
+	/// - Returns: returns `self`, useful for chaining
+	@discardableResult func constrain(width: CGFloat? = nil, height: CGFloat? = nil) -> Self {
+		ConstraintsList.activate([
+			height.flatMap({ heightAnchor.constraint(equalToConstant: $0) }),
+			width.flatMap({ widthAnchor.constraint(equalToConstant: $0) }),
+		])
+		return self
+	}
+
+	/// Constraints the aspect ratio of this view to aspect ratio of the given `size`
+	///
+	/// - Parameters:
+	///		- size: the size of which to use the aspect ratio for constraining
+	///
+	/// - Returns: returns `self`, useful for chaining
+	@discardableResult func constrainAspectRatio(for size: CGSize) -> Self {
+		return constrainAspectRatio(size.height != 0 ? size.width / size.height : 0)
+	}
+
+	/// Constraints the aspect ratio of this view to the given `ratio`, which
+	/// should be expressed as width/height.
+	///
+	/// For example, if `ratio` = `0.5` the width will be half the height
+	///
+	/// - Parameters:
+	///		- ratio: the width:height ratio to constraint to
+	///
+	/// - Returns: returns `self`, useful for chaining
+	@discardableResult func constrainAspectRatio(_ ratio: CGFloat) -> Self {
+		ConstraintsList.activate([widthAnchor.constraint(equalTo: heightAnchor, multiplier: ratio)])
+		return self
+	}
+}
+
+extension UIView {
+	/// Allows this view to shrink vertically if needed
+	///
+	/// (sets `contentCompressionResistance` to `.defaultLow` for the vertical axis)
+	///
+	/// - Returns: returns `self`, useful for chaining
+	@discardableResult @objc func allowVerticalShrinking() -> Self {
+		setContentCompressionResistancePriority(.defaultLow, for: .vertical)
+		return self
+	}
+
+	/// Allows this view to shrink horizontally if needed
+	///
+	/// (sets `contentCompressionResistance` to `.defaultLow` for the horizontal axis)
+	///
+	/// - Returns: returns `self`, useful for chaining
+	@discardableResult @objc func allowHorizontalShrinking() -> Self {
+		setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+		return self
+	}
+
+	/// Allows this view to shrink vertically and horizontally if needed
+	///
+	/// (sets `contentCompressionResistance` to `.defaultLow` for both axis)
+	///
+	/// - Returns: returns `self`, useful for chaining
+	@discardableResult @objc func allowShrinking() -> Self {
+		return allowVerticalShrinking().allowHorizontalShrinking()
+	}
+
+	/// Disallows this view to shrink vertically if needed
+	///
+	/// (sets `contentCompressionResistance` to `.required` for the vertical axis)
+	///
+	/// - Returns: returns `self`, useful for chaining
+	@discardableResult @objc func disallowVerticalShrinking() -> Self {
+		setContentCompressionResistancePriority(.required, for: .vertical)
+		return self
+	}
+
+	/// Disllows this view to shrink horizontally if needed
+	///
+	/// (sets `contentCompressionResistance` to `.required` for the horizontal axis)
+	///
+	/// - Returns: returns `self`, useful for chaining
+	@discardableResult @objc func disallowHorizontalShrinking() -> Self {
+		setContentCompressionResistancePriority(.required, for: .horizontal)
+		return self
+	}
+
+	/// Allows this view to shrink vertically and horizontally if needed
+	///
+	/// (sets `contentCompressionResistance` to `.required` for both axis)
+	///
+	/// - Returns: returns `self`, useful for chaining
+	@discardableResult @objc func disallowShrinking() -> Self {
+		return disallowVerticalShrinking().disallowHorizontalShrinking()
+	}
+}
+
+extension UIView {
+	/// Allows this view to grow vertically if needed
+	///
+	/// (sets `contentHuggingPriority` to `.defaultLow` for the vertical axis)
+	///
+	/// - Returns: returns `self`, useful for chaining
+	@discardableResult @objc func allowVerticalGrowing() -> Self {
+		setContentHuggingPriority(.defaultLow, for: .vertical)
+		return self
+	}
+
+	/// Allows this view to grow horizontally if needed
+	///
+	/// (sets `contentHuggingPriority` to `.defaultLow` for the horizontal axis)
+	///
+	/// - Returns: returns `self`, useful for chaining
+	@discardableResult @objc func allowHorizontalGrowing() -> Self {
+		setContentHuggingPriority(.defaultLow, for: .horizontal)
+		return self
+	}
+
+	/// Allows this view to grow vertically and horizontally if needed
+	///
+	/// (sets `contentHuggingPriority` to `.defaultLow` for the both axis)
+	///
+	/// - Returns: returns `self`, useful for chaining
+	@discardableResult @objc func allowGrowing() -> Self {
+		return allowVerticalGrowing().allowHorizontalGrowing()
+	}
+
+	/// Disallows this view to grow vertically if needed
+	///
+	/// (sets `contentHuggingPriority` to `.required` for the vertical axis)
+	///
+	/// - Returns: returns `self`, useful for chaining
+	@discardableResult @objc func disallowVerticalGrowing() -> Self {
+		setContentHuggingPriority(.required, for: .vertical)
+		return self
+	}
+
+	/// Disallows this view to grow horizontally if needed
+	///
+	/// (sets `contentHuggingPriority` to `.required` for the horizontal axis)
+	///
+	/// - Returns: returns `self`, useful for chaining
+	@discardableResult @objc func disallowHorizontalGrowing() -> Self {
+		setContentHuggingPriority(.required, for: .horizontal)
+		return self
+	}
+
+	/// Disallows this view to grow vertically and horizontally if needed
+	///
+	/// (sets `contentHuggingPriority` to `.defaultLow` for the both axis)
+	///
+	/// - Returns: returns `self`, useful for chaining
+	@discardableResult @objc func disallowGrowing() -> Self {
+		return disallowVerticalGrowing().disallowHorizontalGrowing()
+	}
+}

@@ -1,0 +1,59 @@
+//
+//  HorizontalOverflowScrollView.swift
+//  AutoLayoutConvenience
+//
+//  Created by Andreas Verhoeven on 28/04/2021.
+//
+
+import UIKit
+
+// this scrollview has an intrinsic content size, so it participates in (StackView) AutoLayout
+// and it overflows content in the horizontal direction
+class HorizontalOverflowScrollView: UIScrollView {
+
+	// MARK: - Private
+	private func setup() {
+		showsVerticalScrollIndicator = false
+		showsHorizontalScrollIndicator = true
+
+		alwaysBounceVertical = false
+		alwaysBounceHorizontal = false
+
+		NSLayoutConstraint.activate([
+			contentLayoutGuide.widthAnchor.constraint(greaterThanOrEqualTo: frameLayoutGuide.widthAnchor),
+			contentLayoutGuide.heightAnchor.constraint(equalTo: frameLayoutGuide.heightAnchor).with(priority: .required),
+		])
+	}
+
+	func addOverflowingSubview(_ view: UIView, vertically: VerticalAxisLayout = .superview) {
+		addSubview(view, filling: .horizontally(.scrollContentOf(self), vertically: vertically))
+	}
+
+	// MARK: - UIScrollView
+	override var contentSize: CGSize {
+		didSet {
+			guard contentSize != oldValue else { return }
+			invalidateIntrinsicContentSize()
+		}
+	}
+
+	// MARK: - UIView
+	override var intrinsicContentSize: CGSize {
+		return contentSize
+	}
+
+	override init(frame: CGRect) {
+		super.init(frame: frame)
+		setup()
+	}
+
+	required init?(coder: NSCoder) {
+		super.init(coder: coder)
+		setup()
+	}
+
+	convenience init(with subview: UIView, vertically: VerticalAxisLayout = .superview) {
+		self.init()
+		addOverflowingSubview(subview, vertically: vertically)
+	}
+}
