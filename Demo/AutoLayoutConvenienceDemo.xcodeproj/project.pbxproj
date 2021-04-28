@@ -36,6 +36,8 @@
 		49CD6B6D263976160024C330 /* VerticalOverflowScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CD6B6C263976160024C330 /* VerticalOverflowScrollView.swift */; };
 		49CD6B70263977330024C330 /* HorizontalOverflowScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CD6B6F263977330024C330 /* HorizontalOverflowScrollView.swift */; };
 		49CD6B7426397B340024C330 /* PlatterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CD6B7326397B340024C330 /* PlatterButton.swift */; };
+		49CD6C1D263A0C990024C330 /* MinimumHeightTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CD6C1B263A0C980024C330 /* MinimumHeightTableViewCell.swift */; };
+		49CD6C1E263A0C990024C330 /* NonAutoLayoutWrappingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CD6C1C263A0C990024C330 /* NonAutoLayoutWrappingView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -70,6 +72,8 @@
 		49CD6B6C263976160024C330 /* VerticalOverflowScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalOverflowScrollView.swift; sourceTree = "<group>"; };
 		49CD6B6F263977330024C330 /* HorizontalOverflowScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalOverflowScrollView.swift; sourceTree = "<group>"; };
 		49CD6B7326397B340024C330 /* PlatterButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatterButton.swift; sourceTree = "<group>"; };
+		49CD6C1B263A0C980024C330 /* MinimumHeightTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MinimumHeightTableViewCell.swift; sourceTree = "<group>"; };
+		49CD6C1C263A0C990024C330 /* NonAutoLayoutWrappingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NonAutoLayoutWrappingView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +118,7 @@
 		49CD6B37263972520024C330 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				49CD6C13263A09FB0024C330 /* Other */,
 				49CD6B38263972520024C330 /* ScrollView */,
 				49CD6B3A263972520024C330 /* UIView */,
 				49CD6B42263972520024C330 /* Creation */,
@@ -199,6 +204,15 @@
 				49CD6B23263971900024C330 /* SceneDelegate.swift */,
 			);
 			path = Boilerplate;
+			sourceTree = "<group>";
+		};
+		49CD6C13263A09FB0024C330 /* Other */ = {
+			isa = PBXGroup;
+			children = (
+				49CD6C1B263A0C980024C330 /* MinimumHeightTableViewCell.swift */,
+				49CD6C1C263A0C990024C330 /* NonAutoLayoutWrappingView.swift */,
+			);
+			path = Other;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -297,6 +311,8 @@
 				49CD6B55263972520024C330 /* UIView+PinningHorizontalEdge.swift in Sources */,
 				49CD6B5D263972520024C330 /* UIStackView+Convenience.swift in Sources */,
 				49CD6B5F263972520024C330 /* NSLayoutConstraint+Convenience.swift in Sources */,
+				49CD6C1D263A0C990024C330 /* MinimumHeightTableViewCell.swift in Sources */,
+				49CD6C1E263A0C990024C330 /* NonAutoLayoutWrappingView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
