@@ -6,7 +6,7 @@ Pod::Spec.new do |s|
     s.license          = { :type => 'MIT', :file => 'LICENSE' }
     s.author           = { 'Andreas Verhoeven' => 'cocoapods@aveapps.com' }
     s.source           = { :git => 'https://github.com/AndreasVerhoeven/AutoLayoutConvenience.git', :tag => s.version.to_s }
-    s.module_name      = 'SelfSizingScroller'
+    s.module_name      = 'AutoLayoutConvenience'
 
     s.swift_versions = ['5.3']
     s.ios.deployment_target = '11.0'
