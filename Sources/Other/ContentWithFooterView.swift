@@ -1,6 +1,6 @@
 //
 //  ContentWithFooterView.swift
-//  AutoLayoutConvenienceDemo
+//  AutoLayoutConvenience
 //
 //  Created by Andreas Verhoeven on 02/05/2021.
 //
