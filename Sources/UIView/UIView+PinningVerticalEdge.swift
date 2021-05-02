@@ -85,9 +85,9 @@ extension UIView {
 	///	- Parameters:
 	///		- subview: the subview to add and pin
 	///		- leadingEdge: the edge of `top` to pin to `subview`'s top edge
-	///		- top: where to pin the top edge to
+	///		- top: **optional** where to pin the leading edge to, defaults to `superview`
 	///		- bottomEdge: the edge of `bottom` to pin to `subview`'s bottom edge
-	///		- bottom: where to pin the bottom edge to
+	///		- bottom: **optional** where to pin the bottom edge to, defaults to `superview`
 	///		- horizontally: **optional** how to fill the horizontal space. Defaults to `fill`
 	///		- insets: **optional** the insets to apply to `subview`
 	///		- spacing: **optional** the spacing to apply between the two edges
@@ -95,9 +95,9 @@ extension UIView {
 	/// - Returns: A `ConstraintsList` with the created constraints
 	@discardableResult public func addSubview(_ subview: UIView,
 											  pinningLeadingTo leadingEdge: HorizontalLayoutEdge,
-											  of leading: XAxisLayout,
+											  of leading: XAxisLayout = .default,
 											  trailingTo trailingEdge: HorizontalLayoutEdge,
-											  of trailing: XAxisLayout,
+											  of trailing: XAxisLayout = .default,
 											  vertically: ConstrainedVerticalLayout = .default,
 											  insets: NSDirectionalEdgeInsets = Default.insets,
 											  spacing: CGFloat = Default.spacing) -> ConstraintsList {
