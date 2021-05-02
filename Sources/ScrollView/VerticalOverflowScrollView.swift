@@ -25,7 +25,7 @@ public class VerticalOverflowScrollView: UIScrollView {
 		])
 	}
 
-	func addOverflowingSubview(_ view: UIView, horizontally: HorizontalAxisLayout = .superview) {
+	public func addOverflowingSubview(_ view: UIView, horizontally: HorizontalAxisLayout = .superview) {
 		addSubview(view, filling: .horizontally(horizontally, vertically: .scrollContentOf(self)))
 	}
 
