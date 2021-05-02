@@ -27,10 +27,10 @@ extension UIView {
 	///
 	/// - Parameters:
 	/// 	- size: the size to constraint this view to
-	/// 	- priority: **optional** the priority for the created constraints. defaults to `.defaultHigh`
+	/// 	- priority: **optional** the priority for the created constraints. defaults to `.required`
 	///
 	/// - Returns: returns `self`, useful for chaining
-	@discardableResult public func constrain(size: CGSize, priority: UILayoutPriority = .defaultHigh) -> Self {
+	@discardableResult public func constrain(size: CGSize, priority: UILayoutPriority = .required) -> Self {
 		return constrain(width: size.width, height: size.height)
 	}
 
@@ -39,10 +39,10 @@ extension UIView {
 	/// - Parameters:
 	/// 	- width: **optional** the width to constraint to, if set
 	/// 	- height: **optional** the height to constraint to, if set
-	/// 	- priority: **optional** the priority for the created constraints. defaults to `.defaultHigh`
+	/// 	- priority: **optional** the priority for the created constraints. defaults to `.required`
 	///
 	/// - Returns: returns `self`, useful for chaining
-	@discardableResult public func constrain(width: CGFloat? = nil, height: CGFloat? = nil, priority: UILayoutPriority = .defaultHigh) -> Self {
+	@discardableResult public func constrain(width: CGFloat? = nil, height: CGFloat? = nil, priority: UILayoutPriority = .required) -> Self {
 		ConstraintsList.activate([
 			height.flatMap({ heightAnchor.constraint(equalToConstant: $0).with(priority: priority) }),
 			width.flatMap({ widthAnchor.constraint(equalToConstant: $0).with(priority: priority) }),
@@ -54,10 +54,10 @@ extension UIView {
 	///
 	/// - Parameters:
 	///		- size: the size of which to use the aspect ratio for constraining
-	/// 	- priority: **optional** the priority for the created constraints. defaults to `.defaultHigh`
+	/// 	- priority: **optional** the priority for the created constraints. defaults to `.required`
 	///
 	/// - Returns: returns `self`, useful for chaining
-	@discardableResult public func constrainAspectRatio(for size: CGSize, priority: UILayoutPriority = .defaultHigh) -> Self {
+	@discardableResult public func constrainAspectRatio(for size: CGSize, priority: UILayoutPriority = .required) -> Self {
 		return constrainAspectRatio(size.height != 0 ? size.width / size.height : 0)
 	}
 
@@ -68,10 +68,10 @@ extension UIView {
 	///
 	/// - Parameters:
 	///		- ratio: the width:height ratio to constraint to
-	/// 	- priority: **optional** the priority for the created constraints. defaults to `.defaultHigh`
+	/// 	- priority: **optional** the priority for the created constraints. defaults to `.required`
 	///
 	/// - Returns: returns `self`, useful for chaining
-	@discardableResult public func constrainAspectRatio(_ ratio: CGFloat, priority: UILayoutPriority = .defaultHigh) -> Self {
+	@discardableResult public func constrainAspectRatio(_ ratio: CGFloat, priority: UILayoutPriority = .required) -> Self {
 		ConstraintsList.activate([widthAnchor.constraint(equalTo: heightAnchor, multiplier: ratio).with(priority: priority)])
 		return self
 	}
