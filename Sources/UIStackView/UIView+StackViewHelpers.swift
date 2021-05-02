@@ -17,7 +17,7 @@ extension UIView {
 	///		- insets: **optional** the inset to apply to the stack view
 	///
 	/// - Returns: the created `UIStackView` with the given views
-	static func verticallyStacked(_ views: UIView..., alignment: UIStackView.Alignment = .fill, spacing: CGFloat = 0, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
+	public static func verticallyStacked(_ views: UIView..., alignment: UIStackView.Alignment = .fill, spacing: CGFloat = 0, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
 		return verticallyStacked(views, alignment: alignment, spacing: spacing, insets: insets)
 	}
 
@@ -29,7 +29,7 @@ extension UIView {
 	///		- insets: **optional** the inset to apply to the stack view
 	///
 	/// - Returns: the created `UIStackView` with the given views
-	static func verticallyStacked(_ views: [UIView],  alignment: UIStackView.Alignment = .fill, spacing: CGFloat = 0, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
+	public static func verticallyStacked(_ views: [UIView],  alignment: UIStackView.Alignment = .fill, spacing: CGFloat = 0, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
 		UIStackView(with: views, axis: .vertical, alignment: alignment, distribution: .fill, spacing: spacing, insets: insets)
 	}
 
@@ -42,7 +42,7 @@ extension UIView {
 	///		- insets: **optional** the inset to apply to the stack view
 	///
 	/// - Returns: the created `UIStackView` with the given views
-	static func horizontallyStacked(_ views: UIView..., alignment: UIStackView.Alignment = .fill, spacing: CGFloat = 0, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
+	public static func horizontallyStacked(_ views: UIView..., alignment: UIStackView.Alignment = .fill, spacing: CGFloat = 0, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
 		return verticallyStacked(views, spacing: spacing, insets: insets)
 	}
 
@@ -55,7 +55,7 @@ extension UIView {
 	///		- insets: **optional** the inset to apply to the stack view
 	///
 	/// - Returns: the created `UIStackView` with the given views
-	static func horizontalllyStacked(_ views: [UIView], alignment: UIStackView.Alignment = .fill, spacing: CGFloat = 0, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
+	public static func horizontalllyStacked(_ views: [UIView], alignment: UIStackView.Alignment = .fill, spacing: CGFloat = 0, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
 		return UIStackView(with: views, axis: .horizontal, alignment: .fill, distribution: .fill, spacing: spacing, insets: insets)
 	}
 
@@ -68,7 +68,7 @@ extension UIView {
 	///		- insets: **optional** the inset to apply to the stack view
 	///
 	/// - Returns: the created `UIStackView` with the given views
-	static func stacked(_ views: UIView...,  axis: NSLayoutConstraint.Axis, alignment: UIStackView.Alignment = .fill, spacing: CGFloat = 0, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
+	public static func stacked(_ views: UIView...,  axis: NSLayoutConstraint.Axis, alignment: UIStackView.Alignment = .fill, spacing: CGFloat = 0, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
 		return stacked(views, axis: axis, spacing: spacing, insets: insets)
 	}
 
@@ -81,7 +81,7 @@ extension UIView {
 	///		- insets: **optional** the inset to apply to the stack view
 	///
 	/// - Returns: the created `UIStackView` with the given views
-	static func stacked(_ views: [UIView],  axis: NSLayoutConstraint.Axis, spacing: CGFloat = 0, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
+	public static func stacked(_ views: [UIView],  axis: NSLayoutConstraint.Axis, spacing: CGFloat = 0, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
 		return UIStackView(with: views, axis: axis, alignment: .fill, distribution: .fill, spacing: spacing, insets: insets)
 	}
 
@@ -93,7 +93,7 @@ extension UIView {
 	///		- insets: **optional** the inset to apply to the stack view
 	///
 	/// - Returns: the created `UIStackView` with the given view
-	static func horizontally(_ view: UIView, alignment: UIStackView.Alignment, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
+	public static func horizontally(_ view: UIView, alignment: UIStackView.Alignment, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
 		return UIStackView(with: view, axis: .vertical, alignment: alignment, insets: insets)
 	}
 
@@ -105,7 +105,7 @@ extension UIView {
 	///		- insets: **optional** the inset to apply to the stack view
 	///
 	/// - Returns: the created `UIStackView`
-	func horizontally(aligned: UIStackView.Alignment, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
+	public func horizontally(aligned: UIStackView.Alignment, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
 		return Self.horizontally(self, alignment: aligned, insets: insets)
 	}
 
@@ -116,7 +116,7 @@ extension UIView {
 	///		- insets: **optional** the inset to apply to the stack view
 	///
 	/// - Returns: the created `UIStackView`
-	static func horizontallyCentered(_ view: UIView, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
+	public static func horizontallyCentered(_ view: UIView, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
 		return horizontally(view, alignment: .center)
 	}
 
@@ -127,7 +127,7 @@ extension UIView {
 	///		- insets: **optional** the inset to apply to the stack view
 	///
 	/// - Returns: the created `UIStackView`
-	func horizontallyCentered(insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
+	public func horizontallyCentered(insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
 		return Self.horizontallyCentered(self, insets: insets)
 	}
 
@@ -139,7 +139,7 @@ extension UIView {
 	///		- insets: **optional** the inset to apply to the stack view
 	///
 	/// - Returns: the created `UIStackView` with the given view
-	static func vertically(_ view: UIView, alignment: UIStackView.Alignment, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
+	public static func vertically(_ view: UIView, alignment: UIStackView.Alignment, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
 		return UIStackView(with: view, axis: .horizontal, alignment: alignment, insets: insets)
 	}
 
@@ -151,7 +151,7 @@ extension UIView {
 	///		- insets: **optional** the inset to apply to the stack view
 	///
 	/// - Returns: the created `UIStackView`
-	func vertically(aligned: UIStackView.Alignment, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
+	public func vertically(aligned: UIStackView.Alignment, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
 		Self.vertically(self, alignment: aligned, insets: insets)
 	}
 
@@ -162,7 +162,7 @@ extension UIView {
 	///		- insets: **optional** the inset to apply to the stack view
 	///
 	/// - Returns: the created `UIStackView`
-	static func verticallyCentered(_ view: UIView, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
+	public static func verticallyCentered(_ view: UIView, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
 		return vertically(view, alignment: .center, insets: insets)
 	}
 
@@ -174,7 +174,7 @@ extension UIView {
 	///		- insets: **optional** the inset to apply to the stack view
 	///
 	/// - Returns: the created `UIStackView`
-	func verticallyCentered(insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
+	public func verticallyCentered(insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
 		return Self.verticallyCentered(self, insets: insets)
 	}
 
@@ -187,7 +187,7 @@ extension UIView {
 	///		- insets: **optional** the inset to apply to the stack view
 	///
 	/// - Returns: the created `UIStackView` with the given view
-	static func aligned(_ view: UIView,  horizontally: UIStackView.Alignment = .fill, vertically: UIStackView.Alignment = .fill, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
+	public static func aligned(_ view: UIView,  horizontally: UIStackView.Alignment = .fill, vertically: UIStackView.Alignment = .fill, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
 		return self.vertically(self.horizontally(view, alignment: horizontally, insets: insets), alignment: vertically)
 	}
 
@@ -200,7 +200,7 @@ extension UIView {
 	///		- insets: **optional** the inset to apply to the stack view
 	///
 	/// - Returns: the created `UIStackView` with the given view
-	func aligned(horizontally: UIStackView.Alignment = .fill, vertically: UIStackView.Alignment = .fill, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
+	public func aligned(horizontally: UIStackView.Alignment = .fill, vertically: UIStackView.Alignment = .fill, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
 		return Self.aligned(self,  horizontally: horizontally, vertically: vertically, insets: insets)
 	}
 
@@ -211,7 +211,7 @@ extension UIView {
 	///		- insets: **optional** the inset to apply to the stack view
 	///
 	/// - Returns: the created `UIStackView` with the given view
-	static func centered(_ view: UIView, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
+	public static func centered(_ view: UIView, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
 		return aligned(view,  horizontally: .center, vertically: .center, insets: insets)
 	}
 
@@ -221,7 +221,7 @@ extension UIView {
 	///		- insets: **optional** the inset to apply to the stack view
 	///
 	/// - Returns: the created `UIStackView` with the given view
-	func centered(insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
+	public func centered(insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
 		return Self.centered(self, insets: insets)
 	}
 
@@ -231,7 +231,7 @@ extension UIView {
 	///		- insets: the inset to apply to the stack view
 	///
 	/// - Returns: the created `UIStackView` with the given view
-	static func insetted(_ view: UIView, by insets: NSDirectionalEdgeInsets) -> UIStackView {
+	public static func insetted(_ view: UIView, by insets: NSDirectionalEdgeInsets) -> UIStackView {
 		return UIStackView(with: view, axis: .vertical, insets: insets)
 	}
 
@@ -241,7 +241,7 @@ extension UIView {
 	///		- insets: the inset to apply to the stack view
 	///
 	/// - Returns: the created `UIStackView` with the given view
-	func insetted(by insets: NSDirectionalEdgeInsets) -> UIStackView {
+	public func insetted(by insets: NSDirectionalEdgeInsets) -> UIStackView {
 		return Self.insetted(self, by: insets)
 	}
 
@@ -255,7 +255,7 @@ extension UIView {
 	///		- insets: **optional** the inset to apply to the stack view
 	///
 	/// - Returns: the created `UIStackView` with the given views
-	static func autoAdjustingVerticallyStacked(_ views: UIView..., alignment: UIStackView.Alignment = .fill, spacing: CGFloat = 0, insets: NSDirectionalEdgeInsets? = .zero) -> UIStackView {
+	public static func autoAdjustingVerticallyStacked(_ views: UIView..., alignment: UIStackView.Alignment = .fill, spacing: CGFloat = 0, insets: NSDirectionalEdgeInsets? = .zero) -> UIStackView {
 		return autoAdjustingVerticallyStacked(views, alignment: alignment, spacing: spacing, insets: insets)
 	}
 
@@ -269,7 +269,7 @@ extension UIView {
 	///		- insets: **optional** the inset to apply to the stack view
 	///
 	/// - Returns: the created `UIStackView` with the given views
-	static func autoAdjustingVerticallyStacked(_ views: [UIView], alignment: UIStackView.Alignment = .fill, spacing: CGFloat = 0, insets: NSDirectionalEdgeInsets? = .zero) -> UIStackView {
+	public static func autoAdjustingVerticallyStacked(_ views: [UIView], alignment: UIStackView.Alignment = .fill, spacing: CGFloat = 0, insets: NSDirectionalEdgeInsets? = .zero) -> UIStackView {
 		return AutoAdjustingVerticalStackView(with: views, alignment: alignment, spacing: spacing, insets: insets)
 	}
 
@@ -283,7 +283,7 @@ extension UIView {
 	///		- insets: **optional** the inset to apply to the stack view
 	///
 	/// - Returns: the created `UIStackView` with the given views
-	static func autoAdjustingHorizontallyStacked(_ views: UIView..., alignment: UIStackView.Alignment = .fill, spacing: CGFloat = 0, insets: NSDirectionalEdgeInsets? = .zero) -> UIStackView {
+	public static func autoAdjustingHorizontallyStacked(_ views: UIView..., alignment: UIStackView.Alignment = .fill, spacing: CGFloat = 0, insets: NSDirectionalEdgeInsets? = .zero) -> UIStackView {
 		return autoAdjustingHorizontallyStacked(views, alignment: alignment,  spacing: spacing, insets: insets)
 	}
 
@@ -297,7 +297,7 @@ extension UIView {
 	///		- insets: **optional** the inset to apply to the stack view
 	///
 	/// - Returns: the created `UIStackView` with the given views
-	static func autoAdjustingHorizontallyStacked(_ views: [UIView], alignment: UIStackView.Alignment = .fill, spacing: CGFloat = 0, insets: NSDirectionalEdgeInsets? = .zero) -> UIStackView {
+	public static func autoAdjustingHorizontallyStacked(_ views: [UIView], alignment: UIStackView.Alignment = .fill, spacing: CGFloat = 0, insets: NSDirectionalEdgeInsets? = .zero) -> UIStackView {
 		return AutoAdjustingHorizontalStackView(with: views, alignment: alignment, spacing: spacing, insets: insets)
 	}
 }

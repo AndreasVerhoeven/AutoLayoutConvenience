@@ -8,150 +8,237 @@
 import UIKit
 
 // MARK: - Layout Protocols
-protocol BaseLayout {
+public protocol BaseLayout {
 	init(_ all: LayoutAnchorable)
 	func retargeted(to view: UIView?) -> Self
 }
 
-protocol SingleAxisLayout: BaseLayout {
+public protocol SingleAxisLayout: BaseLayout {
 	var axis: LayoutAnchorable { get }
 }
 
 // MARK: - BaseLayout Factory methods
-extension BaseLayout {
-	static var none: Self { Self(.none) }
+public extension BaseLayout {
+	static var none: Self {
+		return Self(.none)
+	}
 
 	/// Anchored to the `default` anchorable, usually `superview`
-	static var `default`: Self { Self(.default) }
+	static var `default`: Self {
+		return Self(.default)
+	}
 
 	/// Anchored to the `superview` of the relevant view
-	static var superview: Self { Self(.superview) }
+	static var superview: Self {
+		return Self(.superview)
+	}
 
 	/// Anchored to a specified other view that is a relative
 	/// (they share the same superview somewhere in the hierarchy)
 	/// than the relevant view
-	static func relative(_ view: UIView) -> Self { Self(.relative(view)) }
+	static func relative(_ view: UIView) -> Self {
+		return Self(.relative(view))
+	}
 
 	/// Anchored to a specific `UILayoutGuide`
-	static func guide(_ guide: UILayoutGuide) -> Self { Self(.guide(guide)) }
+	static func guide(_ guide: UILayoutGuide) -> Self {
+		return Self(.guide(guide))
+	}
 
 	/// Anchored to the `safeAreaLayoutGuide` of the relevant view
-	static var safeArea: Self { Self(.safeArea) }
+	static var safeArea: Self {
+		return Self(.safeArea)
+	}
 
 	/// Anchored to the `safeAreaLayoutGuide` of a specific view
-	static func safeAreaOf(_ view: UIView) -> Self { Self(.safeAreaOf(view)) }
+	static func safeAreaOf(_ view: UIView) -> Self {
+		return Self(.safeAreaOf(view))
+	}
 
 	/// Anchored to the `layoutMarginsGuide` of the relevant view
-	static var layoutMargins: Self { Self(.layoutMargins) }
+	static var layoutMargins: Self {
+		return Self(.layoutMargins)
+	}
 
 	/// Anchored to the `layoutMarginsGuide` of a specific view
-	static func layoutMarginsOf(_ view: UIView) -> Self { Self(.layoutMarginsOf(view)) }
+	static func layoutMarginsOf(_ view: UIView) -> Self {
+		return Self(.layoutMarginsOf(view))
+	}
 
 	/// Anchored to the `readableContentLayoutGuide` of the relevant view
-	static var readableContent: Self { Self(.readableContent) }
+	static var readableContent: Self {
+		return Self(.readableContent)
+	}
 
 	/// Anchored to the `readableContentLayoutGuide` of the specific view
-	static func readableContentOf(_ view: UIView) -> Self { Self(.readableContentOf(view)) }
+	static func readableContentOf(_ view: UIView) -> Self {
+		return Self(.readableContentOf(view))
+	}
 
 	/// Anchored to the `contentLayoutGuide` of the relevant view if
 	/// that view is a `UIScrollView`, otherwise anchored to the relevant view
-	static var scrollContent: Self { Self(.scrollContent) }
+	static var scrollContent: Self {
+		return Self(.scrollContent)
+	}
 
 	/// Anchored to the `contentLayoutGuide` of the specified `UIScrollView`
-	static func scrollContentOf(_ view: UIScrollView) -> Self { Self(.scrollContentOf(view)) }
+	static func scrollContentOf(_ view: UIScrollView) -> Self {
+		return Self(.scrollContentOf(view))
+	}
 
 	/// Anchored to the `frameLayoutGuide` of the relevant view if
 	/// that view is a `UIScrollView`, otherwise anchored to the relevant view
-	static var scrollFrame: Self { Self(.scrollFrame) }
+	static var scrollFrame: Self {
+		return Self(.scrollFrame)
+	}
 
 	/// Anchored to the `frameLayoutGuide` of the specified `UIScrollView`
-	static func scrollFrameOf(_ view: UIScrollView) -> Self { Self(.scrollFrameOf(view)) }
+	static func scrollFrameOf(_ view: UIScrollView) -> Self {
+		return Self(.scrollFrameOf(view))
+	}
 }
 
 // MARK: - Layout Factories
 extension BoxLayout: BaseLayout {
 	/// Creates a layout where each axis uses the same anchorable
-	static func horizontally(_ horizontally: HorizontalAxisLayout, vertically: VerticalAxisLayout) -> BoxLayout {
+	public static func horizontally(_ horizontally: HorizontalAxisLayout, vertically: VerticalAxisLayout) -> BoxLayout {
 		return Self(top: vertically.top, leading: horizontally.leading, bottom: vertically.bottom, trailing: horizontally.trailing)
 	}
 
 	/// Creates a layout where each anchorable is defined manually
-	static func top(_ top: LayoutAnchorable, leading: LayoutAnchorable, bottom: LayoutAnchorable, trailing: LayoutAnchorable) -> BoxLayout {
+	public static func top(_ top: LayoutAnchorable, leading: LayoutAnchorable, bottom: LayoutAnchorable, trailing: LayoutAnchorable) -> BoxLayout {
 		return Self(top: top, leading: leading, bottom: bottom, trailing: trailing)
+	}
+
+	/// Creates a layout with `top` defined and all other edges set to `others`
+	public static func top(_ top: LayoutAnchorable, others: LayoutAnchorable) -> BoxLayout {
+		return Self(top: top, leading: others, bottom: others, trailing: others)
+	}
+
+	/// Creates a layout with `leading` defined and all other edges set to `others`
+	public static func leading(_ leading: LayoutAnchorable, others: LayoutAnchorable) -> BoxLayout {
+		return Self(top: others, leading: leading, bottom: others, trailing: others)
+	}
+
+	/// Creates a layout with `bottom` defined and all other edges set to `others`
+	public static func bottom(_ bottom: LayoutAnchorable, others: LayoutAnchorable) -> BoxLayout {
+		return Self(top: others, leading: others, bottom: bottom, trailing: others)
+	}
+
+	/// Creates a layout with `trailing` defined and all other edges set to `others`
+	public static func trailing(_ trailing: LayoutAnchorable, others: LayoutAnchorable) -> BoxLayout {
+		return Self(top: others, leading: others, bottom: others, trailing: trailing)
 	}
 }
 
 extension HorizontalAxisLayout: BaseLayout {
 	/// Creates a layout for specific leading and trailing anchorables
-	static func leading(_ leading: LayoutAnchorable, trailing: LayoutAnchorable) -> Self { Self(leading: leading, trailing: trailing) }
+	public static func leading(_ leading: LayoutAnchorable, trailing: LayoutAnchorable) -> Self {
+		return Self(leading: leading, trailing: trailing)
+	}
 }
 
 extension VerticalAxisLayout: BaseLayout {
 	/// Creates a layout for specific top and bottom anchorables
-	static func top(_ top: LayoutAnchorable, bottom: LayoutAnchorable) -> Self { Self(top: top, bottom: bottom) }
+	public static func top(_ top: LayoutAnchorable, bottom: LayoutAnchorable) -> Self {
+		return Self(top: top, bottom: bottom)
+	}
 }
 
 extension PointLayout: BaseLayout {
 	/// Creates a layout for specific x and y anchorables
-	static func x(_ x: LayoutAnchorable, y: LayoutAnchorable) -> Self { Self(x: x, y: y) }
+	public static func x(_ x: LayoutAnchorable, y: LayoutAnchorable) -> Self {
+		return Self(x: x, y: y)
+	}
 }
 
 extension XAxisLayout: SingleAxisLayout {
 	/// Creates a layout for a specific x anchorable
-	static func x(_ x: LayoutAnchorable) -> Self { Self(x: x) }
+	public static func x(_ x: LayoutAnchorable) -> Self {
+		return Self(x: x)
+	}
 }
 
 extension YAxisLayout: SingleAxisLayout {
 	/// Creates a layout for a specific y anchorable
-	static func y(_ y: LayoutAnchorable) -> Self { Self(y: y) }
+	public static func y(_ y: LayoutAnchorable) -> Self {
+		return Self(y: y)
+	}
 }
 
 
 // MARK: - Layout Helpers
 
 extension SingleAxisLayout {
-	func retargeted(to view: UIView?) -> Self {
+	public func retargeted(to view: UIView?) -> Self {
 		return Self(axis.retargeted(to: view))
 	}
 }
 
-extension BoxLayout {
-	init(_ all: LayoutAnchorable) { self.init(top: all, leading: all, bottom: all, trailing: all) }
+public extension BoxLayout {
+	init(_ all: LayoutAnchorable) {
+		self.init(top: all, leading: all, bottom: all, trailing: all)
+	}
 
 	func retargeted(to view: UIView?) -> Self {
 		return Self(top: top.retargeted(to: view), leading: leading.retargeted(to: view), bottom: bottom.retargeted(to: view), trailing: trailing.retargeted(to: view))
 	}
 }
 
-extension HorizontalAxisLayout {
-	init(_ all: LayoutAnchorable) { self.init(leading: all, trailing: all) }
-	func retargeted(to view: UIView?) -> Self { Self(leading: leading.retargeted(to: view), trailing: trailing.retargeted(to: view)) }
+public extension HorizontalAxisLayout {
+	init(_ all: LayoutAnchorable) {
+		self.init(leading: all, trailing: all)
+	}
+
+	func retargeted(to view: UIView?) -> Self {
+		return Self(leading: leading.retargeted(to: view), trailing: trailing.retargeted(to: view))
+	}
 }
 
-extension VerticalAxisLayout {
-	init(_ all: LayoutAnchorable) { self.init(top: all, bottom: all) }
-	func retargeted(to view: UIView?) -> Self { Self(top: top.retargeted(to: view), bottom: bottom.retargeted(to: view)) }
+public extension VerticalAxisLayout {
+	init(_ all: LayoutAnchorable) {
+		self.init(top: all, bottom: all)
+	}
+
+	func retargeted(to view: UIView?) -> Self {
+		return Self(top: top.retargeted(to: view), bottom: bottom.retargeted(to: view))
+	}
 }
 
-extension PointLayout {
-	init(_ all: LayoutAnchorable) { self.init(x: all, y: all) }
-	func retargeted(to view: UIView?) -> Self { Self(x: x.retargeted(to: view), y: y.retargeted(to: view)) }
+public extension PointLayout {
+	init(_ all: LayoutAnchorable) {
+		self.init(x: all, y: all)
+	}
+
+	func retargeted(to view: UIView?) -> Self {
+		return Self(x: x.retargeted(to: view), y: y.retargeted(to: view))
+	}
 }
 
-extension XAxisLayout {
-	init(_ all: LayoutAnchorable) {self.init(x: all) }
-	var axis: LayoutAnchorable {x}
+public extension XAxisLayout {
+	init(_ all: LayoutAnchorable) {
+		self.init(x: all)
+	}
+
+	var axis: LayoutAnchorable {
+		return x
+	}
 }
 
-extension YAxisLayout {
-	init(_ all: LayoutAnchorable) {self.init(y: all) }
-	var axis: LayoutAnchorable {y}
+public extension YAxisLayout {
+	init(_ all: LayoutAnchorable) {
+		self.init(y: all)
+	}
+
+	var axis: LayoutAnchorable {
+		return y
+	}
 }
 
 // MARK: - Layout Anchorable Implementation
 extension LayoutAnchorable {
 	/// Returns the LayoutAnchorsProvider we can use to perform layout
-	internal func layoutAnchorsProvider(in baseView: UIView?) -> LayoutAnchorsProvider? {
+	public func layoutAnchorsProvider(in baseView: UIView?) -> LayoutAnchorsProvider? {
 		switch self {
 			case .none: return nil
 			case .default: return UIView.Default.Resolved.layoutAnchorable.layoutAnchorsProvider(in: baseView)
@@ -226,64 +313,100 @@ extension LayoutAnchorable {
 }
 
 // MARK: - ConstrainedLayout Factory Methods
-extension ConstrainedLayout {
+public extension ConstrainedLayout {
 	/// No layout
-	static var none: Self { Self(.none) }
+	static var none: Self {
+		return Self(.none)
+	}
 
 	/// Use the default layout
-	static var `default`: Self { Self(.default) }
+	static var `default`: Self {
+		return Self(.default)
+	}
 
 	/// Attach the layout to the view we are pinned to instead of the superview
-	static var attach: Self { Self(.attached(nil))}
+	static var attach: Self {
+		return Self(.attached(nil))
+	}
 
 	/// Attach a specific layout to the view we are pinned to instead of the superview
-	static func attached(_ layout: Self) -> Self { Self(.attached(layout)) }
+	static func attached(_ layout: Self) -> Self {
+		return Self(.attached(layout))
+	}
 
 	/// fill from edge to edge
-	static var fill: Self { Self(.fill(nil)) }
+	static var fill: Self {
+		return Self(.fill(nil))
+	}
 
 	/// fill another layout from edge to edge
-	static func filling(_ other: FillLayout) -> Self { Self(.fill(other)) }
+	static func filling(_ other: FillLayout) -> Self {
+		return Self(.fill(other))
+	}
 
 	/// center in the axis
-	static var center: Self { Self(.center(nil)) }
+	static var center: Self {
+		return Self(.center(nil))
+	}
 
 	/// centered in some other axis
-	static func centered(in other: MainAxisLayout) -> Self { centered(in: other, between: FillLayout.init(other.axis)) }
+	static func centered(in other: MainAxisLayout) -> Self {
+		return centered(in: other, between: FillLayout.init(other.axis))
+	}
 
 	/// centered in some other axis while being constrained by the `between` layout
-	static func centered(in other: MainAxisLayout, between: FillLayout) -> Self { Self(.center(CenteredLayout(center: other, fill: between))) }
+	static func centered(in other: MainAxisLayout, between: FillLayout) -> Self {
+		return Self(.center(CenteredLayout(center: other, fill: between)))
+	}
 
 	/// don't constrain the layout, let it overflow if needed
-	static func overflow(_ value: Self) -> Self { Self(operation: value.operation, constrained: false) }
+	static func overflow(_ value: Self) -> Self {
+		return Self(operation: value.operation, isConstrained: false)
+	}
 }
 
-extension ConstrainedLayout where FillLayout == HorizontalAxisLayout {
+public extension ConstrainedLayout where FillLayout == HorizontalAxisLayout {
 	/// Align to the leading edge
-	static var leading: Self { Self(operation: .start(nil)) }
+	static var leading: Self {
+		return Self(operation: .start(nil))
+	}
 
 	/// Align to the leading edge in another layout
-	static func leading(in other: FillLayout) -> Self { Self(.start(other)) }
+	static func leading(in other: FillLayout) -> Self {
+		return Self(.start(other))
+	}
 
 	/// Align to the trailing edge
-	static var trailing: Self { Self(operation: .end(nil)) }
+	static var trailing: Self {
+		return Self(operation: .end(nil))
+	}
 
 	/// Align to the trailing edge in another layout
-	static func trailing(in other: FillLayout) -> Self { Self(.end(other)) }
+	static func trailing(in other: FillLayout) -> Self {
+		return Self(.end(other))
+	}
 }
 
-extension ConstrainedLayout where FillLayout == VerticalAxisLayout {
+public extension ConstrainedLayout where FillLayout == VerticalAxisLayout {
 	/// Align to the top edge
-	static var top: Self { Self(operation: .start(nil)) }
+	static var top: Self {
+		return Self(operation: .start(nil))
+	}
 
 	/// Align to the top edge in another layout
-	static func top(in other: FillLayout) -> Self { Self(.start(other)) }
+	static func top(in other: FillLayout) -> Self {
+		return Self(.start(other))
+	}
 
 	/// Align to the bottom edge
-	static var bottom: Self { Self(operation: .end(nil)) }
+	static var bottom: Self {
+		return Self(operation: .end(nil))
+	}
 
 	/// Align to the bottom edge in another layout
-	static func bottom(in other: FillLayout) -> Self { Self(.end(other)) }
+	static func bottom(in other: FillLayout) -> Self {
+		return Self(.end(other))
+	}
 }
 
 // MARK: - ConstrainedLayout Helpers

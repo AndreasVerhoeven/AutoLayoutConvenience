@@ -17,7 +17,7 @@ extension UIView {
 	///		- offset: **optional** how much this view should be offsetted from the center
 	///
 	/// - Returns: A `ConstraintsList` with the created constraints
-	@discardableResult func addSubview(_ subview: UIView, centeredIn other: PointLayout, offset: CGPoint = .zero) -> ConstraintsList {
+	@discardableResult public func addSubview(_ subview: UIView, centeredIn other: PointLayout, offset: CGPoint = .zero) -> ConstraintsList {
 		return addSubview(subview, pinnedTo: .center, of: other, offset: offset)
 	}
 }

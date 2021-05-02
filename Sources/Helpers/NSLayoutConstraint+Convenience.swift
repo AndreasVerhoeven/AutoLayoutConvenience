@@ -14,7 +14,7 @@ extension NSLayoutConstraint {
 	///		- priority: the priority to set to this constraint
 	///
 	///	- Returns: `self`, useful for chaining
-	@discardableResult func with(priority: UILayoutPriority) -> NSLayoutConstraint {
+	@discardableResult public func with(priority: UILayoutPriority) -> NSLayoutConstraint {
 		self.priority = priority
 		return self
 	}
@@ -23,7 +23,7 @@ extension NSLayoutConstraint {
 	/// to `stackViewWorkaroundHigh`
 	///
 	/// - Returns: `self` useful for chaining
-	var stackViewWorkaroundHigh: NSLayoutConstraint {
+	public var stackViewWorkaroundHigh: NSLayoutConstraint {
 		return with(priority: .stackViewWorkaroundHigh)
 	}
 
@@ -31,7 +31,7 @@ extension NSLayoutConstraint {
 	/// to `selfSizingCellHeightWorkaround`
 	///
 	/// - Returns: `self` useful for chaining
-	var selfSizingCellHeightWorkaround: NSLayoutConstraint {
+	public var selfSizingCellHeightWorkaround: NSLayoutConstraint {
 		return with(priority: .selfSizingCellHeightWorkaround)
 	}
 }

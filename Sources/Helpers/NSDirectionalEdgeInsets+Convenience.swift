@@ -9,7 +9,7 @@
 import UIKit
 
 
-extension NSDirectionalEdgeInsets {
+public extension NSDirectionalEdgeInsets {
 
 	// MARK: - Initializers
 	static func top(_ top: CGFloat) -> NSDirectionalEdgeInsets {

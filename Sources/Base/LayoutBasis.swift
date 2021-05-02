@@ -32,7 +32,7 @@ import UIKit
 
 /// Abstraction protocol for things that provide NSLayoutAnchors:
 /// usually either a `UIView` or a `UILayoutGuide`
-protocol LayoutAnchorsProvider {
+public protocol LayoutAnchorsProvider {
 	var leadingAnchor: NSLayoutXAxisAnchor { get }
 	var trailingAnchor: NSLayoutXAxisAnchor { get }
 	var leftAnchor: NSLayoutXAxisAnchor { get }
@@ -47,7 +47,7 @@ protocol LayoutAnchorsProvider {
 
 /// Abstraction protocol for things that provide
 /// baseline layout anchors
-protocol BaselineLayoutAnchorsProvider {
+public protocol BaselineLayoutAnchorsProvider {
 	var firstBaselineAnchor: NSLayoutYAxisAnchor { get }
 	var lastBaselineAnchor: NSLayoutYAxisAnchor { get }
 }
@@ -62,7 +62,7 @@ extension UILayoutGuide: LayoutAnchorsProvider {}
 /// A `LayoutAnchorable` defines to what a layout
 /// operation is anchored and can be asked for an appropriate
 /// `LayoutAnchorsProvider`
-enum LayoutAnchorable {
+public enum LayoutAnchorable {
 	/// Not anchored to anything, essentially a nope
 	case none
 
@@ -117,57 +117,57 @@ enum LayoutAnchorable {
 
 /// This defines the layout anchors for a box layout where
 /// all 4 edges are needed, such as a **filling** operation
-struct BoxLayout {
-	var top: LayoutAnchorable
-	var leading: LayoutAnchorable
-	var bottom: LayoutAnchorable
-	var trailing: LayoutAnchorable
+public struct BoxLayout {
+	public var top: LayoutAnchorable
+	public var leading: LayoutAnchorable
+	public var bottom: LayoutAnchorable
+	public var trailing: LayoutAnchorable
 }
 
 /// This defines the layout anchors for horizontal layout
 /// where we need the limiting edges in the horizontal axis
-struct HorizontalAxisLayout {
-	var leading: LayoutAnchorable
-	var trailing: LayoutAnchorable
+public struct HorizontalAxisLayout {
+	public var leading: LayoutAnchorable
+	public var trailing: LayoutAnchorable
 }
 
 /// This defines the layout anchors for vertical layout
 /// where we need the limiting edges in the vertical axis
-struct VerticalAxisLayout {
-	var top: LayoutAnchorable
-	var bottom: LayoutAnchorable
+public struct VerticalAxisLayout {
+	public var top: LayoutAnchorable
+	public var bottom: LayoutAnchorable
 }
 
 /// This defines the layout anchors for a specific point
 /// where we need to know the location in both axis
-struct PointLayout {
-	var x: LayoutAnchorable
-	var y: LayoutAnchorable
+public struct PointLayout {
+	public var x: LayoutAnchorable
+	public var y: LayoutAnchorable
 }
 
 /// This defines the layout for a specific point
 /// on the x axis
-struct XAxisLayout {
-	var x: LayoutAnchorable
+public struct XAxisLayout {
+	public var x: LayoutAnchorable
 }
 
 /// This defines the layout for a specific point
 /// on the y axis
-struct YAxisLayout {
-	var y: LayoutAnchorable
+public struct YAxisLayout {
+	public var y: LayoutAnchorable
 }
 
 /// This defines how a layout is constrained
-struct ConstrainedLayout<FillLayout: BaseLayout, MainAxisLayout: SingleAxisLayout> {
-	struct CenteredLayout {
-		var center: MainAxisLayout
-		var fill: FillLayout
+public struct ConstrainedLayout<FillLayout: BaseLayout, MainAxisLayout: SingleAxisLayout> {
+	public struct CenteredLayout {
+		public var center: MainAxisLayout
+		public var fill: FillLayout
 	}
 
-	typealias FillLayout = FillLayout
-	typealias MainAxisLayout = MainAxisLayout
+	public typealias FillLayout = FillLayout
+	public typealias MainAxisLayout = MainAxisLayout
 
-	enum Operation {
+	public enum Operation {
 		case none
 		case `default`
 		indirect case attached(ConstrainedLayout?)
@@ -176,12 +176,12 @@ struct ConstrainedLayout<FillLayout: BaseLayout, MainAxisLayout: SingleAxisLayou
 		case start(FillLayout?)
 		case end(FillLayout?)
 	}
-	var operation: Operation
-	var constrained: Bool = true
+	public var operation: Operation
+	public var isConstrained: Bool = true
 }
 
-typealias ConstrainedHorizontalLayout = ConstrainedLayout<HorizontalAxisLayout, XAxisLayout>
-typealias ConstrainedVerticalLayout = ConstrainedLayout<VerticalAxisLayout, YAxisLayout>
+public typealias ConstrainedHorizontalLayout = ConstrainedLayout<HorizontalAxisLayout, XAxisLayout>
+public typealias ConstrainedVerticalLayout = ConstrainedLayout<VerticalAxisLayout, YAxisLayout>
 
 // MARK: - Edges
 
@@ -193,7 +193,7 @@ typealias ConstrainedVerticalLayout = ConstrainedLayout<VerticalAxisLayout, YAxi
 /// intrinsic content size
 ///
 ///		addSubview(subview, pinnedTo: .leading, spacing: 4)
-enum HorizontalLayoutEdge {
+public enum HorizontalLayoutEdge {
 	case leading
 	case centerX
 	case trailing
@@ -207,7 +207,7 @@ enum HorizontalLayoutEdge {
 ///
 ///		subview.constrain(height: 22)
 ///		addSubview(subview, pinning: .top, to: .bottom, of: siblingView)
-enum VerticalLayoutEdge {
+public enum VerticalLayoutEdge {
 	case top
 	case centerY
 	case bottom
@@ -224,7 +224,7 @@ enum VerticalLayoutEdge {
 /// defined or if the view has an intrinsic size:
 ///
 /// 	addSubview(subview, pinnedTo: topLeading, in: .safeArea)
-enum LayoutPosition: Int {
+public enum LayoutPosition: Int {
 	case topLeading
 	case topCenter
 	case topTrailing

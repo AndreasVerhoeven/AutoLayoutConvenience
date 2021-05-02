@@ -9,9 +9,9 @@ import UIKit
 
 extension UIView {
 	/// This hold the default markers for insets and spacing
-	class Default {
-		static let spacing = (CGFloat.greatestFiniteMagnitude - 1)
-		static let insets = NSDirectionalEdgeInsets.all(CGFloat.greatestFiniteMagnitude - 1)
+	public class Default {
+		public static let spacing = (CGFloat.greatestFiniteMagnitude - 1)
+		public static let insets = NSDirectionalEdgeInsets.all(CGFloat.greatestFiniteMagnitude - 1)
 	}
 
 	/// This calls a block wherein the defaults are temporarily overriden
@@ -23,12 +23,12 @@ extension UIView {
 	///		- insets: **optional** the insets to use as a default
 	///		- spacing: **optional** the spacing to use as default
 	///		- callback: the block to execute wherein the defaults will be overriden with the given values
-	static func with(_ layoutAnchorable: LayoutAnchorable = .default,
-					 horizontally: ConstrainedHorizontalLayout = .default,
-					 vertically: ConstrainedVerticalLayout = .default,
-					 insets: NSDirectionalEdgeInsets = Default.insets,
-					 spacing: CGFloat = Default.spacing,
-					 callback: () -> Void) {
+	public static func with(_ layoutAnchorable: LayoutAnchorable = .default,
+							horizontally: ConstrainedHorizontalLayout = .default,
+							vertically: ConstrainedVerticalLayout = .default,
+							insets: NSDirectionalEdgeInsets = Default.insets,
+							spacing: CGFloat = Default.spacing,
+							callback: () -> Void) {
 		Default.Resolved.with(layoutAnchorable, horizontally: horizontally, vertically: vertically, insets: insets, spacing: spacing, callback: callback)
 	}
 
@@ -41,12 +41,12 @@ extension UIView {
 	///		- insets: **optional** the insets to use as a default
 	///		- spacing: **optional** the spacing to use as default
 	///		- callback: the block to execute wherein the defaults will be overriden with the given values
-	func with(_ layoutAnchorable: LayoutAnchorable = .default,
-			  horizontally: ConstrainedHorizontalLayout = .default,
-			  vertically: ConstrainedVerticalLayout = .default,
-			  insets: NSDirectionalEdgeInsets = Default.insets,
-			  spacing: CGFloat = Default.spacing,
-			  callback: () -> Void) {
+	public func with(_ layoutAnchorable: LayoutAnchorable = .default,
+					 horizontally: ConstrainedHorizontalLayout = .default,
+					 vertically: ConstrainedVerticalLayout = .default,
+					 insets: NSDirectionalEdgeInsets = Default.insets,
+					 spacing: CGFloat = Default.spacing,
+					 callback: () -> Void) {
 		Self.with(layoutAnchorable, horizontally: horizontally, vertically: vertically, insets: insets, spacing: spacing, callback: callback)
 	}
 }
@@ -97,12 +97,12 @@ extension UIView.Default.Resolved {
 			layoutAnchorableStack.append(layoutAnchorable)
 		}
 
-		if horizontally.isDefault != false || horizontally.constrained != false {
+		if horizontally.isDefault != false || horizontally.isConstrained != false {
 			constrainedHorizontalLayoutStack.append(horizontally)
 		}
 
 
-		if vertically.isDefault != false || vertically.constrained != false {
+		if vertically.isDefault != false || vertically.isConstrained != false {
 			constrainedVerticalLayoutStack.append(vertically)
 		}
 
@@ -125,11 +125,11 @@ extension UIView.Default.Resolved {
 			insetsStack.removeLast()
 		}
 
-		if vertically.isDefault != false || vertically.constrained != false {
+		if vertically.isDefault != false || vertically.isConstrained != false {
 			constrainedVerticalLayoutStack.removeLast()
 		}
 
-		if horizontally.isDefault != false || horizontally.constrained != false {
+		if horizontally.isDefault != false || horizontally.isConstrained != false {
 			constrainedHorizontalLayoutStack.removeLast()
 		}
 

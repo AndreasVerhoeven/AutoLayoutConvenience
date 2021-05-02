@@ -8,7 +8,7 @@
 import UIKit
 
 extension UIView {
-	convenience init(backgroundColor: UIColor, alpha: CGFloat = 1) {
+	public convenience init(backgroundColor: UIColor, alpha: CGFloat = 1) {
 		self.init()
 		self.backgroundColor = backgroundColor
 		self.alpha = alpha
@@ -16,7 +16,7 @@ extension UIView {
 }
 
 extension UILabel {
-	convenience init(text: String? = nil, font: UIFont, color: UIColor? = nil, alignment: NSTextAlignment = .natural, numberOfLines: Int = 0) {
+	public convenience init(text: String? = nil, font: UIFont, color: UIColor? = nil, alignment: NSTextAlignment = .natural, numberOfLines: Int = 0) {
 		self.init()
 		self.text = text
 		self.font = font
@@ -26,7 +26,7 @@ extension UILabel {
 		self.numberOfLines = 0
 	}
 
-	convenience init(text: String? = nil, textStyle: UIFont.TextStyle = .body, color: UIColor? = nil, alignment: NSTextAlignment = .natural, numberOfLines: Int = 0) {
+	public convenience init(text: String? = nil, textStyle: UIFont.TextStyle = .body, color: UIColor? = nil, alignment: NSTextAlignment = .natural, numberOfLines: Int = 0) {
 		self.init()
 		self.text = text
 		self.font = UIFont.preferredFont(forTextStyle: textStyle)
@@ -38,7 +38,7 @@ extension UILabel {
 }
 
 extension UITextView {
-	convenience init(text: String? = nil, font: UIFont, color: UIColor? = nil, alignment: NSTextAlignment = .natural, isScrollEnabled: Bool = false) {
+	public convenience init(text: String? = nil, font: UIFont, color: UIColor? = nil, alignment: NSTextAlignment = .natural, isScrollEnabled: Bool = false) {
 		self.init()
 		self.text = text
 		self.font = font
@@ -48,7 +48,7 @@ extension UITextView {
 		self.isScrollEnabled = isScrollEnabled
 	}
 
-	convenience init(text: String? = nil, textStyle: UIFont.TextStyle = .body, color: UIColor? = nil, alignment: NSTextAlignment = .natural, isScrollEnabled: Bool = false) {
+	public convenience init(text: String? = nil, textStyle: UIFont.TextStyle = .body, color: UIColor? = nil, alignment: NSTextAlignment = .natural, isScrollEnabled: Bool = false) {
 		self.init()
 		self.text = text
 		self.font = UIFont.preferredFont(forTextStyle: textStyle)
@@ -60,7 +60,7 @@ extension UITextView {
 }
 
 extension UIButton {
-	convenience init(title: String? = nil, type: UIButton.ButtonType) {
+	public convenience init(title: String? = nil, type: UIButton.ButtonType) {
 		self.init(type: type)
 		self.setTitle(title, for: .normal)
 		self.titleLabel?.adjustsFontForContentSizeCategory = true
@@ -69,7 +69,7 @@ extension UIButton {
 }
 
 extension UIImageView {
-	convenience init(image: UIImage? = nil, contentMode: UIView.ContentMode) {
+	public convenience init(image: UIImage? = nil, contentMode: UIView.ContentMode) {
 		self.init(image: image)
 		self.contentMode = contentMode
 	}

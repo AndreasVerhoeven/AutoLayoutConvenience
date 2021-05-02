@@ -34,12 +34,12 @@ extension UIView {
 	///		- spacing: **optional** the spacing to apply between the two edges
 	///
 	/// - Returns: A `ConstraintsList` with the created constraints
-	@discardableResult func addSubview(_ subview: UIView,
-									   pinnedTo edge: HorizontalLayoutEdge,
-									   of other: XAxisLayout = .default,
-									   vertically: ConstrainedVerticalLayout = .default,
-									   insets: NSDirectionalEdgeInsets = Default.insets,
-									   spacing: CGFloat = Default.spacing) -> ConstraintsList {
+	@discardableResult public func addSubview(_ subview: UIView,
+											  pinnedTo edge: HorizontalLayoutEdge,
+											  of other: XAxisLayout = .default,
+											  vertically: ConstrainedVerticalLayout = .default,
+											  insets: NSDirectionalEdgeInsets = Default.insets,
+											  spacing: CGFloat = Default.spacing) -> ConstraintsList {
 		return addSubviewForAutoLayout(subview).constrain(edge: edge, to: edge, of: other, vertically: vertically, insets: insets, spacing: spacing)
 	}
 
@@ -70,13 +70,13 @@ extension UIView {
 	///		- spacing: **optional** the spacing to apply between the two edges
 	///
 	/// - Returns: A `ConstraintsList` with the created constraints
-	@discardableResult func addSubview(_ subview: UIView,
-									   pinning edge: HorizontalLayoutEdge,
-									   to: HorizontalLayoutEdge,
-									   of other: XAxisLayout = .default,
-									   vertically: ConstrainedVerticalLayout = .default,
-									   insets: NSDirectionalEdgeInsets = Default.insets,
-									   spacing: CGFloat = Default.spacing) -> ConstraintsList {
+	@discardableResult public func addSubview(_ subview: UIView,
+											  pinning edge: HorizontalLayoutEdge,
+											  to: HorizontalLayoutEdge,
+											  of other: XAxisLayout = .default,
+											  vertically: ConstrainedVerticalLayout = .default,
+											  insets: NSDirectionalEdgeInsets = Default.insets,
+											  spacing: CGFloat = Default.spacing) -> ConstraintsList {
 		return addSubviewForAutoLayout(subview).constrain(edge: edge, to: to, of: other, vertically: vertically, insets: insets, spacing: spacing)
 	}
 
@@ -93,14 +93,14 @@ extension UIView {
 	///		- spacing: **optional** the spacing to apply between the two edges
 	///
 	/// - Returns: A `ConstraintsList` with the created constraints
-	@discardableResult func addSubview(_ subview: UIView,
-									   pinningLeadingTo leadingEdge: HorizontalLayoutEdge,
-									   of leading: XAxisLayout,
-									   trailingTo trailingEdge: HorizontalLayoutEdge,
-									   of trailing: XAxisLayout,
-									   vertically: ConstrainedVerticalLayout = .default,
-									   insets: NSDirectionalEdgeInsets = Default.insets,
-									   spacing: CGFloat = Default.spacing) -> ConstraintsList {
+	@discardableResult public func addSubview(_ subview: UIView,
+											  pinningLeadingTo leadingEdge: HorizontalLayoutEdge,
+											  of leading: XAxisLayout,
+											  trailingTo trailingEdge: HorizontalLayoutEdge,
+											  of trailing: XAxisLayout,
+											  vertically: ConstrainedVerticalLayout = .default,
+											  insets: NSDirectionalEdgeInsets = Default.insets,
+											  spacing: CGFloat = Default.spacing) -> ConstraintsList {
 		return addSubviewForAutoLayout(subview).constrain(leadingTo: leadingEdge, of: leading, trailingTo: trailingEdge, of: trailing, vertically: vertically, insets: insets, spacing: spacing)
 	}
 
@@ -114,11 +114,11 @@ extension UIView {
 	///		- spacing: **optional** the spacing to apply between the two edges
 	///
 	/// - Returns: A `ConstraintsList` with the created constraints
-	@discardableResult func addSubview(_ subview: UIView,
-									   pinningAfter otherView: UIView,
-									   vertically: ConstrainedVerticalLayout = .default,
-									   insets: NSDirectionalEdgeInsets = Default.insets,
-									   spacing: CGFloat = Default.spacing) -> ConstraintsList {
+	@discardableResult public func addSubview(_ subview: UIView,
+											  pinningAfter otherView: UIView,
+											  vertically: ConstrainedVerticalLayout = .default,
+											  insets: NSDirectionalEdgeInsets = Default.insets,
+											  spacing: CGFloat = Default.spacing) -> ConstraintsList {
 		return addSubview(subview, pinning: .leading, to: .trailing, of: .relative(otherView), vertically: vertically, insets: insets, spacing: spacing)
 	}
 
@@ -132,11 +132,11 @@ extension UIView {
 	///		- spacing: **optional** the spacing to apply between the two edges
 	///
 	/// - Returns: A `ConstraintsList` with the created constraints
-	@discardableResult func addSubview(_ subview: UIView,
-									   pinningBefore otherView: UIView,
-									   vertically: ConstrainedVerticalLayout = .default,
-									   insets: NSDirectionalEdgeInsets = Default.insets,
-									   spacing: CGFloat = Default.spacing) -> ConstraintsList {
+	@discardableResult public func addSubview(_ subview: UIView,
+											  pinningBefore otherView: UIView,
+											  vertically: ConstrainedVerticalLayout = .default,
+											  insets: NSDirectionalEdgeInsets = Default.insets,
+											  spacing: CGFloat = Default.spacing) -> ConstraintsList {
 		return addSubview(subview, pinning: .trailing, to: .leading, of: .relative(otherView), vertically: vertically, insets: insets, spacing: spacing)
 	}
 
@@ -151,12 +151,12 @@ extension UIView {
 	///		- spacing: **optional** the spacing to apply between the two edges
 	///
 	/// - Returns: A `ConstraintsList` with the created constraints
-	@discardableResult func addSubview(_ subview: UIView,
-									   fillingRemainingSpaceAfter otherView: UIView,
-									   in trailing: XAxisLayout = .default,
-									   vertically: ConstrainedVerticalLayout = .default,
-									   insets: NSDirectionalEdgeInsets = Default.insets,
-									   spacing: CGFloat = Default.spacing) -> ConstraintsList {
+	@discardableResult public func addSubview(_ subview: UIView,
+											  fillingRemainingSpaceAfter otherView: UIView,
+											  in trailing: XAxisLayout = .default,
+											  vertically: ConstrainedVerticalLayout = .default,
+											  insets: NSDirectionalEdgeInsets = Default.insets,
+											  spacing: CGFloat = Default.spacing) -> ConstraintsList {
 		return addSubview(subview, pinningLeadingTo: .trailing, of: .relative(otherView), trailingTo: .trailing, of: trailing, vertically: vertically, insets: insets, spacing: spacing)
 	}
 
@@ -171,12 +171,12 @@ extension UIView {
 	///		- spacing: **optional** the spacing to apply between the two edges
 	///
 	/// - Returns: A `ConstraintsList` with the created constraints
-	@discardableResult func addSubview(_ subview: UIView,
-									   fillingRemainingSpaceBefore otherView: UIView,
-									   in leading: XAxisLayout = .default,
-									   vertically: ConstrainedVerticalLayout = .default,
-									   insets: NSDirectionalEdgeInsets = Default.insets,
-									   spacing: CGFloat = Default.spacing) -> ConstraintsList {
+	@discardableResult public func addSubview(_ subview: UIView,
+											  fillingRemainingSpaceBefore otherView: UIView,
+											  in leading: XAxisLayout = .default,
+											  vertically: ConstrainedVerticalLayout = .default,
+											  insets: NSDirectionalEdgeInsets = Default.insets,
+											  spacing: CGFloat = Default.spacing) -> ConstraintsList {
 		return addSubview(subview, pinningLeadingTo: .leading, of: leading, trailingTo: .leading, of: .relative(otherView), vertically: vertically, insets: insets, spacing: spacing)
 	}
 
@@ -206,13 +206,12 @@ extension UIView {
 	///		- spacing: **optional** the spacing to apply between the two edges
 	///
 	/// - Returns: A `ConstraintsList` with the created constraints
-	@discardableResult func constrain(edge: HorizontalLayoutEdge,
-									   to: HorizontalLayoutEdge,
-									   of other: XAxisLayout,
-									   vertically: ConstrainedVerticalLayout = .default,
-									   insets: NSDirectionalEdgeInsets = Default.insets,
-									   spacing: CGFloat = Default.spacing) -> ConstraintsList {
-
+	@discardableResult public func constrain(edge: HorizontalLayoutEdge,
+											 to: HorizontalLayoutEdge,
+											 of other: XAxisLayout,
+											 vertically: ConstrainedVerticalLayout = .default,
+											 insets: NSDirectionalEdgeInsets = Default.insets,
+											 spacing: CGFloat = Default.spacing) -> ConstraintsList {
 		var constraints = constrain(vertically: vertically, others: [other], insets: insets, retarget: superview)
 		constraints.append(constrain(singleEdge: edge, to: to, of: other, insets: insets, spacing: spacing))
 		return ConstraintsList.activate(constraints)
@@ -230,14 +229,13 @@ extension UIView {
 	///		- spacing: **optional** the spacing to apply between the two edges
 	///
 	/// - Returns: A `ConstraintsList` with the created constraints
-	@discardableResult func constrain(leadingTo leadingEdge: HorizontalLayoutEdge,
-									   of leading: XAxisLayout,
-									   trailingTo trailingEdge: HorizontalLayoutEdge,
-									   of trailing: XAxisLayout,
-									   vertically: ConstrainedVerticalLayout = .default,
-									   insets: NSDirectionalEdgeInsets = Default.insets,
-									   spacing: CGFloat = Default.spacing) -> ConstraintsList {
-
+	@discardableResult public func constrain(leadingTo leadingEdge: HorizontalLayoutEdge,
+											 of leading: XAxisLayout,
+											 trailingTo trailingEdge: HorizontalLayoutEdge,
+											 of trailing: XAxisLayout,
+											 vertically: ConstrainedVerticalLayout = .default,
+											 insets: NSDirectionalEdgeInsets = Default.insets,
+											 spacing: CGFloat = Default.spacing) -> ConstraintsList {
 		var constraints = constrain(vertically: vertically, others: [leading, trailing], insets: insets, retarget: superview)
 		constraints.append(constrain(singleEdge: .leading, to: leadingEdge, of: leading, insets: insets, spacing: spacing))
 		constraints.append(constrain(singleEdge: .trailing, to: trailingEdge, of: trailing, insets: insets, spacing: spacing))
@@ -299,7 +297,7 @@ extension UIView {
 				let centerLayout = ConstrainedVerticalLayout.usableCenterLayout(for: layout?.center, others: others, view: view)
 				constraints.append(centerLayout.axis.layoutAnchorsProvider(in: view)?.centerYAnchor.constraint(equalTo: centerYAnchor))
 
-				if vertically.constrained == true {
+				if vertically.isConstrained == true {
 					let usableLayout = ConstrainedVerticalLayout.usableFillLayout(for: layout?.fill, others: others, view: view)
 					constraints += [
 						usableLayout.top.layoutAnchorsProvider(in: view)?.topAnchor.constraint(lessThanOrEqualTo: topAnchor, constant: -insets.top),
@@ -310,14 +308,14 @@ extension UIView {
 			case .start(let layout):
 				let usableLayout = ConstrainedVerticalLayout.usableFillLayout(for: layout, others: others, view: view)
 				constraints.append(usableLayout.top.layoutAnchorsProvider(in: view)?.topAnchor.constraint(equalTo: topAnchor, constant: -insets.top))
-				if vertically.constrained == true {
+				if vertically.isConstrained == true {
 					constraints.append(usableLayout.bottom.layoutAnchorsProvider(in: view)?.bottomAnchor.constraint(greaterThanOrEqualTo: bottomAnchor, constant: insets.bottom))
 				}
 
 			case .end(let layout):
 				let usableLayout = ConstrainedVerticalLayout.usableFillLayout(for: layout, others: others, view: view)
 				constraints.append(usableLayout.bottom.layoutAnchorsProvider(in: view)?.bottomAnchor.constraint(equalTo: bottomAnchor, constant: insets.bottom))
-				if vertically.constrained == true {
+				if vertically.isConstrained == true {
 					constraints.append(usableLayout.top.layoutAnchorsProvider(in: view)?.topAnchor.constraint(lessThanOrEqualTo: topAnchor, constant: -insets.top))
 				}
 		}

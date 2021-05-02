@@ -27,6 +27,7 @@ class DemoView: UIView {
 			}
 			self.layoutIfNeeded()
 		}
+		firstScrollableView?.flashScrollIndicators()
 	}
 
 	private func setup() {

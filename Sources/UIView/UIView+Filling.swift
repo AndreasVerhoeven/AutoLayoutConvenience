@@ -16,7 +16,7 @@ extension UIView {
 	/// 	- insets: **optional** the insets to apply to `subview` with respect to `box`
 	///
 	/// - Returns: A `ConstraintsList` with the created constraints
-	@discardableResult func addSubview(_ subview: UIView, filling box: BoxLayout, insets: NSDirectionalEdgeInsets = Default.insets) -> ConstraintsList {
+	@discardableResult public func addSubview(_ subview: UIView, filling box: BoxLayout, insets: NSDirectionalEdgeInsets = Default.insets) -> ConstraintsList {
 		return addSubviewForAutoLayout(subview).constrain(filling: box, insets: insets)
 	}
 
@@ -28,7 +28,7 @@ extension UIView {
 	/// 	- insets: **optional** the insets to apply to `self` with respect to `box`
 	///
 	/// - Returns: A `ConstraintsList` with the created constraints
-	@discardableResult func constrain(filling box: BoxLayout, insets: NSDirectionalEdgeInsets = Default.insets) -> ConstraintsList {
+	@discardableResult public func constrain(filling box: BoxLayout, insets: NSDirectionalEdgeInsets = Default.insets) -> ConstraintsList {
 		let resolvedInsets = Default.resolve(insets)
 		return ConstraintsList.activate([
 			box.top.layoutAnchorsProvider(in: superview)?.topAnchor.constraint(equalTo: topAnchor, constant: -resolvedInsets.top),

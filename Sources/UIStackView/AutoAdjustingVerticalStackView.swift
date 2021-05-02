@@ -7,10 +7,9 @@
 
 import UIKit
 
-// Vertical StackView that automatically switches to a horizontal
-// stackview when in compact mode
-
-class AutoAdjustingVerticalStackView: UIStackView {
+/// Vertical StackView that automatically switches to a horizontal
+/// stackview when in compact mode
+public class AutoAdjustingVerticalStackView: UIStackView {
 
 	// MARK: - Private
 	private func updateForContentCategory() {
@@ -28,17 +27,17 @@ class AutoAdjustingVerticalStackView: UIStackView {
 	}
 
 	// MARK: - UIView
-	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+	override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
 		super.traitCollectionDidChange(traitCollection)
 		updateForContentCategory()
 	}
 
-	override init(frame: CGRect) {
+	override public init(frame: CGRect) {
 		super.init(frame: frame)
 		updateForContentCategory()
 	}
 
-	required init(coder: NSCoder) {
+	required public init(coder: NSCoder) {
 		super.init(coder: coder)
 		updateForContentCategory()
 	}

@@ -9,7 +9,7 @@ import UIKit
 
 // this scrollview has an intrinsic content size, so it participates in (StackView) AutoLayout
 // and it overflows content in the vertical direction
-class VerticalOverflowScrollView: UIScrollView {
+public class VerticalOverflowScrollView: UIScrollView {
 
 	// MARK: - Private
 	private func setup() {
@@ -30,7 +30,7 @@ class VerticalOverflowScrollView: UIScrollView {
 	}
 
 	// MARK: - UIScrollView
-	override var contentSize: CGSize {
+	override public var contentSize: CGSize {
 		didSet {
 			guard contentSize != oldValue else { return }
 			invalidateIntrinsicContentSize()
@@ -38,21 +38,21 @@ class VerticalOverflowScrollView: UIScrollView {
 	}
 
 	// MARK: - UIView
-	override var intrinsicContentSize: CGSize {
+	override public var intrinsicContentSize: CGSize {
 		return contentSize
 	}
 
-	override init(frame: CGRect) {
+	override public init(frame: CGRect) {
 		super.init(frame: frame)
 		setup()
 	}
 
-	required init?(coder: NSCoder) {
+	required public init?(coder: NSCoder) {
 		super.init(coder: coder)
 		setup()
 	}
 
-	convenience init(with subview: UIView, horizontally: HorizontalAxisLayout = .superview) {
+	public convenience init(with subview: UIView, horizontally: HorizontalAxisLayout = .superview) {
 		self.init()
 		addOverflowingSubview(subview, horizontally: horizontally)
 	}

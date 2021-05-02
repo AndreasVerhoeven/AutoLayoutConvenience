@@ -7,7 +7,9 @@
 
 import UIKit
 
-class AutoAdjustingHorizontalStackView: UIStackView {
+/// Horizontal StackView that automatically switches to a vertical
+/// stackview when in accessibility mode
+public class AutoAdjustingHorizontalStackView: UIStackView {
 
 	// MARK: - Private
 	private func updateForContentCategory() {
@@ -19,17 +21,17 @@ class AutoAdjustingHorizontalStackView: UIStackView {
 	}
 
 	// MARK: - UIView
-	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+	override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
 		super.traitCollectionDidChange(traitCollection)
 		updateForContentCategory()
 	}
 
-	override init(frame: CGRect) {
+	override public init(frame: CGRect) {
 		super.init(frame: frame)
 		updateForContentCategory()
 	}
 
-	required init(coder: NSCoder) {
+	required public init(coder: NSCoder) {
 		super.init(coder: coder)
 		updateForContentCategory()
 	}
