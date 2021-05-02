@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4969E367263EE626000F8BDA /* ContentWithFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4969E366263EE626000F8BDA /* ContentWithFooterView.swift */; };
 		49CD6B22263971900024C330 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CD6B21263971900024C330 /* AppDelegate.swift */; };
 		49CD6B24263971900024C330 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CD6B23263971900024C330 /* SceneDelegate.swift */; };
 		49CD6B26263971900024C330 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CD6B25263971900024C330 /* ViewController.swift */; };
@@ -41,6 +42,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4969E366263EE626000F8BDA /* ContentWithFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentWithFooterView.swift; sourceTree = "<group>"; };
 		49CD6B1E263971900024C330 /* AutoLayoutConvenienceDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AutoLayoutConvenienceDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		49CD6B21263971900024C330 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		49CD6B23263971900024C330 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -211,6 +213,7 @@
 			children = (
 				49CD6C1B263A0C980024C330 /* MinimumHeightTableViewCell.swift */,
 				49CD6C1C263A0C990024C330 /* NonAutoLayoutWrappingView.swift */,
+				4969E366263EE626000F8BDA /* ContentWithFooterView.swift */,
 			);
 			path = Other;
 			sourceTree = "<group>";
@@ -293,6 +296,7 @@
 				49CD6B70263977330024C330 /* HorizontalOverflowScrollView.swift in Sources */,
 				49CD6B59263972520024C330 /* UIView+CommonInitializers.swift in Sources */,
 				49CD6B54263972520024C330 /* UIView+AutoLayout.swift in Sources */,
+				4969E367263EE626000F8BDA /* ContentWithFooterView.swift in Sources */,
 				49CD6B7426397B340024C330 /* PlatterButton.swift in Sources */,
 				49CD6B63263972520024C330 /* ConstraintsList.swift in Sources */,
 				49CD6B6A263975CE0024C330 /* UIView+Scrollable.swift in Sources */,
