@@ -23,7 +23,7 @@ extension UILabel {
 		self.adjustsFontForContentSizeCategory = true
 		self.textAlignment = alignment
 		color.map { self.textColor = $0}
-		self.numberOfLines = 0
+		self.numberOfLines = numberOfLines
 	}
 
 	public convenience init(text: String? = nil, textStyle: UIFont.TextStyle = .body, color: UIColor? = nil, alignment: NSTextAlignment = .natural, numberOfLines: Int = 0) {
@@ -33,7 +33,7 @@ extension UILabel {
 		self.adjustsFontForContentSizeCategory = true
 		self.textAlignment = alignment
 		color.map { self.textColor = $0}
-		self.numberOfLines = 0
+		self.numberOfLines = numberOfLines
 	}
 }
 
