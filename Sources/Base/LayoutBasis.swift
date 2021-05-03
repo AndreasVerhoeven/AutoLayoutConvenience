@@ -63,7 +63,7 @@ extension UILayoutGuide: LayoutAnchorsProvider {}
 /// operation is anchored and can be asked for an appropriate
 /// `LayoutAnchorsProvider`
 public enum LayoutAnchorable {
-	/// Not anchored to anything, essentially a nope
+	/// Not anchored to anything, essentially a no-op
 	case none
 
 	/// Anchored to the `default` anchorable, usually `superview`
