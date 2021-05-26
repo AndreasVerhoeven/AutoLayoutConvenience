@@ -83,6 +83,10 @@ public extension NSDirectionalEdgeInsets {
 		return NSDirectionalEdgeInsets(top: inset, leading: 0, bottom: inset, trailing: 0)
 	}
 
+	static func horizontally(_ horizontal: CGFloat, vertically vertical: CGFloat) -> NSDirectionalEdgeInsets {
+		return NSDirectionalEdgeInsets(top: vertical, leading: horizontal, bottom: vertical, trailing: horizontal)
+	}
+
 	static func all(_ value: CGFloat) -> NSDirectionalEdgeInsets {
 		return NSDirectionalEdgeInsets(top: value, leading: value, bottom: value, trailing: value)
 	}

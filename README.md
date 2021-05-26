@@ -26,6 +26,7 @@ There are 6 major AutoLayout operations:
 - **centering**, you can make a view center in another view with an optional offset
 - **pinning to a position**, you can make a view pin to a position in another view, with an optional offset
 - **pinning to an edge** you can make a view pin to an edge of another view, and defining how the opposite axis should be constrained
+- **aligning to an edge** you can make a view align to the edge of another view, making sure it's as big as possible, but it will never exceeds the other views edges.
 - **constraining** you can constrain the **width**, **height** and **aspect ratio** of a view
 - **(dis)allowing shrinking/growing**, you can determine which views can shrink/grow
 
@@ -223,6 +224,57 @@ Examples:
 	// Makes subview fill the remaing space below sibblingView
 	addSubview(subview, fillingRemainingSpaceBelow: sibblingView)
 
+### Aligning Edges
+
+Aligning is like pinning, except that it will make sure that the view respects the boundaries of its superview. If you want to have a view that is as big as it should be, but never exceed the boundaries of its superview, this will do it for you.
+
+When aligning, you specify how both the **vertical** and **horizontal** edges are constrained:
+
+
+#### Horizontally:
+
+- `.fill` (default), makes the view fill its superview horizontally
+- `filling(Other)` makes the view fill another layout, e.g. `filling(.safeArea)`
+- `center` makes the view center horizontally in its superview
+- `centered(in: Other)` makes the view center in another layout, e.g. `filling(.layoutMargins)`
+- `centered(in: Other, between: Other)` makes the view center in in another layout, while being constrained to another layout, .e.g `centered(in: .superview, between: .safeArea)`
+- `overflow(Other)` makes the view unconstrained: it can overflow its superview if it doesn't fit, .e.g. `.overflow(.center)`
+- `.leading` makes the view align to the leading edge horizontally and taking as much space as needed, but not past the trailing edge
+- `.leading` makes the view align to the trailing edge horizontally and taking as much space as needed, but not past the leading edge
+
+#### Vertically:
+
+- `.fill` (default), makes the view fill its superview vertically
+- `filling(Other)` makes the view fill another layout, e.g. `filling(.safeArea)`
+- `center` makes the view center vertically in its superview
+- `centered(in: Other)` makes the view center in another layout, e.g. `filling(.layoutMargins)`
+- `centered(in: Other, between: Other)` makes the view center in in another layout, while being constrained to another layout, .e.g `centered(in: .superview, between: .safeArea)`
+- `overflow(Other)` makes the view unconstrained: it can overflow its superview if it doesn't fit, .e.g. `.overflow(.center)`
+- `.top` makes the view align to the top edge vertically and taking as much space as needed, but not past the bottom edge
+- `.bottom` makes the view align to the bottom edge vertically and taking as much space as needed, but not past the top edge
+
+Examples:
+
+	// This makes subview align to the top of its superview.
+	// subview will never grow past the bottom edge of its superview,
+	// but if its smaller it will not fill until the bottom edge:
+	//
+	// You can think of this as: bottom edge < superviews.bottom edge  
+	//
+	// Horizontally, the view will fill its superview
+	addSubview(subview, aligningVerticallyTo: .top)
+	
+	
+	// this makes subview align to the horizontal center of its superviews 
+	// layoutMargins, while never growing past the layout margins if it needs to be bigger/
+	//
+	// Vertically, the view will fill its superview
+	addSubview(subview, aligningHorizontallyTo: .center(in: .layoutMargins))
+	
+	//this will make the subview align vertically to its superview and horizontally to the bottom.
+	// subview will not extend past the edges of its superview insetted by 10 pts.
+	addSubview(subview, aligningVerticallyTo: .center, horizontally: .bottom, insets: .all(10))
+
 
 ### Constraining
 
@@ -232,6 +284,13 @@ Examples:
 	view.constrain(height: 20)
 	view.constrain(width: 100, height: 20)
 	view.constrain(size: (CGSize(width: 100, height: 20))
+	
+	view.constrain(width: .atMost(100)) // not wider than 100
+	view.constrain(width: .atLeast(50)) // not smaller than 50
+	view.constrain(width: .exactly(100)) // exactly 100 wide
+	
+	// nog bigger than 100x30, but with defaultLow priority
+	view.constrain(size: .atMost(CGSize(width: 100, height: 30), priority: .defaultLow))
 	
 
 Examples of constraining aspect ratio:

@@ -261,10 +261,10 @@ extension UIView {
 		}
 	}
 
-	private func constrain(vertically: ConstrainedVerticalLayout,
-							others: [SingleAxisLayout],
-							insets insetsValue: NSDirectionalEdgeInsets,
-							retarget view: UIView?) -> [NSLayoutConstraint?] {
+	internal func constrain(vertically: ConstrainedVerticalLayout,
+								others: [SingleAxisLayout],
+								insets insetsValue: NSDirectionalEdgeInsets,
+								retarget view: UIView?) -> [NSLayoutConstraint?] {
 		let insets = Default.resolve(insetsValue)
 		var constraints: [NSLayoutConstraint?] = []
 		switch vertically.operation {

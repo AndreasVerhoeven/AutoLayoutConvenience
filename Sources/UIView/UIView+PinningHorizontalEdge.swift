@@ -79,7 +79,7 @@ extension UIView {
 											  spacing: CGFloat = Default.spacing) -> ConstraintsList {
 		return addSubviewForAutoLayout(subview).constrain(edge: edge, to: to, of: other, horizontally: horizontally, insets: insets, spacing: spacing)
 	}
-
+	
 	/// Adds a `subview` by pinning its top edge to `topEdge` and its bottom edge to `bottomEdge`
 	///
 	///	- Parameters:
@@ -268,7 +268,7 @@ extension UIView {
 	}
 
 	/// Private helper to constrain the opposite axis
-	private func constrain(horizontally: ConstrainedHorizontalLayout,
+	internal func constrain(horizontally: ConstrainedHorizontalLayout,
 							others: [SingleAxisLayout],
 							insets insetsValue: NSDirectionalEdgeInsets,
 							retarget view: UIView?) -> [NSLayoutConstraint?] {
