@@ -1,6 +1,6 @@
 //
 //  UIView+ManualLayoutBridging.swift
-//  AutoLayoutConvenienceDemo
+//  AutoLayoutConvenience
 //
 //  Created by Andreas Verhoeven on 27/05/2021.
 //
@@ -21,6 +21,13 @@ public struct ManualLayoutSizeThatFitsBridgingMode {
 			switch self {
 				case .fixed: return .required
 				case .bounded: return .defaultLow
+			}
+		}
+
+		var shouldUseCompressedSize: Bool {
+			switch self {
+				case .fixed: return false
+				case .bounded: return true
 			}
 		}
 	}
@@ -53,18 +60,27 @@ extension UIView {
 		var verticalFittingPriority = bridgingMode.vertical.fittingPriority
 
 		var targetSize = size
-		if targetSize.width == .greatestFiniteMagnitude {
+		if targetSize.width == .greatestFiniteMagnitude || bridgingMode.horizontal.shouldUseCompressedSize == true {
 			targetSize.width = UIView.layoutFittingCompressedSize.width
 			horizontalLayoutPriority = .defaultLow
 
 		}
 
-		if targetSize.height == .greatestFiniteMagnitude {
+		if targetSize.height == .greatestFiniteMagnitude || bridgingMode.vertical.shouldUseCompressedSize == true {
 			targetSize.height = UIView.layoutFittingCompressedSize.height
 			verticalFittingPriority = .defaultLow
 		}
 
-		return systemLayoutSizeFitting(targetSize, withHorizontalFittingPriority: horizontalLayoutPriority, verticalFittingPriority: verticalFittingPriority)
+		var fittingSize = systemLayoutSizeFitting(targetSize, withHorizontalFittingPriority: horizontalLayoutPriority, verticalFittingPriority: verticalFittingPriority)
+
+		if bridgingMode.vertical.shouldUseCompressedSize == true{
+			fittingSize.height = min(fittingSize.height, size.height)
+		}
+
+		if bridgingMode.horizontal.shouldUseCompressedSize == true{
+			fittingSize.width = min(fittingSize.width, size.width)
+		}
+		return fittingSize
 	}
 }
 
@@ -73,16 +89,24 @@ extension UIView {
 /// This view can be used in a manual layout setting, while doing auto layout inside of it:
 /// it implements sizeThatFits() by forwarding to `autoLayoutSizeThatFits()`
 public class ManualLayoutBridgedView: UIView {
-	public var sizeThatFitsBridgingMode: ManualLayoutSizeThatFitsBridgingMode { .fixedSize }
+
+	/// Set this view to how you want the default implementation of sizeThatFits() work
+	public var sizeThatFitsBridgingMode: ManualLayoutSizeThatFitsBridgingMode = .fixedSize
+
+	convenience init(sizeThatFitsBridgingMode: ManualLayoutSizeThatFitsBridgingMode, backgroundColor: UIColor? = nil) {
+		self.init(frame: .zero)
+		self.sizeThatFitsBridgingMode = sizeThatFitsBridgingMode
+		self.backgroundColor = backgroundColor
+	}
 
 	// MARK: - UIView
-	
+
 	/* this is private API, unfortunately:
 	@objc func _intrinsicContentSizeInvalidatedForChildView(_ x: UIView) {
-		setNeedsLayout()
-		if UIView.inheritedAnimationDuration > 0 {
-			layoutIfNeeded()
-		}
+	setNeedsLayout()
+	if UIView.inheritedAnimationDuration > 0 {
+	layoutIfNeeded()
+	}
 	}
 	*/
 
