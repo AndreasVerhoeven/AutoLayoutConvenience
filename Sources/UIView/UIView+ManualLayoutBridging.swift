@@ -38,13 +38,13 @@ public struct ManualLayoutSizeThatFitsBridgingMode {
 	/// The vertical bridging mode
 	public var vertical: Dimension = .fixed
 
-	/// The view should have the same width as the passed in width, but horizontally we should be smaller than the given size
+	/// the width should be the same as the passed in width, the height should not exceed the passed in height, but can be smaller
 	public static var fixedWidth = Self(horizontal: .fixed, vertical: .bounded)
 
-	/// The view should have the same height as the passed in height, but verticallt we should be smaller than the given size
+	/// the height should be the same as the passed in height, the width should not exceed the passed in width, but can be smaller
 	public static var fixedHeight = Self(horizontal: .bounded, vertical: .fixed)
 
-	/// The view should have the exact same dimensions as the view, if possible
+	/// The view should have the exact same dimensions as the passed in size, if possible
 	public static var fixedSize = Self(horizontal: .fixed, vertical: .fixed)
 }
 
