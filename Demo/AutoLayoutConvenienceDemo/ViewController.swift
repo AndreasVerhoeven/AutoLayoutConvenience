@@ -19,7 +19,11 @@ class ViewController: UIViewController {
 			demoView.setSubTitleAnimated(String(repeating: "Sub label with a lot of text. ", count: 10))
 		}), for: .touchUpInside)
 
-		view.addSubview(demoView, filling: .superview)
+		//view.addSubview(demoView, filling: .superview)
+
+		let label = UILabel(text: "blablabla").constrain(widthBetween: 0...23)
+		view.addSubview(label, pinnedTo: .center)
+
 	}
 }
 

@@ -1,6 +1,6 @@
 //
 //  UIView+SizeConstraints.swift
-//  AutoLayoutConvenienceDemo
+//  AutoLayoutConvenience
 //
 //  Created by Andreas Verhoeven on 26/05/2021.
 //
@@ -55,9 +55,58 @@ extension UIView {
 	/// - Returns: returns `self`, useful for chaining
 	@discardableResult public func constrain(width: SizeConstrain<CGFloat>? = nil, height: SizeConstrain<CGFloat>? = nil) -> Self {
 		ConstraintsList.activate([
-			width.flatMap({ $0.layoutConstraint(for: widthAnchor) }),
-			height.flatMap({ $0.layoutConstraint(for: heightAnchor) }),
+			width.flatMap({ $0.layoutConstraint(for: widthAnchor).with(priority: $0.priority) }),
+			height.flatMap({ $0.layoutConstraint(for: heightAnchor).with(priority: $0.priority) }),
 		])
+		return self
+	}
+
+	/// Constrains this view to that width is between `widthRange` and its height is between `heightRange`
+	///
+	/// - Parameters:
+	///	 - widthRange: **optional** the range we want the width to be between
+	///	 - heightRange: **optional** the range we want the height to be between
+	///  - priority: **optional** the priority for the constraints, defaults to `.required`
+	///
+	/// - Returns: returns `self`, useful for chaining
+	@discardableResult public func constrain(widthBetween widthRange: Range<CGFloat>? = nil,
+											 heightBetween heightRange: Range<CGFloat>? = nil,
+											 priority: UILayoutPriority = .required) -> Self {
+		let scale = UIScreen.main.scale
+		let pixelSize = scale > 0 ? (1 / scale) : 1
+
+		let closedWidthRange = widthRange.flatMap { $0.lowerBound...$0.upperBound - pixelSize  }
+		let closedHeightRange = heightRange.flatMap { $0.lowerBound...$0.upperBound - pixelSize  }
+		return constrain(widthBetween: closedWidthRange, heightBetween: closedHeightRange, priority: priority)
+	}
+
+	/// Constrains this view to that width is between `widthRange` and its height is between `heightRange`
+	///
+	/// - Parameters:
+	///	 - widthRange: **optional** the range we want the width to be between
+	///	 - heightRange: **optional** the range we want the height to be between
+	///  - priority: **optional** the priority for the constraints, defaults to `.required`
+	///
+	/// - Returns: returns `self`, useful for chaining
+	@discardableResult public func constrain(widthBetween widthRange: ClosedRange<CGFloat>? = nil,
+											 heightBetween heightRange: ClosedRange<CGFloat>? = nil,
+											 priority: UILayoutPriority = .required) -> Self {
+		var constraints = [NSLayoutConstraint]()
+		if let widthRange = widthRange {
+			constraints += [
+				widthAnchor.constraint(greaterThanOrEqualToConstant: widthRange.lowerBound).with(priority: priority),
+				widthAnchor.constraint(lessThanOrEqualToConstant: widthRange.upperBound).with(priority: priority),
+			]
+		}
+
+		if let heightRange = heightRange {
+			constraints += [
+				heightAnchor.constraint(greaterThanOrEqualToConstant: heightRange.lowerBound).with(priority: priority),
+				heightAnchor.constraint(lessThanOrEqualToConstant: heightRange.upperBound).with(priority: priority),
+			]
+		}
+
+		NSLayoutConstraint.activate(constraints)
 		return self
 	}
 }
