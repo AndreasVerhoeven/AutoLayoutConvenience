@@ -289,8 +289,14 @@ Examples:
 	view.constrain(width: .atLeast(50)) // not smaller than 50
 	view.constrain(width: .exactly(100)) // exactly 100 wide
 	
-	// nog bigger than 100x30, but with defaultLow priority
+	// not bigger than 100x30, but with defaultLow priority
 	view.constrain(size: .atMost(CGSize(width: 100, height: 30), priority: .defaultLow))
+	
+	// the width should be at least 10 and smaller than 20
+	view.constrain(widthBetween: 10..<20)
+	
+	// the height should be at least 10 and at most 20
+	view.constrain(heightBetween: 10...20)
 	
 
 Examples of constraining aspect ratio:
