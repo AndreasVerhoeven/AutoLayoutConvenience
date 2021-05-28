@@ -20,7 +20,7 @@ This is a helper library that has helper functions for common AutoLayout operati
 
 ## What is it?
 
-There are 6 major AutoLayout operations:
+There are 7 major AutoLayout operations:
 
 - **filling**, you make a view fill another view and optionally inset it
 - **centering**, you can make a view center in another view with an optional offset
@@ -223,6 +223,23 @@ Examples:
 	
 	// Makes subview fill the remaing space below sibblingView
 	addSubview(subview, fillingRemainingSpaceBelow: sibblingView)
+	
+	
+There's also a helper to pin a bunch of views to the superview and each other, much like a UIStackView, except without its overhead:
+
+	// this stacks viewA, viewB, viewC and viewD along side the vertical axis,
+	// pinning:
+	//	- viewA 40pts to the top edge of the superview
+	// 	- viewB to viewA
+	//	- viewC to viewB 
+	//	- and viewD 40pts from the bottom edge of the superview
+	//
+	// The spacing between the views will be 8pts and on the horizontal axis,
+	// the views will be centered
+	addSubviewsVertically(viewA, viewB, viewC, viewD, horizontally: .center, insets: .all(40), spacing: 8)
+	
+	// same, but the views are stacked horizontally
+	addSubviewsHorizontally(viewA, viewB, viewC, viewD, vertically: .center, insets: .all(40), spacing: 8)
 
 ### Aligning Edges
 
