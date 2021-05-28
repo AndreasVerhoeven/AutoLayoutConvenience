@@ -7,6 +7,12 @@
 
 import UIKit
 
+class X: UIView {
+	override func sizeThatFits(_ size: CGSize) -> CGSize {
+		return CGSize(width: 20, height: 30)
+	}
+}
+
 class ViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -20,6 +26,8 @@ class ViewController: UIViewController {
 		}), for: .touchUpInside)
 
 		view.addSubview(demoView, filling: .superview)
+
+		print(X().systemLayoutSizeFitting(CGSize(width: 100, height: 100)))
 	}
 }
 
