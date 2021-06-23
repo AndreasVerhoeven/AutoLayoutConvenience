@@ -60,7 +60,7 @@ extension UIView.Default {
 
 	// Helper method to quicklt resolve insets
 	internal static func resolve(_ insets: NSDirectionalEdgeInsets) -> NSDirectionalEdgeInsets {
-		return insets == self.insets ? Resolved.insets : insets
+		return NSDirectionalEdgeInsets(top: resolve(insets.top), leading: resolve(insets.leading), bottom: resolve(insets.bottom), trailing: resolve(insets.trailing))
 	}
 }
 
