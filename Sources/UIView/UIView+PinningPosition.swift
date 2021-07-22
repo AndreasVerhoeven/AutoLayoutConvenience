@@ -35,6 +35,30 @@ extension UIView {
 		return addSubviewForAutoLayout(subview).constrain(pinning: position, to: to, of: other, offset: offset)
 	}
 
+	/// Adds a `subview` by pinning to an exact `rect` `to` in `other`
+	///
+	///  - Parameters:
+	///		- subview: the subview to add and pin
+	///		- rect: the exact rect to pin to
+	///		- in: the point in `other` to pin to
+	///
+	/// - Returns: A `ConstraintsList` with the created constraints
+	@discardableResult public func addSubview(_ subview: UIView, pinnedAt rect: CGRect, in other: BoxLayout = .default) -> ConstraintsList {
+		return addSubviewForAutoLayout(subview).constrain(pinnedAt: rect, in: other)
+	}
+
+	/// Adds a `subview` by pinning to an exact `poiny` `to` in `other`
+	///
+	///  - Parameters:
+	///		- subview: the subview to add and pin
+	///		- point: the exact point to pin to
+	///		- in: the point in `other` to pin to
+	///
+	/// - Returns: A `ConstraintsList` with the created constraints
+	@discardableResult public func addSubview(_ subview: UIView, pinnedAt point: CGPoint, in other: BoxLayout = .default) -> ConstraintsList {
+		return addSubviewForAutoLayout(subview).constrain(pinnedAt: point, in: other)
+	}
+
 	/// Constraints a `subview` by pinning a `position` in `self` `to` another position in `other`
 	///
 	///  - Parameters:
@@ -49,6 +73,36 @@ extension UIView {
 		return ConstraintsList.activate([
 			to.xAnchor(for: other.x.layoutAnchorsProvider(in: superview)).flatMap({ position.xAnchor(for: self)?.constraint(equalTo: $0, constant: offset.x) }),
 			to.yAnchor(for: other.y.layoutAnchorsProvider(in: superview)).flatMap({ position.yAnchor(for: self)?.constraint(equalTo: $0, constant: offset.x) }),
+		])
+	}
+
+	/// Constrains a `subview` by pinning it to a exact `rect` in `other`
+	///  - Parameters:
+	///		- subview: the subview to pin
+	///		- rect: the exact rect to pin to
+	///		- in: the point in `other` to pin to
+	///
+	/// - Returns: A `ConstraintsList` with the created constraints
+	@discardableResult public func constrain(pinnedAt rect: CGRect, in other: BoxLayout = .default) -> ConstraintsList {
+		return ConstraintsList.activate([
+			other.leading.layoutAnchorsProvider(in: superview)?.leadingAnchor.anchorWithOffset(to: leadingAnchor).constraint(equalToConstant: rect.minX),
+			other.top.layoutAnchorsProvider(in: superview)?.topAnchor.anchorWithOffset(to: topAnchor).constraint(equalToConstant: rect.minY),
+			widthAnchor.constraint(equalToConstant: rect.width),
+			heightAnchor.constraint(equalToConstant: rect.height),
+		])
+	}
+
+	/// Constrains a `subview` by pinning it to a exact `point` in `other`
+	///  - Parameters:
+	///		- subview: the subview to pin
+	///		- point: the exact point to pin to
+	///		- in: the point in `other` to pin to
+	///
+	/// - Returns: A `ConstraintsList` with the created constraints
+	@discardableResult public func constrain(pinnedAt point: CGPoint, in other: BoxLayout = .default) -> ConstraintsList {
+		return ConstraintsList.activate([
+			other.leading.layoutAnchorsProvider(in: superview)?.leadingAnchor.anchorWithOffset(to: leadingAnchor).constraint(equalToConstant: point.x),
+			other.top.layoutAnchorsProvider(in: superview)?.topAnchor.anchorWithOffset(to: topAnchor).constraint(equalToConstant: point.y),
 		])
 	}
 }

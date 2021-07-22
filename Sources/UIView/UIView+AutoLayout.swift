@@ -75,6 +75,33 @@ extension UIView {
 		ConstraintsList.activate([widthAnchor.constraint(equalTo: heightAnchor, multiplier: ratio).with(priority: priority)])
 		return self
 	}
+
+	/// Removes any existing width or height constraint
+	///
+	/// - Returns: returns `self`, useful for chaining
+	@discardableResult public func removeSizeConstraints() -> Self {
+		let constraintsToRemove = constraints.filter { $0.firstAttribute == .width || $0.firstAttribute == .height }
+		removeConstraints(constraintsToRemove)
+		return self
+	}
+
+	/// Removes any existing width
+	///
+	/// - Returns: returns `self`, useful for chaining
+	@discardableResult public func removeWidthConstraints() -> Self {
+		let constraintsToRemove = constraints.filter { $0.firstAttribute == .width }
+		removeConstraints(constraintsToRemove)
+		return self
+	}
+
+	/// Removes any existing width or height constraint
+	///
+	/// - Returns: returns `self`, useful for chaining
+	@discardableResult public func removeHeightConstraints() -> Self {
+		let constraintsToRemove = constraints.filter { $0.firstAttribute == .height }
+		removeConstraints(constraintsToRemove)
+		return self
+	}
 }
 
 extension UIView {

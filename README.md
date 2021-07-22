@@ -177,6 +177,23 @@ Relative to a x,y position (`PointLayout`).  `pinnedTo:` pins the same position 
 	// Pins the center of subview to the top leading of its superview
 	adSubview(subview, pinning: .center, to: .topLeading, of: .superview)
 
+### Pinning to Constant Rects / Points
+
+You can also pin a view to a constant rect or point, using:
+
+
+	/// pins the subview to the given rect
+	addSubview(subview, pinnedAt: CGRect(x: 10, y: 20, width: 100, height: 40))
+	
+	/// pins the subview to the given rect in another view
+	addSubview(subview, pinnedAt: CGRect(x: 10, y: 20, width: 100, height: 40), in: .relative(anotherView)
+	
+	/// pins the subview to the given point - the view needs to have a defined width & height or an intrinsic size
+	addSubview(subview, pinnedAt: CGPoint(x: 20, y: 10))
+	
+	/// pins the subview to the given point in the safeArea - the view needs to have a defined width & height or an intrinsic size
+	addSubview(subview, pinnedAt: CGPoint(x: 20, y: 10), in: .safeArea)
+	 
 
 ### Pinning Edges
 
@@ -314,6 +331,15 @@ Examples:
 	
 	// the height should be at least 10 and at most 20
 	view.constrain(heightBetween: 10...20)
+	
+	/// removing existing width constraints and setting a new width constraint
+	view.removeWidthConstraints().constrain(width: 100)
+	
+	// removing existing height constraints and setting a new height constraint
+	view.removeHeightConstraints().constrain(height: 100)
+	
+	/// removing existing size constraints and setting a new size constraint
+	view.removeSizeConstraints().constrain(size: CGSize(width: 100, height: 100))
 	
 
 Examples of constraining aspect ratio:

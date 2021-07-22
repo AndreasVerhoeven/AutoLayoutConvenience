@@ -103,10 +103,10 @@ public class ManualLayoutBridgedView: UIView {
 
 	/* this is private API, unfortunately:
 	@objc func _intrinsicContentSizeInvalidatedForChildView(_ x: UIView) {
-	setNeedsLayout()
-	if UIView.inheritedAnimationDuration > 0 {
-	layoutIfNeeded()
-	}
+		setNeedsLayout()
+		if UIView.inheritedAnimationDuration > 0 {
+			layoutIfNeeded()
+		}
 	}
 	*/
 

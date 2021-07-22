@@ -22,4 +22,3 @@ class ViewController: UIViewController {
 		view.addSubview(demoView, filling: .superview)
 	}
 }
-
