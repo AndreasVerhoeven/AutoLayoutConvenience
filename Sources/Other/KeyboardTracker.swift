@@ -9,7 +9,7 @@ import UIKit
 
 /// Tracks keyboard notifications
 @objcMembers class KeyboardTracker: NSObject {
-	static let updatedNotification = Notification.Name(rawValue: "kBunqKeyboardTrackerUpdatedNotification")
+	static let didUpdateNotification = Notification.Name(rawValue: "KeyboardTracker.DidUpdateNotification")
 	typealias Callback = (KeyboardTracker) -> Void
 
 	static let shared = KeyboardTracker()
@@ -44,10 +44,6 @@ import UIKit
 		center.addObserver(self, selector: #selector(keyboardChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
 	}
 
-	static func ensureIsLoaded() {
-		_ = shared
-	}
-
 	func perform(_ changes: @escaping () -> Void) {
 		if isInCallbackCount > 0 && animationDuration > 0 {
 			UIView.animate(withDuration: animationDuration, delay: 0, options: animationCurveAnimationOptions, animations: changes)
@@ -56,7 +52,7 @@ import UIKit
 		}
 	}
 
-	// pass return value to removeObserver: to remove the observer
+	// pass return value to removeObserver: to remove the observer or call .cancel() on it
 	func addObserver(_ callback: @escaping Callback) -> Cancellable {
 		let cancellable = Cancellable(tracker: self)
 		observers[cancellable.uuid] = callback
@@ -69,7 +65,7 @@ import UIKit
 
 	// MARK: - Privates
 	private func notifyObservers() {
-		NotificationCenter.default.post(name: Self.updatedNotification, object: self)
+		NotificationCenter.default.post(name: Self.didUpdateNotification, object: self)
 		let originalObservers = observers
 		originalObservers.forEach { $0.value(self) }
 	}
