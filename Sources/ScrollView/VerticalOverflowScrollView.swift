@@ -68,9 +68,12 @@ public class VerticalOverflowScrollView: UIScrollView {
 	}
 
 	private func updateInsetsForKeyboard(forceLayout: Bool = true) {
+		let newBottomInset = max(effectiveContentInsets.bottom - safeAreaInsets.bottom, 0)
+		guard newBottomInset != contentInset.bottom else { return }
+
 		keyboardTracker.perform {
-			self.contentInset.bottom = max(self.effectiveContentInsets.bottom - self.safeAreaInsets.bottom, 0)
-			self.verticalScrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: self.contentInset.bottom, right: 0)
+			self.contentInset.bottom = newBottomInset
+			self.verticalScrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: newBottomInset, right: 0)
 			guard forceLayout == true else { return }
 			self.setNeedsLayout()
 			self.layoutIfNeeded()
