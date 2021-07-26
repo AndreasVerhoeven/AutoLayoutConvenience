@@ -13,6 +13,14 @@ extension UIView {
 		self.backgroundColor = backgroundColor
 		self.alpha = alpha
 	}
+
+
+	/// Return this view wrapped in another view with the given layout
+	public func wrappedIn(_ layout: BoxLayout) -> UIView {
+		let view = UIView()
+		view.addSubview(self, filling: layout)
+		return view
+	}
 }
 
 extension UILabel {
