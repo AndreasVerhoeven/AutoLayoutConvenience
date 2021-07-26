@@ -10,23 +10,71 @@ import UIKit
 // this scrollview has an intrinsic content size, so it participates in (StackView) AutoLayout
 // and it overflows content in the vertical direction
 public class VerticalOverflowScrollView: UIScrollView {
+	private var heightConstraint: NSLayoutConstraint!
+	private var widthConstraint: NSLayoutConstraint!
+	private var keyboardTracker = KeyboardTracker()
+	private var keyboardTrackerCookie: NSObjectProtocol!
+
+	/// if true, this scrollview will adjust the content inset to avoid the keyboard
+	var isAdjustingForKeyboard = false {
+		didSet {
+			guard isAdjustingForKeyboard != oldValue else { return }
+			updateInsetsForKeyboard()
+		}
+	}
+
+	/// Adds a subview that overflows when needed or fills otherwise
+	public func addOverflowingSubview(_ view: UIView, horizontally: HorizontalAxisLayout = .superview) {
+		addSubview(view, filling: .horizontally(horizontally, vertically: .scrollContentOf(self)))
+	}
 
 	// MARK: - Private
 	private func setup() {
 		showsVerticalScrollIndicator = true
 		showsHorizontalScrollIndicator = false
 
+		contentInsetAdjustmentBehavior = .always
 		alwaysBounceVertical = false
 		alwaysBounceHorizontal = false
 
-		NSLayoutConstraint.activate([
-			contentLayoutGuide.heightAnchor.constraint(greaterThanOrEqualTo: frameLayoutGuide.heightAnchor),
-			contentLayoutGuide.widthAnchor.constraint(equalTo: frameLayoutGuide.widthAnchor).with(priority: .required),
-		])
+		heightConstraint = contentLayoutGuide.heightAnchor.constraint(greaterThanOrEqualTo: frameLayoutGuide.heightAnchor)
+		widthConstraint = contentLayoutGuide.widthAnchor.constraint(equalTo: frameLayoutGuide.widthAnchor).with(priority: .required)
+		NSLayoutConstraint.activate([heightConstraint, widthConstraint])
+
+		keyboardTrackerCookie = keyboardTracker.addObserver { [weak self] _ in
+			guard self?.isAdjustingForKeyboard == true else { return }
+			self?.updateInsetsForKeyboard()
+		}
 	}
 
-	public func addOverflowingSubview(_ view: UIView, horizontally: HorizontalAxisLayout = .superview) {
-		addSubview(view, filling: .horizontally(horizontally, vertically: .scrollContentOf(self)))
+	private func updateInternalConstraints() {
+		super.updateConstraints()
+		heightConstraint.constant = -(adjustedContentInset.top + adjustedContentInset.bottom)
+		widthConstraint.constant = -(adjustedContentInset.left + adjustedContentInset.right)
+	}
+
+	private var effectiveContentInsets: UIEdgeInsets {
+		guard isAdjustingForKeyboard == true else { return .zero }
+
+		// we're only interested in vertical insets
+		let boundsInScreenCoordinates = convert(bounds, to: nil)
+		var keyboardScreenFrame = keyboardTracker.keyboardScreenFrame
+		keyboardScreenFrame.origin.x = boundsInScreenCoordinates.minX
+		keyboardScreenFrame.size.width = boundsInScreenCoordinates.width
+
+		guard keyboardScreenFrame.isEmpty == false && keyboardScreenFrame.intersects(boundsInScreenCoordinates) == true else { return .zero }
+		let keyboardHeightInView = max(boundsInScreenCoordinates.maxY - keyboardScreenFrame.minY, 0)
+		return UIEdgeInsets(top: 0, left: 0, bottom: keyboardHeightInView, right: 0)
+	}
+
+	private func updateInsetsForKeyboard(forceLayout: Bool = true) {
+		keyboardTracker.perform {
+			self.contentInset.bottom = max(self.effectiveContentInsets.bottom - self.safeAreaInsets.bottom, 0)
+			self.verticalScrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: self.contentInset.bottom, right: 0)
+			guard forceLayout == true else { return }
+			self.setNeedsLayout()
+			self.layoutIfNeeded()
+		}
 	}
 
 	// MARK: - UIScrollView
@@ -37,9 +85,20 @@ public class VerticalOverflowScrollView: UIScrollView {
 		}
 	}
 
+	public override func adjustedContentInsetDidChange() {
+		super.adjustedContentInsetDidChange()
+		updateInternalConstraints()
+		invalidateIntrinsicContentSize()
+	}
+
 	// MARK: - UIView
 	override public var intrinsicContentSize: CGSize {
 		return contentSize
+	}
+
+	public override func safeAreaInsetsDidChange() {
+		super.safeAreaInsetsDidChange()
+		updateInsetsForKeyboard()
 	}
 
 	override public init(frame: CGRect) {
@@ -52,8 +111,14 @@ public class VerticalOverflowScrollView: UIScrollView {
 		setup()
 	}
 
-	public convenience init(with subview: UIView, horizontally: HorizontalAxisLayout = .superview) {
+	public convenience init(with subview: UIView, horizontally: HorizontalAxisLayout = .superview, adjustsForKeyboard: Bool) {
 		self.init()
+		self.isAdjustingForKeyboard = adjustsForKeyboard
 		addOverflowingSubview(subview, horizontally: horizontally)
+		updateInsetsForKeyboard(forceLayout: false)
+	}
+
+	deinit {
+		keyboardTracker.removeObserver(keyboardTrackerCookie)
 	}
 }

@@ -10,23 +10,31 @@ import UIKit
 // this scrollview has an intrinsic content size, so it participates in (StackView) AutoLayout
 // and it overflows content in the horizontal direction
 public class HorizontalOverflowScrollView: UIScrollView {
+	private var heightConstraint: NSLayoutConstraint!
+	private var widthConstraint: NSLayoutConstraint!
+
+	public func addOverflowingSubview(_ view: UIView, vertically: VerticalAxisLayout = .superview) {
+		addSubview(view, filling: .horizontally(.scrollContentOf(self), vertically: vertically))
+	}
 
 	// MARK: - Private
 	private func setup() {
 		showsVerticalScrollIndicator = false
 		showsHorizontalScrollIndicator = true
 
+		contentInsetAdjustmentBehavior = .always
 		alwaysBounceVertical = false
 		alwaysBounceHorizontal = false
 
-		NSLayoutConstraint.activate([
-			contentLayoutGuide.widthAnchor.constraint(greaterThanOrEqualTo: frameLayoutGuide.widthAnchor),
-			contentLayoutGuide.heightAnchor.constraint(equalTo: frameLayoutGuide.heightAnchor).with(priority: .required),
-		])
+		widthConstraint = contentLayoutGuide.widthAnchor.constraint(greaterThanOrEqualTo: frameLayoutGuide.widthAnchor)
+		heightConstraint = contentLayoutGuide.heightAnchor.constraint(equalTo: frameLayoutGuide.heightAnchor).with(priority: .required)
+		NSLayoutConstraint.activate([heightConstraint, widthConstraint])
 	}
 
-	public func addOverflowingSubview(_ view: UIView, vertically: VerticalAxisLayout = .superview) {
-		addSubview(view, filling: .horizontally(.scrollContentOf(self), vertically: vertically))
+	private func updateInternalConstraints() {
+		super.updateConstraints()
+		heightConstraint.constant = -(adjustedContentInset.top + adjustedContentInset.bottom)
+		widthConstraint.constant = -(adjustedContentInset.left + adjustedContentInset.right)
 	}
 
 	// MARK: - UIScrollView
@@ -35,6 +43,12 @@ public class HorizontalOverflowScrollView: UIScrollView {
 			guard contentSize != oldValue else { return }
 			invalidateIntrinsicContentSize()
 		}
+	}
+
+	public override func adjustedContentInsetDidChange() {
+		super.adjustedContentInsetDidChange()
+		updateInternalConstraints()
+		invalidateIntrinsicContentSize()
 	}
 
 	// MARK: - UIView

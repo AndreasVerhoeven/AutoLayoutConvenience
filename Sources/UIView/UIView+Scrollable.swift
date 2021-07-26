@@ -13,20 +13,22 @@ extension UIView {
 	/// - Parameters:
 	///		- view: the view to embed
 	///		- horizontally: **optional** the axis to constrain horizontally to, defaults to `.superview`
+	///		- `avoidsKeyboard`: **optional** if true, will make the scrollview avoid the keyboard (defaults to false)
 	///
 	///	- Returns: A VerticalOverflowScrollView with view embedded in it
-	static public func verticallyScrollable(_ view: UIView, horizontally: HorizontalAxisLayout = .superview) -> VerticalOverflowScrollView {
-		return VerticalOverflowScrollView(with: view, horizontally: horizontally)
+	static public func verticallyScrollable(_ view: UIView, horizontally: HorizontalAxisLayout = .superview, avoidsKeyboard: Bool = false) -> VerticalOverflowScrollView {
+		return VerticalOverflowScrollView(with: view, horizontally: horizontally, adjustsForKeyboard: avoidsKeyboard)
 	}
 
 	/// Embeds `self` in a vertically scrollable view
 	///
 	/// - Parameters:
 	///		- horizontally: **optional** the axis to constrain horizontally to, defaults to `.superview`
+	///		- `avoidsKeyboard`: **optional** if true, will make the scrollview avoid the keyboard (defaults to false)
 	///
 	///	- Returns: A VerticalOverflowScrollView with `self` embedded in it
-	public func verticallyScrollable(horizontally: HorizontalAxisLayout = .superview) -> VerticalOverflowScrollView {
-		Self.verticallyScrollable(self, horizontally: horizontally)
+	public func verticallyScrollable(horizontally: HorizontalAxisLayout = .superview, avoidsKeyboard: Bool = false) -> VerticalOverflowScrollView {
+		Self.verticallyScrollable(self, horizontally: horizontally, avoidsKeyboard: avoidsKeyboard)
 	}
 
 	/// Embeds a view in a horizontally scrollable view

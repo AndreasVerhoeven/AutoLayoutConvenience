@@ -422,13 +422,17 @@ There are two `UIStackView` subclasses that automatically switches their axis ba
 
 ### ScrollView
 
-There are two `UIScrolLView` subclasses that participate in AutoLayout and become scrollable when needed:
+There are two `UIScrollView` subclasses that participate in AutoLayout and become scrollable when needed:
 - `VerticalOverflowScrollView`
 - `HorizontalOverflowScrollView`
 
 
+### Keyboard Avoidance:
+`VerticalOverflowScrollView` can avoid the keyboard by setting `isAdjustingForKeyboard = true`.
+
+
 ##### Factories:
-- `verticallyScrollable()` embes the view in a vertical scrollview that becomes scrollable when needed
-- `horizontallyScrollable()` embes the view in a vertical scrollview that becomes scrollable when needed
+- `verticallyScrollable()` embeds the view in a vertical scrollview that becomes scrollable when needed. Pass `avoidsKeyboard: true` to make the scrollview automatically adjust for the keyboard.
+- `horizontallyScrollable()` embeds the view in a vertical scrollview that becomes scrollable when needed
 
 These functions both have parameters for the opposing axis and also both have **static** variants, for easy composing.
