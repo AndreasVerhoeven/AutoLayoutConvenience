@@ -13,7 +13,7 @@ public class VerticalOverflowScrollView: UIScrollView {
 	private var heightConstraint: NSLayoutConstraint!
 	private var widthConstraint: NSLayoutConstraint!
 	private var keyboardTracker = KeyboardTracker()
-	private var keyboardTrackerCookie: NSObjectProtocol!
+	private var keyboardTrackingCancellable: KeyboardTracker.Cancellable!
 
 	/// if true, this scrollview will adjust the content inset to avoid the keyboard
 	var isAdjustingForKeyboard = false {
@@ -41,7 +41,7 @@ public class VerticalOverflowScrollView: UIScrollView {
 		widthConstraint = contentLayoutGuide.widthAnchor.constraint(equalTo: frameLayoutGuide.widthAnchor).with(priority: .required)
 		NSLayoutConstraint.activate([heightConstraint, widthConstraint])
 
-		keyboardTrackerCookie = keyboardTracker.addObserver { [weak self] _ in
+		keyboardTrackingCancellable = keyboardTracker.addObserver { [weak self] _ in
 			guard self?.isAdjustingForKeyboard == true else { return }
 			self?.updateInsetsForKeyboard()
 		}
@@ -122,6 +122,6 @@ public class VerticalOverflowScrollView: UIScrollView {
 	}
 
 	deinit {
-		keyboardTracker.removeObserver(keyboardTrackerCookie)
+		keyboardTrackingCancellable?.cancel()
 	}
 }

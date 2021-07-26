@@ -24,8 +24,17 @@ import UIKit
 		return UIView.AnimationOptions(rawValue: UInt(animationCurve.rawValue) << 16)
 	}
 
-	private var observers = [NSUUID: Callback]()
+	private var observers = [UUID: Callback]()
 	private var lastKeyboardFrameWhenVisible = CGRect.zero
+
+	struct Cancellable {
+		weak var tracker: KeyboardTracker?
+		let uuid = UUID()
+
+		func cancel() {
+			tracker?.removeObserver(self)
+		}
+	}
 
 	override init() {
 		super.init()
@@ -48,15 +57,14 @@ import UIKit
 	}
 
 	// pass return value to removeObserver: to remove the observer
-	func addObserver(_ callback: @escaping Callback) -> NSObjectProtocol {
-		let uuid = NSUUID()
-		observers[uuid] = callback
-		return uuid
+	func addObserver(_ callback: @escaping Callback) -> Cancellable {
+		let cancellable = Cancellable(tracker: self)
+		observers[cancellable.uuid] = callback
+		return cancellable
 	}
 
-	func removeObserver(_ observer: NSObjectProtocol) {
-		guard let uuid = observer as? NSUUID else { return }
-		observers.removeValue(forKey: uuid)
+	func removeObserver(_ cancellable: Cancellable) {
+		observers.removeValue(forKey: cancellable.uuid)
 	}
 
 	// MARK: - Privates
