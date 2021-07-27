@@ -16,9 +16,9 @@ extension UIView {
 
 
 	/// Return this view wrapped in another view with the given layout
-	public func wrapped(in layout: BoxLayout) -> UIView {
+	public func wrapped(in layout: BoxLayout, insets: NSDirectionalEdgeInsets = Default.insets) -> UIView {
 		let view = UIView()
-		view.addSubview(self, filling: layout)
+		view.addSubview(self, filling: layout, insets: insets)
 		return view
 	}
 }
