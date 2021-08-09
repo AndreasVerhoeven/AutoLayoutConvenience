@@ -68,9 +68,10 @@ extension UITextView {
 }
 
 extension UIButton {
-	public convenience init(title: String? = nil, type: UIButton.ButtonType) {
+	public convenience init(title: String? = nil, font: UIFont? = nil, type: UIButton.ButtonType) {
 		self.init(type: type)
 		self.setTitle(title, for: .normal)
+		font.map { self.titleLabel?.font = $0 }
 		self.titleLabel?.adjustsFontForContentSizeCategory = true
 		adjustsImageSizeForAccessibilityContentSizeCategory = true
 	}
