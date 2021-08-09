@@ -16,6 +16,7 @@ class DemoView: UIView {
 	let actionButton = UIButton.platter(title: "Add More Text", titleColor: .white)
 	let cancelButton = UIButton.platter(title: "Revert", backgroundColor: .white)
 	let buttonSize = CGSize(width: 32, height: 32)
+	let textField = UITextField(backgroundColor: .tertiarySystemBackground).constrain(heightBetween: 32..<40)
 
 	// Helper method to animate sub title changes
 	func setSubTitleAnimated(_ text: String) {
@@ -32,6 +33,11 @@ class DemoView: UIView {
 
 	private func setup() {
 		backgroundView.layer.cornerRadius = 16
+		textField.returnKeyType = .done
+		textField.placeholder = "Bring up the keyboard"
+		textField.layer.cornerRadius = 8
+		textField.leftView = UIView().constrain(width: 16)
+		textField.leftViewMode = .always
 
 		// create our content:
 		//	- we stack the titles vertically, which will fill the horizontal axis
@@ -41,7 +47,7 @@ class DemoView: UIView {
 		//	- the buttons are vertically stacked at the bottom, but will auto switch to a horizontal stack on vertical compact devices
 		let content = UIView.verticallyStacked(
 			UIView.verticallyStacked(titleLabel, subLabel, spacing: 4, insets: .all(16)).verticallyCentered().verticallyScrollable(),
-			UIView.autoAdjustingVerticallyStacked(actionButton, cancelButton, spacing: 8)
+			UIView.autoAdjustingVerticallyStacked(textField, actionButton, cancelButton, spacing: 8)
 		)
 
 		// Next up:

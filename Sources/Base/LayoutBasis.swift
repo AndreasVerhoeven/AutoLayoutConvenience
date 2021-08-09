@@ -111,6 +111,18 @@ public enum LayoutAnchorable {
 
 	/// Anchored to the `frameLayoutGuide` of the specified `UIScrollView`
 	case scrollFrameOf(UIScrollView)
+
+	/// Anchored to the custom `keyboardSafeAreaLayoutGuide` of the relevant view
+	case keyboardSafeArea
+
+	/// Anchored to the custom `keyboardSafeAreaLayoutGuide` of a specific view
+	case keyboardSafeAreaOf(UIView)
+
+	/// Anchored to the custom `keyboardFrameLayoutGuide` of the relevant view
+	case keyboardFrame
+
+	/// Anchored to the custom `keyboardFrameLayoutGuide` of a specific view
+	case keyboardFrameOf(UIView)
 }
 
 // MARK: - Layouts

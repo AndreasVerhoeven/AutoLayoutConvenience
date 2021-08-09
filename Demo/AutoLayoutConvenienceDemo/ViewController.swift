@@ -18,7 +18,11 @@ class ViewController: UIViewController {
 		demoView.cancelButton.addAction(UIAction(handler: { _ in
 			demoView.setSubTitleAnimated(String(repeating: "Sub label with a lot of text. ", count: 10))
 		}), for: .touchUpInside)
+		demoView.textField.addAction(UIAction(handler: { _ in
+			demoView.endEditing(true)
+		}), for: .editingDidEndOnExit)
 
-		view.addSubview(demoView, filling: .superview)
+		view.addSubview(UIView(backgroundColor: .red), filling: .keyboardFrame)
+		view.addSubview(demoView, filling: .keyboardSafeArea)
 	}
 }

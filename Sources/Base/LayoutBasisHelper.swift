@@ -96,6 +96,26 @@ public extension BaseLayout {
 	static func scrollFrameOf(_ view: UIScrollView) -> Self {
 		return Self(.scrollFrameOf(view))
 	}
+
+	/// Anchored to the custom `keyboardSafeAreaLayoutGuide` of the relevant view
+	static var keyboardSafeArea: Self {
+		return Self(.keyboardSafeArea)
+	}
+
+	/// Anchored to the custom `keyboardSafeAreaLayoutGuide` of a specific view
+	static func keyboardSafeAreaOf(_ view: UIView) -> Self {
+		return Self(.keyboardSafeAreaOf(view))
+	}
+
+	/// Anchored to the custom `keyboardFrameLayoutGuide` of the relevant view
+	static var keyboardFrame: Self {
+		return Self(.keyboardFrame)
+	}
+
+	/// Anchored to the custom `keyboardFrameLayoutGuide` of a specific view
+	static func keyboardFrameOf(_ view: UIView) -> Self {
+		return Self(.keyboardFrameOf(view))
+	}
 }
 
 // MARK: - Layout Factories
@@ -261,6 +281,12 @@ extension LayoutAnchorable {
 
 			case .scrollFrame: return (baseView as? UIScrollView)?.frameLayoutGuide ?? baseView
 			case .scrollFrameOf(let scrollView): return scrollView.frameLayoutGuide
+
+			case .keyboardSafeArea: return baseView?.keyboardSafeAreaLayoutGuide
+			case .keyboardSafeAreaOf(let view): return view.keyboardSafeAreaLayoutGuide
+
+			case .keyboardFrame: return baseView?.keyboardFrameLayoutGuide
+			case .keyboardFrameOf(let view): return view.keyboardFrameLayoutGuide
 		}
 	}
 }
@@ -288,6 +314,9 @@ extension LayoutAnchorable {
 			case .scrollFrame, .scrollFrameOf:
 				guard let scrollView = view as? UIScrollView else { return .relative(view)}
 				return  .scrollFrameOf(scrollView)
+
+			case .keyboardSafeArea, .keyboardSafeAreaOf: return .keyboardSafeAreaOf(view)
+			case .keyboardFrame, .keyboardFrameOf: return .keyboardFrameOf(view)
 		}
 	}
 

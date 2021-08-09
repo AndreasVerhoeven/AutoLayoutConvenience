@@ -96,8 +96,20 @@ The basics of this library are so called `anchorable layouts`, which define whic
 - `scrollContentOf(UIView)` anchors to the `contentLayoutGuide` of a specific `UIScrollView`
 - `scrollFrame` anchors to the `frameLayoutGuide` of the relevant view if that is a `UIScrollView`, otherwise just to the view itself
 - `scrollFrameOf(UIView)` anchors to the `frameLayoutGuide` of a specific `UIScrollView`
+- `keyboardSafeArea` anchors to the `keyboardSafeAreaLayoutGuide` of the relevant view
+- `keyboardSafeAreaOf(UIView)` anchors to the `keyboardSafeAreaLayoutGuide` of a specific view
+- `keyboardFrame` anchors to the `keyboardFrameLayoutGuide` of the relevant view
+- `keyboardFrameOf(UIView)` anchors to the `keyboardFrameLayoutGuide` of a specific view
 
 As you can see, there are anchorables that take a specific `UIView` and ones that don't. The ones that don't always apply to the relevant view, which usually is the subview that is being added.
+
+
+There are also anchors to deal with the keyboard:
+
+- `keyboardSafeArea[Of]` which is the safeArea minus the keyboard. In short, it's the area uncovered by the keyboard or safe area insets
+- `keyboardFrame[Of]` which is the frame of the keyboard. If the keyboard is hidden, its height is 0.
+
+Those anchors are implemented using custom `UILayoutGuide` subclasses, which respond to keyboard events. They work best with static views, since they do not track the view changing position.
 
 ### Insets
 
