@@ -44,12 +44,8 @@ public class KeyboardSafeAreaLayoutGuide: UILayoutGuide {
 		keyboardTracker.perform {
 			self.bottomConstraint?.constant = newBottomInset
 			guard forceLayout == true else { return }
-			owningView.superview?.setNeedsLayout()
-			owningView.setNeedsLayout()
-			owningView.superview?.layoutIfNeeded()
-			owningView.layoutIfNeeded()
+			owningView.forceLayoutInViewHierarchy()
 		}
-
 	}
 
 	private var effectiveContentInsets: UIEdgeInsets {
@@ -105,3 +101,16 @@ public extension UIView {
 	}
 }
 
+
+internal extension UIView {
+	func forceLayoutInViewHierarchy() {
+		var possibleView: UIView? = self
+		while let view = possibleView {
+			view.setNeedsLayout()
+			possibleView = view.superview
+			if possibleView == nil {
+				view.layoutIfNeeded()
+			}
+		}
+	}
+}

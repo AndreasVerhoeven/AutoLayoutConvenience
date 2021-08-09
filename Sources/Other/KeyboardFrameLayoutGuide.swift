@@ -44,12 +44,8 @@ public class KeyboardFrameLayoutGuide: UILayoutGuide {
 		keyboardTracker.perform {
 			self.heightConstraint?.constant = newBottomInset
 			guard forceLayout == true else { return }
-			owningView.superview?.setNeedsLayout()
-			owningView.setNeedsLayout()
-			owningView.superview?.layoutIfNeeded()
-			owningView.layoutIfNeeded()
+			owningView.forceLayoutInViewHierarchy()
 		}
-
 	}
 
 	private var effectiveContentInsets: UIEdgeInsets {
