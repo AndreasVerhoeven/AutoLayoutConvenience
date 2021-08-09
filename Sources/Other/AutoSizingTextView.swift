@@ -72,9 +72,7 @@ public class AutoSizingTextView: UITextView {
 		ignoreBoundsChanges = false
 	}
 
-	// MARK: - UITextView
-	public override init(frame: CGRect, textContainer: NSTextContainer?) {
-		super.init(frame: frame, textContainer: textContainer)
+	private func setup() {
 		isScrollEnabled = false
 		autoresizingMask = [.flexibleWidth, .flexibleHeight]
 		NotificationCenter.default.addObserver(self, selector: #selector(UITextInputDelegate.textDidChange(_:)), name: UITextView.textDidChangeNotification, object: self)
@@ -92,8 +90,15 @@ public class AutoSizingTextView: UITextView {
 		addSubview(placeholderTextView, filling: .superview)
 	}
 
+	// MARK: - UITextView
+	public override init(frame: CGRect, textContainer: NSTextContainer?) {
+		super.init(frame: frame, textContainer: textContainer)
+		setup()
+	}
+
 	required init?(coder aDecoder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
+		super.init(coder: aDecoder)
+		setup()
 	}
 
 	public override var text: String! {
@@ -165,10 +170,14 @@ public class AutoSizingTextView: UITextView {
 }
 
 public extension AutoSizingTextView {
-	/// Creates an AutoSizingTextView with a placeholder and an optional backgroundColor
-	convenience init(placeholder: String?, backgroundColor: UIColor = .clear) {
+	/// Creates an AutoSizingTextView with a placeholder, optional font and an optional backgroundColor
+	convenience init(placeholder: String?, font: UIFont? = nil, backgroundColor: UIColor = .clear) {
 		self.init(frame: .zero)
 		self.placeholder = placeholder
 		self.backgroundColor = backgroundColor
+		if let font = font {
+			self.font = font
+			self.placeholderTextView.font = font
+		}
 	}
 }

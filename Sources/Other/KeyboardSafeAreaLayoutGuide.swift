@@ -44,7 +44,9 @@ public class KeyboardSafeAreaLayoutGuide: UILayoutGuide {
 		keyboardTracker.perform {
 			self.bottomConstraint?.constant = newBottomInset
 			guard forceLayout == true else { return }
+			owningView.superview?.setNeedsLayout()
 			owningView.setNeedsLayout()
+			owningView.superview?.layoutIfNeeded()
 			owningView.layoutIfNeeded()
 		}
 
