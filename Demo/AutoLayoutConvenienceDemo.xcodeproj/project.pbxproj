@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4933F50226F0F1EE008EEA01 /* AutoHidingStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4933F50126F0F1EE008EEA01 /* AutoHidingStackView.swift */; };
 		4969E367263EE626000F8BDA /* ContentWithFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4969E366263EE626000F8BDA /* ContentWithFooterView.swift */; };
 		496ADB4426B1E91B0016A582 /* ExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496ADB4326B1E91B0016A582 /* ExampleViewController.swift */; };
 		496ADB4E26B346EE0016A582 /* FillingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496ADB4D26B346EE0016A582 /* FillingViewController.swift */; };
@@ -52,6 +53,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4933F50126F0F1EE008EEA01 /* AutoHidingStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoHidingStackView.swift; sourceTree = "<group>"; };
 		4969E366263EE626000F8BDA /* ContentWithFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentWithFooterView.swift; sourceTree = "<group>"; };
 		496ADB4326B1E91B0016A582 /* ExampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleViewController.swift; sourceTree = "<group>"; };
 		496ADB4D26B346EE0016A582 /* FillingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FillingViewController.swift; sourceTree = "<group>"; };
@@ -211,6 +213,7 @@
 				49CD6B45263972520024C330 /* AutoAdjustingHorizontalStackView.swift */,
 				49CD6B46263972520024C330 /* UIView+StackViewHelpers.swift */,
 				49CD6B47263972520024C330 /* AutoAdjustingVerticalStackView.swift */,
+				4933F50126F0F1EE008EEA01 /* AutoHidingStackView.swift */,
 			);
 			path = UIStackView;
 			sourceTree = "<group>";
@@ -359,6 +362,7 @@
 				49CD6B22263971900024C330 /* AppDelegate.swift in Sources */,
 				49CD6B61263972520024C330 /* LayoutBasisHelper.swift in Sources */,
 				49CD6B57263972520024C330 /* UIView+Filling.swift in Sources */,
+				4933F50226F0F1EE008EEA01 /* AutoHidingStackView.swift in Sources */,
 				49CD6B6D263976160024C330 /* VerticalOverflowScrollView.swift in Sources */,
 				4980798826C18F470007C155 /* AutoSizingTextView.swift in Sources */,
 				49CD6B58263972520024C330 /* UIView+PinningPosition.swift in Sources */,

@@ -9,7 +9,7 @@ import UIKit
 
 /// Horizontal StackView that automatically switches to a vertical
 /// stackview when in accessibility mode
-public class AutoAdjustingHorizontalStackView: UIStackView {
+public class AutoAdjustingHorizontalStackView: AutoHidingStackView {
 
 	// MARK: - Private
 	private func updateForContentCategory() {

@@ -32,6 +32,7 @@
                 <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="nau-xU-Zif" sceneMemberID="viewController">
                     <toolbarItems/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Klz-6A-AGf">
+                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>
@@ -358,7 +359,7 @@
                                                 <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="PZj-cb-IQ7">
                                                     <rect key="frame" x="30" y="0.0" width="0.5" height="0.0"/>
                                                     <autoresizingMask key="autoresizingMask"/>
-                                                    <imageReference key="image" image="rectangle.topthird.inset" catalog="system" renderingMode="original"/>
+                                                    <imageReference key="image" image="rectangle.topthird.inset.fill" catalog="system" renderingMode="original"/>
                                                 </imageView>
                                             </subviews>
                                         </tableViewCellContentView>
@@ -478,7 +479,7 @@
                                                 <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="yBh-nJ-IYr">
                                                     <rect key="frame" x="30" y="0.0" width="0.5" height="0.0"/>
                                                     <autoresizingMask key="autoresizingMask"/>
-                                                    <imageReference key="image" image="rectangle.topthird.inset" catalog="system" renderingMode="original"/>
+                                                    <imageReference key="image" image="rectangle.topthird.inset.fill" catalog="system" renderingMode="original"/>
                                                 </imageView>
                                             </subviews>
                                         </tableViewCellContentView>
@@ -624,7 +625,6 @@
         <image name="rectangle.leftthird.inset.fill" catalog="system" width="128" height="93"/>
         <image name="rectangle.rightthird.inset.fill" catalog="system" width="128" height="93"/>
         <image name="rectangle.split.3x1" catalog="system" width="128" height="93"/>
-        <image name="rectangle.topthird.inset" catalog="system" width="128" height="93"/>
         <image name="rectangle.topthird.inset.fill" catalog="system" width="128" height="93"/>
         <image name="scroll" catalog="system" width="128" height="116"/>
         <systemColor name="secondaryLabelColor">

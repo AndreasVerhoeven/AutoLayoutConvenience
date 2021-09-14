@@ -30,7 +30,7 @@ extension UIView {
 	///
 	/// - Returns: the created `UIStackView` with the given views
 	public static func verticallyStacked(_ views: [UIView],  alignment: UIStackView.Alignment = .fill, spacing: CGFloat = 0, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
-		UIStackView(with: views, axis: .vertical, alignment: alignment, distribution: .fill, spacing: spacing, insets: insets)
+		return AutoHidingStackView(with: views, axis: .vertical, alignment: alignment, distribution: .fill, spacing: spacing, insets: insets)
 	}
 
 	/// Wraps views in a horizontally aligned UIStackView
@@ -56,7 +56,7 @@ extension UIView {
 	///
 	/// - Returns: the created `UIStackView` with the given views
 	public static func horizontallyStacked(_ views: [UIView], alignment: UIStackView.Alignment = .fill, spacing: CGFloat = 0, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
-		return UIStackView(with: views, axis: .horizontal, alignment: alignment, distribution: .fill, spacing: spacing, insets: insets)
+		return AutoHidingStackView(with: views, axis: .horizontal, alignment: alignment, distribution: .fill, spacing: spacing, insets: insets)
 	}
 
 	/// Wraps views in a UIStackView
@@ -83,7 +83,7 @@ extension UIView {
 	///
 	/// - Returns: the created `UIStackView` with the given views
 	public static func stacked(_ views: [UIView],  axis: NSLayoutConstraint.Axis, alignment: UIStackView.Alignment = .fill, spacing: CGFloat = 0, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
-		return UIStackView(with: views, axis: axis, alignment: .fill, distribution: .fill, spacing: spacing, insets: insets)
+		return AutoHidingStackView(with: views, axis: axis, alignment: .fill, distribution: .fill, spacing: spacing, insets: insets)
 	}
 
 	/// Horizontally aligns a single view by wrapping it in a properly aligned UIStackView
@@ -95,7 +95,7 @@ extension UIView {
 	///
 	/// - Returns: the created `UIStackView` with the given view
 	public static func horizontally(_ view: UIView, alignment: UIStackView.Alignment, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
-		return UIStackView(with: view, axis: .vertical, alignment: alignment, insets: insets)
+		return AutoHidingStackView(with: view, axis: .vertical, alignment: alignment, insets: insets)
 	}
 
 	/// Horizontally aligns `self` by wrapping it in a properly aligned UIStackView
