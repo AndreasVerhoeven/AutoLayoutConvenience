@@ -27,6 +27,8 @@ import UIKit
 	public override func setNeedsUpdateConstraints() {
 		super.setNeedsUpdateConstraints()
 		guard automaticallyHidesWhenNotHavingVisibleSubviews == true else { return }
-		isHidden = arrangedSubviews.contains { $0.isHidden == false } == false
+		let needsToBeHidden = (arrangedSubviews.contains { $0.isHidden == false } == false)
+		guard isHidden != needsToBeHidden else { return }
+		isHidden = needsToBeHidden
 	}
 }

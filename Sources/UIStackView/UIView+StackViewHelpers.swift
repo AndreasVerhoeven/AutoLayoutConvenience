@@ -141,7 +141,7 @@ extension UIView {
 	///
 	/// - Returns: the created `UIStackView` with the given view
 	public static func vertically(_ view: UIView, alignment: UIStackView.Alignment, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
-		return UIStackView(with: view, axis: .horizontal, alignment: alignment, insets: insets)
+		return AutoHidingStackView(with: view, axis: .horizontal, alignment: alignment, insets: insets)
 	}
 
 	/// Vertically aligns `self` by wrapping it in a properly aligned UIStackView
@@ -233,7 +233,7 @@ extension UIView {
 	///
 	/// - Returns: the created `UIStackView` with the given view
 	public static func insetted(_ view: UIView, by insets: NSDirectionalEdgeInsets) -> UIStackView {
-		return UIStackView(with: view, axis: .vertical, insets: insets)
+		return AutoHidingStackView(with: view, axis: .vertical, insets: insets)
 	}
 
 	/// Insets `self` by wrapping it in a properly insetted `UIStackView`
