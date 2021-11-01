@@ -118,7 +118,7 @@ extension UIView {
 	///
 	/// - Returns: the created `UIStackView`
 	public static func horizontallyCentered(_ view: UIView, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
-		return horizontally(view, alignment: .center)
+		return horizontally(view, alignment: .center, insets: insets)
 	}
 
 	/// Horizontally centers `self` by wrapping it in a properly aligned UIStackView
