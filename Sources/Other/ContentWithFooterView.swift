@@ -12,8 +12,8 @@ public class ContentWithFooterView: UIView {
 	// helper views, laid out to fit the whole width of the screen, so that
 	// the scrollview can be scrolled from the full width of this view and the
 	// scroll indicators show up at the sides correctly.
-	private let stackView = UIStackView(axis: .vertical, insets: .zero)
-	private let scrollView = VerticalOverflowScrollView()
+	public let stackView = UIStackView(axis: .vertical, insets: .zero)
+	public let scrollView = VerticalOverflowScrollView()
 
 	// we wrap our footerview into wrapper, so our footer is aligned to the readableContentGuide
 	private let footerWrapperView = UIView()
