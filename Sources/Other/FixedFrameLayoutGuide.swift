@@ -46,15 +46,15 @@ class FixedFrameLayoutGuide: UILayoutGuide {
 			var needsActivation = false
 			if leadingConstraint == nil {
 				leadingConstraint = leadingAnchor.constraint(equalTo: view.leadingAnchor)
-				trailingConstraint = trailingAnchor.constraint(equalTo: view.trailingAnchor)
+				trailingConstraint = trailingAnchor.constraint(equalTo: view.leadingAnchor)
 				topConstraint = topAnchor.constraint(equalTo: view.topAnchor)
-				bottomConstraint = bottomAnchor.constraint(equalTo: view.bottomAnchor)
+				bottomConstraint = bottomAnchor.constraint(equalTo: view.topAnchor)
 				needsActivation = true
 			}
 			
-			leadingConstraint?.constant = -frame.minX
+			leadingConstraint?.constant = frame.minX
 			trailingConstraint?.constant = frame.maxX
-			topConstraint?.constant = -frame.minY
+			topConstraint?.constant = frame.minY
 			bottomConstraint?.constant = frame.maxY
 			
 			if needsActivation == true {
