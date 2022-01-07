@@ -448,3 +448,16 @@ There are two `UIScrollView` subclasses that participate in AutoLayout and becom
 - `horizontallyScrollable()` embeds the view in a vertical scrollview that becomes scrollable when needed
 
 These functions both have parameters for the opposing axis and also both have **static** variants, for easy composing.
+
+### FixedFrameLayoutGuide
+
+A helper `UILayoutGuide` that has a fixed frame in its owning view. Useful to combine AutoLayout and manual calculations.
+
+Example:
+
+	let layoutGuide = FixedFrameLayoutGuide()
+	view.addLayoutGuide(layoutGuide)
+	
+	otherView.addSubview(label, pinnedTo: .center, of: .guide(layoutGuide))
+	
+	layoutGuide.frame = CGRect(x: 100, y: 50, width: 100, height: 30)
