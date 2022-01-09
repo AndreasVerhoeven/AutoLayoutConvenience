@@ -188,25 +188,28 @@ extension UIView {
 	///
 	/// - Parameters:
 	///		- views: the views to stack horizontally
+	///		- in: the vertical boundaries for the outermost views
 	///		- horizontally: **optional** how to fill the horizontal space. Defaults to `fill`
 	///		- insets: **optional** the insets to apply from superview
 	///		- spacing: **optional** the spacing between the views
-	func addSubviewsVertically(_ views: [UIView],
-							   horizontally: ConstrainedHorizontalLayout = .default,
-							   insets: NSDirectionalEdgeInsets = Default.insets,
-							   spacing: CGFloat = Default.spacing) {
+	public func addSubviewsVertically(_ views: [UIView],
+									  in vertically: VerticalAxisLayout = .default,
+									  horizontally: ConstrainedHorizontalLayout = .default,
+									  insets: NSDirectionalEdgeInsets = Default.insets,
+									  spacing: CGFloat = Default.spacing) {
+		let actualHorizontally = horizontally.resolve(vertically)
 		if views.count == 1 {
-			addSubview(views[0], pinningTopTo: .top, bottomTo: .bottom, horizontally: horizontally, insets: insets)
+			addSubview(views[0], pinningTopTo: .top, of: vertically.top.yAxis, bottomTo: .bottom, of: vertically.bottom.yAxis, horizontally: actualHorizontally, insets: insets)
 		} else if views.count == 2 {
-			addSubview(views[0], pinnedTo: .top, horizontally: horizontally, insets: insets)
-			addSubview(views[1], fillingRemainingSpaceBelow: views[0], horizontally: horizontally, insets: insets.with(top: spacing), spacing: 0)
+			addSubview(views[0], pinnedTo: .top, of: vertically.top.yAxis, horizontally: actualHorizontally, insets: insets)
+			addSubview(views[1], fillingRemainingSpaceBelow: views[0], in: vertically.bottom.yAxis, horizontally: actualHorizontally, insets: insets.with(top: spacing), spacing: 0)
 		} else if views.count > 0 {
 			
-			addSubview(views[0], pinnedTo: .top, horizontally: horizontally, insets: insets)
+			addSubview(views[0], pinnedTo: .top, of: vertically.top.yAxis, horizontally: actualHorizontally, insets: insets)
 			for index in 1..<views.count - 1 {
-				addSubview(views[index], pinningBelow: views[index-1], horizontally: horizontally, insets: insets.with(vertical: 0), spacing: spacing)
+				addSubview(views[index], pinningBelow: views[index-1], horizontally: actualHorizontally, insets: insets.with(vertical: 0), spacing: spacing)
 			}
-			addSubview(views[views.count - 1], fillingRemainingSpaceBelow: views[views.count - 2], horizontally: horizontally, insets: insets.with(top: spacing), spacing: 0)
+			addSubview(views[views.count - 1], fillingRemainingSpaceBelow: views[views.count - 2], in: vertically.bottom.yAxis, horizontally: actualHorizontally, insets: insets.with(top: spacing), spacing: 0)
 		}
 	}
 	
@@ -214,14 +217,16 @@ extension UIView {
 	///
 	/// - Parameters:
 	///		- views: the views to stack horizontally
+	///		- in: the vertical boundaries for the outermost views
 	///		- horizontally: **optional** how to fill the horizontal space. Defaults to `fill`
 	///		- insets: **optional** the insets to apply from superview
 	///		- spacing: **optional** the spacing between the views
-	func addSubviewsVertically(_ views: UIView...,
-							   horizontally: ConstrainedHorizontalLayout = .default,
-							   insets: NSDirectionalEdgeInsets = Default.insets,
-							   spacing: CGFloat = Default.spacing) {
-		addSubviewsVertically(views, horizontally: horizontally, insets: insets, spacing: spacing)
+	public func addSubviewsVertically(_ views: UIView...,
+									  in vertically: VerticalAxisLayout = .default,
+									  horizontally: ConstrainedHorizontalLayout = .default,
+									  insets: NSDirectionalEdgeInsets = Default.insets,
+									  spacing: CGFloat = Default.spacing) {
+		addSubviewsVertically(views, in: vertically, horizontally: horizontally, insets: insets, spacing: spacing)
 	}
 
 	/// Constrains self` pinning `edge` `to` another edge in `other`

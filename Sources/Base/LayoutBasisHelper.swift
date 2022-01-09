@@ -289,6 +289,16 @@ extension LayoutAnchorable {
 			case .keyboardFrameOf(let view): return view.keyboardFrameLayoutGuide
 		}
 	}
+	
+	/// converts this layout  anchorable to a YAxisLayout
+	internal var yAxis: YAxisLayout {
+		return YAxisLayout(y: self)
+	}
+	
+	/// converts this layout  anchorable to a XAxisLayout
+	internal var xAxis: XAxisLayout {
+		return XAxisLayout(x: self)
+	}
 }
 
 // Mark: - LayoutAnchorable Helpers
@@ -416,6 +426,23 @@ public extension ConstrainedLayout where FillLayout == HorizontalAxisLayout {
 	}
 }
 
+extension ConstrainedLayout where FillLayout == HorizontalAxisLayout, MainAxisLayout == XAxisLayout {
+	fileprivate var resolved: Self {
+		guard isDefault == true else { return self }
+		return UIView.Default.Resolved.constrainedHorizontalLayout
+	}
+	
+	internal func resolve(_ vertically: VerticalAxisLayout) -> Self {
+		let value = resolved
+		guard value.isSpecific == false else { return self }
+		if vertically.top == vertically.bottom {
+			return value.makeSpecific(HorizontalAxisLayout(vertically.top))
+		} else {
+			return .filling(.superview)
+		}
+	}
+}
+
 public extension ConstrainedLayout where FillLayout == VerticalAxisLayout {
 	/// Align to the top edge
 	static var top: Self {
@@ -461,7 +488,18 @@ extension ConstrainedLayout {
 	internal var isPassThru: Bool {
 		return (isDefault == true || isAttached == true)
 	}
-
+	
+	internal var isSpecific: Bool {
+		switch operation {
+			case .default, .none: return false
+			case .attached: return false
+			case .fill(let other): return other != nil
+			case .center(let other): return other != nil
+			case .start(let other): return other != nil
+			case .end(let other): return other != nil
+		}
+	}
+	
 	internal static func usableFillLayout(for layout: FillLayout?, others: [SingleAxisLayout], view: UIView?) -> FillLayout {
 		if let layout = layout {
 			return layout
@@ -479,6 +517,53 @@ extension ConstrainedLayout {
 			return MainAxisLayout(other.axis.retargeted(to: view))
 		} else {
 			return .default
+		}
+	}
+}
+
+fileprivate protocol SingleAxisSegmentLayout: BaseLayout {
+	var start: LayoutAnchorable { get }
+	var end: LayoutAnchorable { get }
+}
+
+extension HorizontalAxisLayout: SingleAxisSegmentLayout {
+	fileprivate var start: LayoutAnchorable { leading }
+	fileprivate var end: LayoutAnchorable { trailing }
+}
+
+extension VerticalAxisLayout: SingleAxisSegmentLayout {
+	fileprivate var start: LayoutAnchorable { top }
+	fileprivate var end: LayoutAnchorable { bottom }
+}
+
+extension ConstrainedLayout where FillLayout: SingleAxisSegmentLayout {
+	fileprivate func makeSpecific(_ other: FillLayout) -> Self {
+		guard isSpecific == false else { return self }
+		switch operation {
+			case .default, .none: return self
+			case .attached: return self
+			case .fill: return .filling(other)
+			case .center: return .centered(in: MainAxisLayout(other.start), between: other)
+			case .start: return Self(.start(other))
+			case .end: return Self(.end(other))
+		}
+	}
+}
+
+
+extension ConstrainedLayout where FillLayout == VerticalAxisLayout, MainAxisLayout == YAxisLayout {
+	fileprivate var resolved: Self {
+		guard isDefault == true else { return self }
+		return UIView.Default.Resolved.constrainedVerticalLayout
+	}
+	
+	internal func resolve(_ horizontally: HorizontalAxisLayout) -> Self {
+		let value = resolved
+		guard value.isSpecific == false else { return self }
+		if horizontally.leading == horizontally.trailing {
+			return value.makeSpecific(VerticalAxisLayout(horizontally.leading))
+		} else {
+			return .filling(.superview)
 		}
 	}
 }
@@ -562,4 +647,3 @@ extension VerticalLayoutEdge {
 		}
 	}
 }
-

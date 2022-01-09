@@ -62,7 +62,7 @@ extension UILayoutGuide: LayoutAnchorsProvider {}
 /// A `LayoutAnchorable` defines to what a layout
 /// operation is anchored and can be asked for an appropriate
 /// `LayoutAnchorsProvider`
-public enum LayoutAnchorable {
+public enum LayoutAnchorable: Equatable {
 	/// Not anchored to anything, essentially a no-op
 	case none
 
