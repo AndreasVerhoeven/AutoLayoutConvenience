@@ -267,6 +267,9 @@ There's also a helper to pin a bunch of views to the superview and each other, m
 	// the views will be centered
 	addSubviewsVertically(viewA, viewB, viewC, viewD, horizontally: .center, insets: .all(40), spacing: 8)
 	
+	// same, but the views are now pinned to the safeArea instead of the superview and no insets or spacing
+	addSubviewsVertically(viewA, viewB, viewC, viewD, in: .safeArea)
+	
 	// same, but the views are stacked horizontally
 	addSubviewsHorizontally(viewA, viewB, viewC, viewD, vertically: .center, insets: .all(40), spacing: 8)
 
