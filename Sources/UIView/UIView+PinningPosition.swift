@@ -47,7 +47,7 @@ extension UIView {
 		return addSubviewForAutoLayout(subview).constrain(pinnedAt: rect, in: other)
 	}
 
-	/// Adds a `subview` by pinning to an exact `poiny` `to` in `other`
+	/// Adds a `subview` by pinning to an exact `point` `to` in `other`
 	///
 	///  - Parameters:
 	///		- subview: the subview to add and pin
@@ -57,6 +57,19 @@ extension UIView {
 	/// - Returns: A `ConstraintsList` with the created constraints
 	@discardableResult public func addSubview(_ subview: UIView, pinnedAt point: CGPoint, in other: BoxLayout = .default) -> ConstraintsList {
 		return addSubviewForAutoLayout(subview).constrain(pinnedAt: point, in: other)
+	}
+	
+	/// Adds a `subview` by pinning to an exact `point` `to` in `other`
+	///
+	///  - Parameters:
+	///		- subview: the subview to add and pin
+	///		- position: the point to pin, e.g. `topLeading` or `topCenter`
+	///		- point: the exact point to pin to
+	///		- in: the point in `other` to pin to
+	///
+	/// - Returns: A `ConstraintsList` with the created constraints
+	@discardableResult public func addSubview(_ subview: UIView, pinning position: LayoutPosition, at point: CGPoint, in other: BoxLayout = .default) -> ConstraintsList {
+		return addSubviewForAutoLayout(subview).constrain(pinning: position, at: point, in: other)
 	}
 
 	/// Constraints a `subview` by pinning a `position` in `self` `to` another position in `other`
@@ -103,6 +116,20 @@ extension UIView {
 		return ConstraintsList.activate([
 			other.leading.layoutAnchorsProvider(in: superview)?.leadingAnchor.anchorWithOffset(to: leadingAnchor).constraint(equalToConstant: point.x),
 			other.top.layoutAnchorsProvider(in: superview)?.topAnchor.anchorWithOffset(to: topAnchor).constraint(equalToConstant: point.y),
+		])
+	}
+	
+	/// Constrains a `subview` by pinning it to a exact `point` in `other`
+	///  - Parameters:
+	///		- subview: the subview to pin
+	///		- point: the exact point to pin to
+	///		- in: the point in `other` to pin to
+	///
+	/// - Returns: A `ConstraintsList` with the created constraints
+	@discardableResult public func constrain(pinning position: LayoutPosition, at point: CGPoint, in other: BoxLayout = .default) -> ConstraintsList {
+		return ConstraintsList.activate([
+			position.xAnchor(for: self)?.anchorWithOffset(to: leadingAnchor).constraint(equalToConstant: point.x),
+			position.yAnchor(for: self)?.anchorWithOffset(to: topAnchor).constraint(equalToConstant: point.y),
 		])
 	}
 }

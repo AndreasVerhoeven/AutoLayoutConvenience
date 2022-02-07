@@ -572,7 +572,7 @@ extension ConstrainedLayout where FillLayout == VerticalAxisLayout, MainAxisLayo
 extension LayoutPosition {
 
 	/// Gets the appropriate vertical layout anchor for this position
-	internal func xAnchor(for provider: LayoutAnchorsProvider?) -> NSLayoutYAxisAnchor? {
+	internal func yAnchor(for provider: LayoutAnchorsProvider?) -> NSLayoutYAxisAnchor? {
 		switch self {
 			case .topLeading, .topCenter, .topTrailing: return provider?.topAnchor
 			case .leadingCenter, .center, .trailingCenter: return provider?.centerYAnchor
@@ -581,7 +581,7 @@ extension LayoutPosition {
 	}
 
 	/// Gets the appropriate horizontal layout anchor for this position
-	internal func yAnchor(for provider: LayoutAnchorsProvider?) -> NSLayoutXAxisAnchor? {
+	internal func xAnchor(for provider: LayoutAnchorsProvider?) -> NSLayoutXAxisAnchor? {
 		switch self {
 			case .topLeading, .leadingCenter, .bottomLeading: return provider?.leadingAnchor
 			case .topCenter,  .center, .bottomCenter: return provider?.centerXAnchor
