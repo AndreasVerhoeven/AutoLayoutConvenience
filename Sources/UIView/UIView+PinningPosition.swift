@@ -128,8 +128,8 @@ extension UIView {
 	/// - Returns: A `ConstraintsList` with the created constraints
 	@discardableResult public func constrain(pinning position: LayoutPosition, at point: CGPoint, in other: BoxLayout = .default) -> ConstraintsList {
 		return ConstraintsList.activate([
-			position.xAnchor(for: self)?.anchorWithOffset(to: leadingAnchor).constraint(equalToConstant: point.x),
-			position.yAnchor(for: self)?.anchorWithOffset(to: topAnchor).constraint(equalToConstant: point.y),
+			position.xAnchor(for: self).flatMap { other.leading.layoutAnchorsProvider(in: superview)?.leadingAnchor.anchorWithOffset(to: $0).constraint(equalToConstant: point.x) },
+			position.yAnchor(for: self).flatMap { other.top.layoutAnchorsProvider(in: superview)?.topAnchor.anchorWithOffset(to: $0).constraint(equalToConstant: point.y) },
 		])
 	}
 }
