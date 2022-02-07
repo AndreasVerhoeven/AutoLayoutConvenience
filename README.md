@@ -356,6 +356,20 @@ Examples:
 	/// removing existing size constraints and setting a new size constraint
 	view.removeSizeConstraints().constrain(size: CGSize(width: 100, height: 100))
 	
+	
+### Constraining to other layouts
+
+   Examples of constraining width/height:
+	addSubview(otherView, centeredIn: .superview)
+	addSubview(view, pinnedTo: .topCenter)
+	
+	// Note that this must be called after the view has been added to the hierarchy already,
+	// since it creates cross-view constraints.
+	view.constrain(width: .exactly(.relative(otherView)), height: .atLeast(.safeAreaOf(otherView))
+	
+	// short hand for constraining to views directly
+	view.constrain(width: .exactly(as: otherView), height: .atLeast(halfOf: otherView))
+	
 
 Examples of constraining aspect ratio:
 	

@@ -15,6 +15,7 @@ public protocol BaseLayout {
 
 public protocol SingleAxisLayout: BaseLayout {
 	var axis: LayoutAnchorable { get }
+	static func layoutDimension(in layoutAnchorsProvider: LayoutAnchorsProvider) -> NSLayoutDimension
 }
 
 // MARK: - BaseLayout Factory methods
@@ -177,12 +178,20 @@ extension XAxisLayout: SingleAxisLayout {
 	public static func x(_ x: LayoutAnchorable) -> Self {
 		return Self(x: x)
 	}
+	
+	public static func layoutDimension(in layoutAnchorsProvider: LayoutAnchorsProvider) -> NSLayoutDimension {
+		return layoutAnchorsProvider.widthAnchor
+	}
 }
 
 extension YAxisLayout: SingleAxisLayout {
 	/// Creates a layout for a specific y anchorable
 	public static func y(_ y: LayoutAnchorable) -> Self {
 		return Self(y: y)
+	}
+	
+	public static func layoutDimension(in layoutAnchorsProvider: LayoutAnchorsProvider) -> NSLayoutDimension {
+		return layoutAnchorsProvider.heightAnchor
 	}
 }
 
