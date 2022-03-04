@@ -73,7 +73,11 @@ public class VerticalOverflowScrollView: UIScrollView {
 
 		keyboardTracker.perform {
 			self.contentInset.bottom = newBottomInset
-			self.verticalScrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: newBottomInset, right: 0)
+			if #available(iOS 11.1, *) {
+				self.verticalScrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: newBottomInset, right: 0)
+			} else {
+				self.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: newBottomInset, right: 0)
+			}
 			guard forceLayout == true else { return }
 			self.setNeedsLayout()
 			self.layoutIfNeeded()

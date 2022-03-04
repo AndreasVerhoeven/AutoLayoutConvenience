@@ -58,7 +58,7 @@ extension SizeConstrain where T: SingleAxisLayout {
 	
 	/// Makes the view at most the same dimension as another view. Convenience for `atLeast(.relative(view))`
 	/// Note that the layout that is being referenced should already be in the same view hierarchy.
-	public static func atLeast(SameAs view: UIView, priority: UILayoutPriority = .required, multiplier: CGFloat = 1, constant: CGFloat = 0) -> Self {
+	public static func atLeast(sameAs view: UIView, priority: UILayoutPriority = .required, multiplier: CGFloat = 1, constant: CGFloat = 0) -> Self {
 		return atLeast(.relative(view), priority: priority, multiplier: multiplier, constant: constant)
 	}
 	
