@@ -67,6 +67,7 @@ public class AutoSizingTableHeaderFooterView: UIView {
 				tableView.tableFooterView = self
 			}
 			tableView.layoutIfNeeded()
+			tableView.setNeedsLayout()
 		}
 		
 		if automaticallyAnimateChanges == true || bounds.height == 0 {
