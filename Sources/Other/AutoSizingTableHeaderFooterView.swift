@@ -30,7 +30,7 @@ public class AutoSizingTableHeaderFooterView: UIView {
 		
 		stackView.callback = { [weak self] in self?.updateHeaderView() }
 		stackView.addArrangedSubview(view)
-		wrapperView.addSubview(stackView, aligningVerticallyTo: .center, horizontallyTo: .fill)
+		wrapperView.addSubview(stackView, filling: .superview) //aligningVerticallyTo: .center, horizontallyTo: .fill)
 	}
 	
 	@available(*, unavailable)
