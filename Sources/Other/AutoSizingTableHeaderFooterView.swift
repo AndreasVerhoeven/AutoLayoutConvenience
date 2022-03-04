@@ -28,6 +28,10 @@ public class AutoSizingTableHeaderFooterView: UIView {
 		self.view = view
 		super.init(frame: .zero)
 		
+		view.preservesSuperviewLayoutMargins = true
+		wrapperView.preservesSuperviewLayoutMargins = true
+		stackView.preservesSuperviewLayoutMargins = true
+		
 		stackView.callback = { [weak self] in self?.updateHeaderView() }
 		stackView.addArrangedSubview(view)
 		wrapperView.addSubview(stackView, filling: .superview) //aligningVerticallyTo: .center, horizontallyTo: .fill)
