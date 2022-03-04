@@ -28,6 +28,7 @@ public class AutoSizingTableHeaderFooterView: UIView {
 		self.view = view
 		super.init(frame: .zero)
 		
+		preservesSuperviewLayoutMargins = true
 		view.preservesSuperviewLayoutMargins = true
 		wrapperView.preservesSuperviewLayoutMargins = true
 		stackView.preservesSuperviewLayoutMargins = true
