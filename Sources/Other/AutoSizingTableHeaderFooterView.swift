@@ -96,7 +96,6 @@ extension AutoSizingTableHeaderFooterView {
 		
 		override func layoutSubviews() {
 			super.layoutSubviews()
-			print(#function)
 			callback?()
 		}
 	}
