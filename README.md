@@ -478,3 +478,30 @@ Example:
 	otherView.addSubview(label, pinnedTo: .center, of: .guide(layoutGuide))
 	
 	layoutGuide.frame = CGRect(x: 100, y: 50, width: 100, height: 30)
+
+
+### AutoSizingTableHeaderFooterView
+
+UITableView's `tableHeaderView` and `tableFooterView` don't work nicely with AutoLayout: you need to pre-size these views before assigning them, and then keeping track of changes and re-assign the views to update its size in the table view. Another issue is that you need to manually size them when the table view change size, for example on rotation.
+
+There's a helper class you can use to have auto sizing `tableHeaderView`'s and `tableFooterView`s with UITableView. Use `AutoSizingTableHeaderFooterView(view:)` as a header or footer and it will automatically update the view when the intrinsic contentSize changes, with animation (which can be disabled).
+
+There are helpers on UITableView to easily set this as well.
+
+Examples:
+
+	// the tableHeaderView will automatically be updated to the correct size when myAutoLayoutHeaderView
+	// changes its size, with animation. 
+	tableView.tableHeaderView = AutoSizingTableHeaderFooterView(view: myAutoLayoutHeaderView)
+	DispatchQueue.main.asyncAfter(deadline: .now() + 1} { myAutoLayoutHeaderView.somethingThatUpdatesTheContentHeightOfThisView()  }
+	
+	// this is a shortcut for  tableHeaderView = AutoSizingTableHeaderFooterView(view: view)
+	tableView.autosizingTableHeaderView = myAutoLayoutHeaderView
+	
+	// you can also disable animations on size updates
+	let headerView = AutoSizingTableHeaderFooterView(view: myAutoLayoutHeaderView)
+	headerView.automaticallyAnimateChanges = false
+	tableView.tableHeaderView = headerView
+	
+	// And of course, all of these methods have a footer view equivalent:
+	tableView.autosizingTableFooterView = myAutoLayoutFooterView
