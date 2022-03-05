@@ -37,7 +37,7 @@ public class AutoSizingTableHeaderFooterView: UIView {
 		
 		stackView.callback = { [weak self] in self?.updateHeaderView() }
 		stackView.addArrangedSubview(view)
-		wrapperView.addSubview(stackView, filling: .superview) //aligningVerticallyTo: .center, horizontallyTo: .fill)
+		wrapperView.addSubview(stackView, filling: .superview)
 	}
 	
 	@available(*, unavailable)
@@ -92,15 +92,14 @@ public class AutoSizingTableHeaderFooterView: UIView {
 		super.layoutSubviews()
 		
 		// Only add the wrapper view in layoutSubviews(), so that we don't generate AutoLayout warnings
-		var justAdded = false
-		if wrapperView.superview == nil {
-			justAdded = true
+		let notYetAdded = (wrapperView.superview == nil)
+		if notYetAdded == true {
 			addSubview(wrapperView)
 		}
 		
 		wrapperView.frame = CGRect(origin: .zero, size: bounds.size)
 		
-		if justAdded == true {
+		if notYetAdded == true {
 			updateHeaderView()
 		}
 	}
