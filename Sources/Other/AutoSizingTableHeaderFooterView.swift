@@ -57,6 +57,7 @@ public class AutoSizingTableHeaderFooterView: UIView {
 		guard wantedSize.height != bounds.height else { return }
 		
 		isInUpdateHeaderViewCount += 1
+		guard isInUpdateHeaderViewCount == 1 else { return }
 		
 		let updates = {
 			// update our frame
