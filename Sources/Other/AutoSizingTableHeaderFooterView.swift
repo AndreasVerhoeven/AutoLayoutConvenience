@@ -57,7 +57,6 @@ public class AutoSizingTableHeaderFooterView: UIView {
 		guard wantedSize.height != bounds.height else { return }
 		
 		isInUpdateHeaderViewCount += 1
-		guard isInUpdateHeaderViewCount == 1 else { return }
 		
 		let updates = {
 			// update our frame
@@ -98,10 +97,7 @@ public class AutoSizingTableHeaderFooterView: UIView {
 		}
 		
 		wrapperView.frame = CGRect(origin: .zero, size: bounds.size)
-		
-		if notYetAdded == true {
-			updateHeaderView()
-		}
+		updateHeaderView()
 	}
 }
 
