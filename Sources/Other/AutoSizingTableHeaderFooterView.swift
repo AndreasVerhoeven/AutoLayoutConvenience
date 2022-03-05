@@ -72,7 +72,9 @@ public class AutoSizingTableHeaderFooterView: UIView {
 		}
 		
 		if automaticallyAnimateChanges == false || bounds.height == 0 || isInitialLayoutCycle == true {
-			isInitialLayoutCycle = false
+			if bounds.height > 0 {
+				isInitialLayoutCycle = false
+			}
 			updates()
 		} else {
 			UIView.animate(withDuration: 1, delay: 0, options: [.allowUserInteraction, .allowAnimatedContent, .beginFromCurrentState], animations: updates)
