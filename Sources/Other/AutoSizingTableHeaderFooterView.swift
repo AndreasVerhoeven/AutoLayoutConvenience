@@ -20,6 +20,7 @@ public class AutoSizingTableHeaderFooterView: UIView {
 	/// The stack view caches intrinsicContentsize changes in the view and will notify us so we can update our size
 	private let stackView = CallbackStackView(axis: .horizontal, alignment: .top, distribution: .fill)
 	private var isInitialLayoutCycle = true
+	private var isInUpdateHeaderViewCount = 0
 	
 	/// This view stops AutoLayout messages from bubbling up to parent views
 	private let wrapperView = UIView()
@@ -55,6 +56,9 @@ public class AutoSizingTableHeaderFooterView: UIView {
 		let wantedSize = view.systemLayoutSizeFitting(CGSize(width: width, height: UIView.layoutFittingCompressedSize.height), withHorizontalFittingPriority: .required, verticalFittingPriority: .defaultLow)
 		guard wantedSize.height != bounds.height else { return }
 		
+		guard isInUpdateHeaderViewCount == 0 else { return }
+		isInUpdateHeaderViewCount += 1
+		
 		let updates = {
 			// update our frame
 			self.frame = CGRect(origin: .zero, size: CGSize(width: width, height: wantedSize.height))
@@ -79,6 +83,8 @@ public class AutoSizingTableHeaderFooterView: UIView {
 		} else {
 			UIView.animate(withDuration: 1, delay: 0, options: [.allowUserInteraction, .allowAnimatedContent, .beginFromCurrentState], animations: updates)
 		}
+		
+		isInUpdateHeaderViewCount -= 1
 	}
 	
 	// MARK: - UIView
