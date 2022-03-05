@@ -56,7 +56,6 @@ public class AutoSizingTableHeaderFooterView: UIView {
 		let wantedSize = view.systemLayoutSizeFitting(CGSize(width: width, height: UIView.layoutFittingCompressedSize.height), withHorizontalFittingPriority: .required, verticalFittingPriority: .defaultLow)
 		guard wantedSize.height != bounds.height else { return }
 		
-		guard isInUpdateHeaderViewCount == 0 else { return }
 		isInUpdateHeaderViewCount += 1
 		
 		let updates = {
@@ -75,7 +74,7 @@ public class AutoSizingTableHeaderFooterView: UIView {
 			tableView.setNeedsLayout()
 		}
 		
-		if automaticallyAnimateChanges == false || bounds.height == 0 || isInitialLayoutCycle == true {
+		if automaticallyAnimateChanges == false || bounds.height == 0 || isInitialLayoutCycle == true || isInUpdateHeaderViewCount > 1 {
 			if bounds.height > 0 {
 				isInitialLayoutCycle = false
 			}
