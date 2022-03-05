@@ -92,12 +92,17 @@ public class AutoSizingTableHeaderFooterView: UIView {
 		super.layoutSubviews()
 		
 		// Only add the wrapper view in layoutSubviews(), so that we don't generate AutoLayout warnings
+		var justAdded = false
 		if wrapperView.superview == nil {
+			justAdded = true
 			addSubview(wrapperView)
 		}
 		
 		wrapperView.frame = CGRect(origin: .zero, size: bounds.size)
-		updateHeaderView()
+		
+		if justAdded == true {
+			updateHeaderView()
+		}
 	}
 }
 
