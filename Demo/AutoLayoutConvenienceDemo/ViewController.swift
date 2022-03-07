@@ -29,5 +29,7 @@ class ViewController: UIViewController {
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		view.firstScrollableView?.flashScrollIndicators()
+		
+		present(T(style: .insetGrouped), animated: true)
 	}
 }

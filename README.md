@@ -493,10 +493,10 @@ Examples:
 	// the tableHeaderView will automatically be updated to the correct size when myAutoLayoutHeaderView
 	// changes its size, with animation. 
 	tableView.tableHeaderView = AutoSizingTableHeaderFooterView(view: myAutoLayoutHeaderView)
-	DispatchQueue.main.asyncAfter(deadline: .now() + 1} { myAutoLayoutHeaderView.somethingThatUpdatesTheContentHeightOfThisView()  }
+	DispatchQueue.main.asyncAfter(deadline: .now() + 1) { myAutoLayoutHeaderView.somethingThatUpdatesTheContentHeightOfThisView()  }
 	
 	// this is a shortcut for  tableHeaderView = AutoSizingTableHeaderFooterView(view: view)
-	tableView.autosizingTableHeaderView = myAutoLayoutHeaderView
+	tableView.selfSizingTableHeaderView = myAutoLayoutHeaderView
 	
 	// you can also disable animations on size updates
 	let headerView = AutoSizingTableHeaderFooterView(view: myAutoLayoutHeaderView)
@@ -504,4 +504,17 @@ Examples:
 	tableView.tableHeaderView = headerView
 	
 	// And of course, all of these methods have a footer view equivalent:
-	tableView.autosizingTableFooterView = myAutoLayoutFooterView
+	tableView.selfSizingTableFooterView = myAutoLayoutFooterView
+
+
+	// if you have a view that uses manual layout, you can use 
+	// `manualLayoutAutoSizingTableHeaderView` to have it size automatically.
+	// You need to call the update() method or invalidate the intrinsic content size
+	// to update changes.
+	let manualLayoutView = MyManualLayoutViewImplementingSizeThatFits()
+	tableView.manualLayoutAutoSizingTableHeaderView = manualLayoutView
+	DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+		manualLayoutAutoSizingTableHeaderView.somethingThatUpdatesTheContentHeightOfThisView()
+		tableView.updateAutoSizingTableHeader()
+	}
+}
