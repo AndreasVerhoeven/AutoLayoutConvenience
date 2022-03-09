@@ -16,7 +16,7 @@ class ViewController: UIViewController {
 			demoView.setSubTitleAnimated(String(repeating: demoView.subLabel.text ?? "", count: 2))
 		}), for: .touchUpInside)
 		demoView.cancelButton.addAction(UIAction(handler: { _ in
-			demoView.setSubTitleAnimated(String(repeating: "Sub label with a lot of text. ", count: 10))
+			demoView.setSubTitleAnimated(String(repeating: "Sub label with a lot of text. ", count: 10))r
 		}), for: .touchUpInside)
 		demoView.textField.addAction(UIAction(handler: { _ in
 			demoView.endEditing(true)
@@ -29,7 +29,5 @@ class ViewController: UIViewController {
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		view.firstScrollableView?.flashScrollIndicators()
-		
-		present(T(style: .insetGrouped), animated: true)
 	}
 }
