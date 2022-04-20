@@ -56,17 +56,34 @@ public class AutoSizingTableHeaderFooterView: UIView {
 		self.usesAutoLayout = false
 	}
 	
+	/// presizes this view in a given table view.
+	func presized(in tableView: UITableView) -> Self {
+		
+		// temporarily add to the table view so we have the right insets / margins
+		let shouldAddToTableViewTemporarily = (superview == nil)
+		if shouldAddToTableViewTemporarily == true {
+			tableView.addSubview(self)
+		}
+		
+		let wantedSize = wantedSize(for: tableView.bounds.width, usesFallbackWidth: true)
+		
+		// remove from the tableview if we temporarily added it
+		if shouldAddToTableViewTemporarily == true {
+			self.removeFromSuperview()
+		}
+		
+		applyNewSize(wantedSize)
+		return self
+	}
+	
 	@available(*, unavailable)
 	public required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 	
 	// MARK: - Privates
-	private func updateLayoutFrame() {
-		guard let tableView = superview as? UITableView else { return }
-		guard tableView.tableHeaderView == self || tableView.tableFooterView == self else { return }
-		let width = tableView.bounds.width
-		guard width > 0 else { return }
+	private func wantedSize(for tableViewWidth: CGFloat, usesFallbackWidth: Bool) -> CGSize {
+		let width = tableViewWidth == 0 && usesFallbackWidth == true ? UIScreen.main.bounds.width : tableViewWidth
 		
 		// figure out the size of our view and make sure the height matches
 		let wantedSize: CGSize
@@ -75,26 +92,40 @@ public class AutoSizingTableHeaderFooterView: UIView {
 		} else {
 			wantedSize = view.sizeThatFits(CGSize(width: width, height: .greatestFiniteMagnitude))
 		}
-		guard wantedSize.height != bounds.height else { return }
+		return CGSize(width: width, height: wantedSize.height)
+	}
+	
+	private func applyNewSize(_ size: CGSize) {
+		let newFrame = CGRect(origin: .zero, size: size)
 		
+		if self.usesAutoLayout == false {
+			// when not using auto layout, we use a height constraint to force the view to have at least a height, otherwise
+			// its height will be 0 in the AutoLayout world.
+			self.view.frame = newFrame
+			let constraint = self.manualLayoutHeightConstraint ?? self.view.heightAnchor.constraint(equalToConstant: size.height)
+			self.manualLayoutHeightConstraint = constraint
+			constraint.constant = size.height
+			constraint.isActive = true
+		}
+		
+		self.wrapperView.frame = newFrame
+		self.frame = newFrame
+	}
+	
+	private func updateLayoutFrame() {
+		guard let tableView = superview as? UITableView else { return }
+		guard tableView.tableHeaderView == self || tableView.tableFooterView == self else { return }
+		let width = tableView.bounds.width
+		guard width > 0 else { return }
+		
+		// figure out the size of our view and make sure the height matches
+		let wantedSize = wantedSize(for: width, usesFallbackWidth: false)
+		guard wantedSize.height != bounds.height else { return }
 		isInUpdateHeaderViewCount += 1
 		
 		let updates = {
-			// update our frame
-			let newFrame = CGRect(origin: .zero, size: CGSize(width: width, height: wantedSize.height))
-			
-			if self.usesAutoLayout == false {
-				// when not using auto layout, we use a height constraint to force the view to have at least a height, otherwise
-				// its height will be 0 in the AutoLayout world.
-				self.view.frame = newFrame
-				let constraint = self.manualLayoutHeightConstraint ?? self.view.heightAnchor.constraint(equalToConstant: wantedSize.height)
-				self.manualLayoutHeightConstraint = constraint
-				constraint.constant = wantedSize.height
-				constraint.isActive = true
-			}
-			
-			self.wrapperView.frame = newFrame
-			self.frame = newFrame
+			self.applyNewSize(wantedSize)
+			// force re-layout for animation purposes
 			self.layoutSubviews()
 			self.stackView.layoutIfNeeded()
 			
@@ -167,7 +198,7 @@ extension UITableView {
 	/// Or invalidate the `intrinsicContentSize` of the view.
 	public var manualLayoutAutoSizingTableHeaderView: UIView? {
 		get { (tableHeaderView as? AutoSizingTableHeaderFooterView)?.view }
-		set { tableHeaderView = newValue.flatMap { AutoSizingTableHeaderFooterView(nonAutoLayoutView: $0) } ?? nil }
+		set { tableHeaderView = newValue.flatMap { AutoSizingTableHeaderFooterView(nonAutoLayoutView: $0).presized(in: self) } ?? nil }
 	}
 	
 	/// sets a `tableFooterView` wrapped in an `AutoSizingTableHeaderFooterView`
@@ -176,7 +207,7 @@ extension UITableView {
 	/// Or invalidate the `intrinsicContentSize` of the view.
 	public var manualLayoutAutoSizingTableFooterView: UIView? {
 		get { (tableFooterView as? AutoSizingTableHeaderFooterView)?.view }
-		set { tableFooterView = newValue.flatMap { AutoSizingTableHeaderFooterView(nonAutoLayoutView: $0) } ?? nil }
+		set { tableFooterView = newValue.flatMap { AutoSizingTableHeaderFooterView(nonAutoLayoutView: $0).presized(in: self) } ?? nil }
 	}
 	
 	/// Makes the `tableHeaderView` update its layout if it's an auto-sizing one
