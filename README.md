@@ -227,7 +227,7 @@ Vertically, we can pin:
  - centerY
  - bottom
  
- ![Example of Pinning Horizontal Edges](https://user-images.githubusercontent.com/168214/164457428-34e8902c-aee5-4e95-9285-08097a73beb6.png)
+ ![Example of Pinning Vertical Edges](https://user-images.githubusercontent.com/168214/164457238-2bd65bde-229c-4a8c-b455-cd515b0cf220.png)
 
 Horizontally, we can pin:
 
@@ -235,7 +235,7 @@ Horizontally, we can pin:
  - centerX
  - trailing
  
- ![Example of Pinning Vertical Edges](https://user-images.githubusercontent.com/168214/164457238-2bd65bde-229c-4a8c-b455-cd515b0cf220.png)
+![Example of Pinning Horizontal Edges](https://user-images.githubusercontent.com/168214/164457428-34e8902c-aee5-4e95-9285-08097a73beb6.png)
 
 Pinning edges is done by specifying the edge (`YAxisLayout` or `XAxisLayout`) and takes an optional **spacing** and 
 **insets** parameter.  Furthermore, you can specify how the opposite axis is constrained:
