@@ -219,9 +219,9 @@ You can also pin a view to a constant rect or point, using:
 
 ### Pinning Edges
 
-Pinning edges is separated into **horizontal** and **vertical** variants, that pretty much mirror each other.
+Pinning edges is separated into **vertical** and **horizontal** variants, that pretty much mirror each other.
 
-Horizontally, we can pin:
+Vertically, we can pin:
 
  - top
  - centerY
@@ -229,7 +229,7 @@ Horizontally, we can pin:
  
  ![Example of Pinning Horizontal Edges](https://user-images.githubusercontent.com/168214/164457428-34e8902c-aee5-4e95-9285-08097a73beb6.png)
 
-Vertically, we can pin:
+Horizontally, we can pin:
 
  - leading
  - centerX
