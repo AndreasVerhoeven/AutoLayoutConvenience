@@ -135,6 +135,9 @@ Most helper functions in the library take insets. There are convenience helpers 
 
 ### Filling
 
+![Example of Filling](https://user-images.githubusercontent.com/168214/164456459-854d667d-1711-4d33-b2d9-3ce1f912b3af.png)
+
+
 Filling is done by specifying the 4 edges to constrain to (`BoxLayout`), with optionally insetting:
 
 	// Fills the insetted by 8pts safeArea of its superview
@@ -155,6 +158,8 @@ Filling is done by specifying the 4 edges to constrain to (`BoxLayout`), with op
 
 ### Centering
 
+![Example of Centering](https://user-images.githubusercontent.com/168214/164456670-91c9b2b8-b07b-40e3-90eb-6efc33cea1f5.png)
+
 Centering is done by specifying the x,y position (`PointLayout`) to center in, with optionally offsetting:
 
 	// Centers the subview in the layoutMargins of its superview, ofsetted by 4pt horizontally
@@ -165,6 +170,9 @@ Centering is done by specifying the x,y position (`PointLayout`) to center in, w
 
 
 ### Pinning Positions
+
+![Example of Pinning To Positions](https://user-images.githubusercontent.com/168214/164456835-dc52467c-f2fd-4902-9c28-717c85b2aa83.png)
+![Example of Pinning Positions](https://user-images.githubusercontent.com/168214/164456980-b3e37e38-2676-4b9d-bc9a-ba42534ff911.png)
 
 Pinning is done by specifying what to position to pin to:
 
@@ -191,6 +199,8 @@ Relative to a x,y position (`PointLayout`).  `pinnedTo:` pins the same position 
 
 ### Pinning to Constant Rects / Points
 
+![Example of Pinning To Rects and Points](https://user-images.githubusercontent.com/168214/164457088-876f20d6-0419-4e0f-9f44-c6971f818dca.png)
+
 You can also pin a view to a constant rect or point, using:
 
 
@@ -216,12 +226,16 @@ Horizontally, we can pin:
  - top
  - centerY
  - bottom
+ 
+ ![Example of Pinning Horizontal Edges](https://user-images.githubusercontent.com/168214/164457428-34e8902c-aee5-4e95-9285-08097a73beb6.png)
 
 Vertically, we can pin:
 
  - leading
  - centerX
  - trailing
+ 
+ ![Example of Pinning Vertical Edges](https://user-images.githubusercontent.com/168214/164457238-2bd65bde-229c-4a8c-b455-cd515b0cf220.png)
 
 Pinning edges is done by specifying the edge (`YAxisLayout` or `XAxisLayout`) and takes an optional **spacing** and 
 **insets** parameter.  Furthermore, you can specify how the opposite axis is constrained:
@@ -235,6 +249,8 @@ Pinning edges is done by specifying the edge (`YAxisLayout` or `XAxisLayout`) an
 - `attach` makes the view constrained to the view we are pinned to, instead of to its superview
 - `attached(Other)` makes the view constrained to another layout in the view we are pinned to, instead of to its superview
 
+
+![Example of Aligning Edges](https://user-images.githubusercontent.com/168214/164457600-0ff11145-13bc-4f7a-87ce-e58fb705bd0c.png)
 
 Examples:
 
