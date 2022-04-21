@@ -223,3 +223,32 @@ extension UIView {
 		return disallowVerticalGrowing().disallowHorizontalGrowing()
 	}
 }
+
+extension UIView {
+	/// Prefers this view to not grow or shrink horizontally
+	///
+	/// (sets  `contentCompressionResistance` and ` contentHuggingPriority` to `.required` for the horizontal axis)
+	///
+	/// - Returns: returns `self`, useful for chaining
+	@discardableResult public func prefersExactHorizontalSize() -> Self {
+		return disallowHorizontalGrowing().disallowHorizontalShrinking()
+	}
+	
+	/// Prefers this view to not grow or shrink vertically
+	///
+	/// (sets  `contentCompressionResistance` and ` contentHuggingPriority` to `.required` for the vertical axis)
+	///
+	/// - Returns: returns `self`, useful for chaining
+	@discardableResult public func prefersExactVerticalSize() -> Self {
+		return disallowVerticalGrowing().disallowVerticalShrinking()
+	}
+	
+	/// Prefers this view to not grow or shrink
+	///
+	/// (sets  `contentCompressionResistance` and ` contentHuggingPriority` to `.required` for both axis)
+	///
+	/// - Returns: returns `self`, useful for chaining
+	@discardableResult public func prefersExactSize() -> Self {
+		return prefersExactHorizontalSize().prefersExactVerticalSize()
+	}
+}

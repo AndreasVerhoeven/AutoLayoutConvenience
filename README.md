@@ -401,6 +401,11 @@ There are some chainable helpers for `setContentCompressionResistancePriority()`
 - `disallowHorizontalGrowing()` sets the horizontal hugging priority to `.required`
 - `disallowGrowing()` sets the hugging priority to `.required`
 
+#### Shrinking and Growing:
+- `prefersExactHorizontalSize()` sets the horizontal compression resistance and hugging priority to `.required`
+- `prefersExactVerticalSize()` sets the vertical compression resistance and hugging priority to `.required`
+- `prefersExactHorizontalSize()` sets the compression resistance and hugging priority to `.required` on both axis
+
 
 ### UIStackView
 
