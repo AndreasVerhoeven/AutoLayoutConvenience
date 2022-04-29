@@ -31,6 +31,11 @@ public class AutoAdjustingVerticalStackView: AutoHidingStackView {
 		super.traitCollectionDidChange(traitCollection)
 		updateForContentCategory()
 	}
+	
+	public override func didMoveToSuperview() {
+		super.didMoveToSuperview()
+		updateForContentCategory()
+	}
 
 	override public init(frame: CGRect) {
 		super.init(frame: frame)
