@@ -85,7 +85,7 @@ extension UIView {
 	@discardableResult public func constrain(pinning position: LayoutPosition, to: LayoutPosition, of other: PointLayout = .default, offset: CGPoint = .zero) -> ConstraintsList {
 		return ConstraintsList.activate([
 			to.xAnchor(for: other.x.layoutAnchorsProvider(in: superview)).flatMap({ position.xAnchor(for: self)?.constraint(equalTo: $0, constant: offset.x) }),
-			to.yAnchor(for: other.y.layoutAnchorsProvider(in: superview)).flatMap({ position.yAnchor(for: self)?.constraint(equalTo: $0, constant: offset.x) }),
+			to.yAnchor(for: other.y.layoutAnchorsProvider(in: superview)).flatMap({ position.yAnchor(for: self)?.constraint(equalTo: $0, constant: offset.y) }),
 		])
 	}
 
