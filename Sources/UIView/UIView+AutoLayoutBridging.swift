@@ -74,10 +74,10 @@ public class AutoLayoutBridgingView: UIView {
 	
 	public override var intrinsicContentSize: CGSize {
 		switch constrainedOnAxis {
-			case .horizontal:
+			case .vertical:
 				return sizeThatFits(CGSize(width: .greatestFiniteMagnitude, height: bounds.height))
 				
-			case .vertical:
+			case .horizontal:
 				fallthrough
 			@unknown default:
 				return sizeThatFits(CGSize(width: bounds.width, height: .greatestFiniteMagnitude))
