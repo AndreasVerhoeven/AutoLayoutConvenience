@@ -52,6 +52,7 @@
 		49CD6B7426397B340024C330 /* PlatterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CD6B7326397B340024C330 /* PlatterButton.swift */; };
 		49CD6C1D263A0C990024C330 /* MinimumHeightTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CD6C1B263A0C980024C330 /* MinimumHeightTableViewCell.swift */; };
 		49CD6C1E263A0C990024C330 /* NonAutoLayoutWrappingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CD6C1C263A0C990024C330 /* NonAutoLayoutWrappingView.swift */; };
+		49EC263C2822CC59000F8C4B /* UIView+AutoLayoutBridging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49EC263B2822CC59000F8C4B /* UIView+AutoLayoutBridging.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -102,6 +103,7 @@
 		49CD6B7326397B340024C330 /* PlatterButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatterButton.swift; sourceTree = "<group>"; };
 		49CD6C1B263A0C980024C330 /* MinimumHeightTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MinimumHeightTableViewCell.swift; sourceTree = "<group>"; };
 		49CD6C1C263A0C990024C330 /* NonAutoLayoutWrappingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NonAutoLayoutWrappingView.swift; sourceTree = "<group>"; };
+		49EC263B2822CC59000F8C4B /* UIView+AutoLayoutBridging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+AutoLayoutBridging.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -199,6 +201,7 @@
 				49CD6B41263972520024C330 /* UIView+PinningPosition.swift */,
 				49CD6B69263975CE0024C330 /* UIView+Scrollable.swift */,
 				49BE83E9265FA4DF001CEC2A /* UIView+ManualLayoutBridging.swift */,
+				49EC263B2822CC59000F8C4B /* UIView+AutoLayoutBridging.swift */,
 			);
 			path = UIView;
 			sourceTree = "<group>";
@@ -377,6 +380,7 @@
 				49CD6B5A263972520024C330 /* AutoAdjustingHorizontalStackView.swift in Sources */,
 				49CD6B52263972520024C330 /* UIView+Defaults.swift in Sources */,
 				49CD6B60263972520024C330 /* UILayoutPriority+Convenience.swift in Sources */,
+				49EC263C2822CC59000F8C4B /* UIView+AutoLayoutBridging.swift in Sources */,
 				49CD6B66263972730024C330 /* DemoView.swift in Sources */,
 				49CD6B55263972520024C330 /* UIView+PinningVerticalEdge.swift in Sources */,
 				496EE97F26AED47200C0EEEC /* KeyboardTracker.swift in Sources */,
