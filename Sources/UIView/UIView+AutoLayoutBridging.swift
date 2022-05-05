@@ -10,7 +10,7 @@ import UIKit
 /// This view bridges a manual layout view to AutoLayout. The manual layout view must implement
 /// sizeThatFits() and can use invalidateIntrinsicContentSize() to notify about changes. This bridging view,
 /// in turn, will have an intrinsicContentSize based on sizeThatFits.
-public class ManualLayoutInAutoLayoutBridgingView: UIView {
+public class ManualLayoutHostedInAutoLayoutBridgingView: UIView {
 	/// the manual layout view we are bridging to auto layout
 	public let view: UIView
 	

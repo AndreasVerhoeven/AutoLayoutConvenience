@@ -91,7 +91,7 @@ extension UIView {
 ///
 /// This view can be used in a manual layout setting, while doing auto layout inside of it:
 /// it implements sizeThatFits() by forwarding to `autoLayoutSizeThatFits()`
-public class AutoLayoutInManualLayoutBridgingView: UIView {
+public class AutoLayoutHostedInManualLayoutBridgingView: UIView {
 	/// Callback that will be called when the auto layout view requires layout. If not set,
 	/// will call setNeedsLayout() on self and superview.
 	public var layoutCallback: LayoutCallback?
