@@ -76,11 +76,11 @@ extension UIView {
 
 		var fittingSize = systemLayoutSizeFitting(targetSize, withHorizontalFittingPriority: horizontalLayoutPriority, verticalFittingPriority: verticalFittingPriority)
 
-		if bridgingMode.vertical.shouldUseCompressedSize == true{
+		if bridgingMode.vertical.shouldUseCompressedSize == true {
 			fittingSize.height = min(fittingSize.height, size.height)
 		}
 
-		if bridgingMode.horizontal.shouldUseCompressedSize == true{
+		if bridgingMode.horizontal.shouldUseCompressedSize == true {
 			fittingSize.width = min(fittingSize.width, size.width)
 		}
 		return fittingSize
