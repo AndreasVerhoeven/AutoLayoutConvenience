@@ -46,6 +46,9 @@ public struct ManualLayoutSizeThatFitsBridgingMode {
 
 	/// The view should have the exact same dimensions as the passed in size, if possible
 	public static var fixedSize = Self(horizontal: .fixed, vertical: .fixed)
+	
+	/// The view should be smaller than the given dimensions, if possible
+	public static var boundedSize = Self(horizontal: .bounded, vertical: .bounded)
 }
 
 extension UIView {
@@ -88,28 +91,83 @@ extension UIView {
 ///
 /// This view can be used in a manual layout setting, while doing auto layout inside of it:
 /// it implements sizeThatFits() by forwarding to `autoLayoutSizeThatFits()`
-public class ManualLayoutBridgedView: UIView {
-
+public class AutoLayoutInManualLayoutBridgingView: UIView {
+	/// Callback that will be called when the auto layout view requires layout. If not set,
+	/// will call setNeedsLayout() on self and superview.
+	public var layoutCallback: LayoutCallback?
+	public typealias LayoutCallback = () -> Void
+	
 	/// Set this view to how you want the default implementation of sizeThatFits() work
 	public var sizeThatFitsBridgingMode: ManualLayoutSizeThatFitsBridgingMode = .fixedSize
 
+	/// Creates a simple bridging view without any contents
 	convenience init(sizeThatFitsBridgingMode: ManualLayoutSizeThatFitsBridgingMode, backgroundColor: UIColor? = nil) {
 		self.init(frame: .zero)
 		self.sizeThatFitsBridgingMode = sizeThatFitsBridgingMode
 		self.backgroundColor = backgroundColor
 	}
-
-	// MARK: - UIView
-
-	/* this is private API, unfortunately:
-	@objc func _intrinsicContentSizeInvalidatedForChildView(_ x: UIView) {
-		setNeedsLayout()
-		if UIView.inheritedAnimationDuration > 0 {
-			layoutIfNeeded()
+	
+	/// Creates a bridging view that holds an AutoLayout view and that can be used in Manual Layout. When the AutoLayout view needs new layout, it'll call setNeedsLayout() on the bridging view
+	/// and its superview or call the layoutCallback.
+	convenience init(view: UIView, sizeThatFitsBridgingMode: ManualLayoutSizeThatFitsBridgingMode = .boundedSize, layoutCallback: LayoutCallback? = nil) {
+		self.init(frame: .zero)
+		self.sizeThatFitsBridgingMode = sizeThatFitsBridgingMode
+		self.translatesAutoresizingMaskIntoConstraints = false
+		self.layoutCallback = layoutCallback
+		
+		let stackView = CallbackStackView(axis: .horizontal, alignment: .fill, distribution: .fillProportionally)
+		stackView.callback = { [weak self] in self?.update() }
+		addSubview(stackView, filling: .superview)
+	}
+	
+	public override class var requiresConstraintBasedLayout: Bool { true }
+	
+	// MARK: - Privates
+	private var isInLayoutCallbackInSetNeedsLayoutCount = 0
+	
+	private class CallbackStackView: UIStackView {
+		var callback: (() -> Void)?
+		override func updateConstraints() {
+			super.updateConstraints()
+			callback?()
+		}
+		
+		override func setNeedsLayout() {
+			super.setNeedsLayout()
+			callback?()
 		}
 	}
-	*/
+	
+	private func update() {
+		if let layoutCallback = layoutCallback {
+			layoutCallback()
+		} else {
+			setNeedsLayout()
+			superview?.setNeedsLayout()
+		}
+	}
+	
+	public override func setNeedsLayout() {
+		super.setNeedsLayout()
+		
+		if let layoutCallback = layoutCallback {
+			isInLayoutCallbackInSetNeedsLayoutCount += 1
+			if isInLayoutCallbackInSetNeedsLayoutCount == 1 {
+				layoutCallback()
+			}
+			isInLayoutCallbackInSetNeedsLayoutCount -= 1
+		}
+	}
 
+	// MARK: - UIView
+	// this is private API, unfortunately:
+//	@objc func _intrinsicContentSizeInvalidatedForChildView(_ x: UIView) {
+//		setNeedsLayout()
+//		if UIView.inheritedAnimationDuration > 0 {
+//			layoutIfNeeded()
+//		}
+//	}
+	
 	public override func sizeThatFits(_ size: CGSize) -> CGSize {
 		return autoLayoutSizeThatFits(size, bridgingMode: sizeThatFitsBridgingMode)
 	}
