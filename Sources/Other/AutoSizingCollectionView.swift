@@ -8,7 +8,7 @@
 import UIKit
 
 /// A UICollectionView with its intrinsic content size the same as the contentSize
-class AutoSizingCollectionView: UICollectionView {
+public class AutoSizingCollectionView: UICollectionView {
 	public override var contentSize: CGSize {
 		didSet {
 			guard contentSize != oldValue else { return }

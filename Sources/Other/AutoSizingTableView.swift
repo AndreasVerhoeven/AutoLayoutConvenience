@@ -8,7 +8,7 @@
 import UIKit
 
 /// A UITableView with its intrinsic content size the same as the contentSize
-class AutoSizingTableView: UITableView {
+public class AutoSizingTableView: UITableView {
 	public override var contentSize: CGSize {
 		didSet {
 			guard contentSize != oldValue else { return }
