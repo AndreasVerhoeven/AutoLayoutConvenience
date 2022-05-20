@@ -49,6 +49,17 @@ extension UIView {
 		])
 		return self
 	}
+	
+	/// Constraints the width and height of this view to a constant value
+	///
+	/// - Parameters:
+	/// 	- value: **optional** the width tand height o constraint to,
+	/// 	- priority: **optional** the priority for the created constraints. defaults to `.required`
+	///
+	/// - Returns: returns `self`, useful for chaining
+	@discardableResult public func constrain(widthAndHeight dimension: CGFloat, priority: UILayoutPriority = .required) -> Self {
+		return constrain(width: dimension, height: dimension, priority: priority)
+	}
 
 	/// Constraints the aspect ratio of this view to aspect ratio of the given `size`
 	///

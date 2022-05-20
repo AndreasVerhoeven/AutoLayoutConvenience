@@ -120,6 +120,16 @@ extension UIView {
 		return self
 	}
 	
+	/// Constrains this view `width` and `height` to a given `dimension`
+	///
+	/// - Parameters:
+	///  - dimension: the dimension to constrain width and height to, one of .atLeast, .exactly, .atMost
+	///
+	/// - Returns: returns `self`, useful for chaining
+	@discardableResult public func constrain(widthAndHeight dimension: SizeConstrain<CGFloat>) -> Self {
+		return constrain(width: dimension, height: dimension)
+	}
+	
 	/// Constrains this view to a given `width` and `height`
 	///
 	/// - Parameters:
