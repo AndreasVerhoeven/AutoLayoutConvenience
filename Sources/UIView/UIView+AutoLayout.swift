@@ -8,6 +8,14 @@
 import UIKit
 
 extension UIView {
+	static fileprivate var ignoreSpuriousAddSubviewForAutoLayoutCount = 0
+	
+	static internal func ignoreSpuriousAddSubviewForAutoLayoutCalls(during: () -> Void) {
+		ignoreSpuriousAddSubviewForAutoLayoutCount += 1
+		during()
+		ignoreSpuriousAddSubviewForAutoLayoutCount -= 1
+	}
+	
 	/// Adds a `subview` to `self` for use with **AutoLayout**
 	/// and returns self for use in chaining calls
 	///
@@ -16,6 +24,8 @@ extension UIView {
 	///
 	/// - Returns: `subview`, useful for chaining with contraint calls
 	@discardableResult public func addSubviewForAutoLayout<ViewType: UIView>(_ subview: ViewType) -> ViewType {
+		guard Self.ignoreSpuriousAddSubviewForAutoLayoutCount == 0 || subview.superview == nil else { return subview }
+		
 		subview.translatesAutoresizingMaskIntoConstraints = false
 		addSubview(subview)
 		return subview
@@ -46,7 +56,7 @@ extension UIView {
 		ConstraintsList.activate([
 			height.flatMap({ heightAnchor.constraint(equalToConstant: $0).with(priority: priority) }),
 			width.flatMap({ widthAnchor.constraint(equalToConstant: $0).with(priority: priority) }),
-		])
+		], for: self)
 		return self
 	}
 	
@@ -83,7 +93,7 @@ extension UIView {
 	///
 	/// - Returns: returns `self`, useful for chaining
 	@discardableResult public func constrainAspectRatio(_ ratio: CGFloat, priority: UILayoutPriority = .required) -> Self {
-		ConstraintsList.activate([widthAnchor.constraint(equalTo: heightAnchor, multiplier: ratio).with(priority: priority)])
+		ConstraintsList.activate([widthAnchor.constraint(equalTo: heightAnchor, multiplier: ratio).with(priority: priority)], for: self)
 		return self
 	}
 

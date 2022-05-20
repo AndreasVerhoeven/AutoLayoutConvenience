@@ -86,7 +86,7 @@ extension UIView {
 		return ConstraintsList.activate([
 			to.xAnchor(for: other.x.layoutAnchorsProvider(in: superview)).flatMap({ position.xAnchor(for: self)?.constraint(equalTo: $0, constant: offset.x) }),
 			to.yAnchor(for: other.y.layoutAnchorsProvider(in: superview)).flatMap({ position.yAnchor(for: self)?.constraint(equalTo: $0, constant: offset.y) }),
-		])
+		], for: self)
 	}
 
 	/// Constrains a `subview` by pinning it to a exact `rect` in `other`
@@ -102,7 +102,7 @@ extension UIView {
 			other.top.layoutAnchorsProvider(in: superview)?.topAnchor.anchorWithOffset(to: topAnchor).constraint(equalToConstant: rect.minY),
 			widthAnchor.constraint(equalToConstant: rect.width),
 			heightAnchor.constraint(equalToConstant: rect.height),
-		])
+		], for: self)
 	}
 
 	/// Constrains a `subview` by pinning it to a exact `point` in `other`
@@ -116,7 +116,7 @@ extension UIView {
 		return ConstraintsList.activate([
 			other.leading.layoutAnchorsProvider(in: superview)?.leadingAnchor.anchorWithOffset(to: leadingAnchor).constraint(equalToConstant: point.x),
 			other.top.layoutAnchorsProvider(in: superview)?.topAnchor.anchorWithOffset(to: topAnchor).constraint(equalToConstant: point.y),
-		])
+		], for: self)
 	}
 	
 	/// Constrains a `subview` by pinning it to a exact `point` in `other`
@@ -130,6 +130,6 @@ extension UIView {
 		return ConstraintsList.activate([
 			position.xAnchor(for: self).flatMap { other.leading.layoutAnchorsProvider(in: superview)?.leadingAnchor.anchorWithOffset(to: $0).constraint(equalToConstant: point.x) },
 			position.yAnchor(for: self).flatMap { other.top.layoutAnchorsProvider(in: superview)?.topAnchor.anchorWithOffset(to: $0).constraint(equalToConstant: point.y) },
-		])
+		], for: self)
 	}
 }

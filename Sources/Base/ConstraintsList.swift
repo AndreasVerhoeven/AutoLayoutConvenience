@@ -28,15 +28,29 @@ public class ConstraintsList: NSObject {
 
 	public var others = [NSLayoutConstraint]()
 
-	public init(constraints: [NSLayoutConstraint] = []) {
+	public init(constraints: [NSLayoutConstraint] = [], view: UIView? = nil) {
 		super.init()
+		self.view = view
 		replaceConstraints(constraints)
+	}
+	
+	
+	internal typealias Interceptor = (ConstraintsList, UIView) -> Void
+	static internal var interceptors = [Interceptor]()
+	internal static func intercept(_ callback: @escaping Interceptor, while running: () -> Void) {
+		interceptors.append(callback)
+		running()
+		interceptors.removeLast()
 	}
 
 	/// Activates a list of optional constraints and returns a constraint list
-	@discardableResult public static func activate(_ constraints: [NSLayoutConstraint?]) -> ConstraintsList {
-		let list = ConstraintsList(constraints: constraints.compactMap({$0}))
-		list.activate()
+	@discardableResult public static func activate(_ constraints: [NSLayoutConstraint?], for view: UIView) -> ConstraintsList {
+		let list = ConstraintsList(constraints: constraints.compactMap({ $0 }), view: view)
+		if Self.interceptors.isEmpty == false {
+			interceptors.last?(list, view)
+		} else {
+			list.activate()
+		}
 		return list
 	}
 

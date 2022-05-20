@@ -261,7 +261,7 @@ extension UIView {
 											 spacing: CGFloat = Default.spacing) -> ConstraintsList {
 		var constraints = constrain(vertically: vertically, others: [other], insets: insets, retarget: superview)
 		constraints.append(constrain(singleEdge: edge, to: to, of: other, insets: insets, spacing: spacing))
-		return ConstraintsList.activate(constraints)
+		return ConstraintsList.activate(constraints, for: self)
 	}
 
 	/// Constrains `self` by pinning its leading edge to `leadingEdge` and its trailing edge to `trailingEdge`
@@ -290,7 +290,7 @@ extension UIView {
 		var constraints = constrain(vertically: vertically, others: [leading, trailing], insets: insets, retarget: superview)
 		constraints.append(constrain(singleEdge: .leading, to: leadingEdge, of: leading, insets: insets, spacing: leadingSpacing))
 		constraints.append(constrain(singleEdge: .trailing, to: trailingEdge, of: trailing, insets: insets, spacing: trailingSpacing))
-		return ConstraintsList.activate(constraints)
+		return ConstraintsList.activate(constraints, for: self)
 	}
 
 	/// Private helper to constrain a single edge

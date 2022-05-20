@@ -13,6 +13,9 @@
 		496ADB4426B1E91B0016A582 /* ExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496ADB4326B1E91B0016A582 /* ExampleViewController.swift */; };
 		496ADB4E26B346EE0016A582 /* FillingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496ADB4D26B346EE0016A582 /* FillingViewController.swift */; };
 		496ADB5026B3495E0016A582 /* BaseTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496ADB4F26B3495E0016A582 /* BaseTableViewController.swift */; };
+		496E7E3D28378A13004615B1 /* ConstraintsListCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496E7E3C28378A13004615B1 /* ConstraintsListCollection.swift */; };
+		496E7E3F2837F811004615B1 /* UIView+ConditionalInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496E7E3E2837F811004615B1 /* UIView+ConditionalInternal.swift */; };
+		496E7E41283809D9004615B1 /* UIView+Conditional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496E7E40283809D9004615B1 /* UIView+Conditional.swift */; };
 		496EE97F26AED47200C0EEEC /* KeyboardTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496EE97E26AED47200C0EEEC /* KeyboardTracker.swift */; };
 		49746F47278885240028E523 /* FixedFrameLayoutGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49746F46278885240028E523 /* FixedFrameLayoutGuide.swift */; };
 		4980796E26C12CE90007C155 /* KeyboardSafeAreaLayoutGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4980796D26C12CE90007C155 /* KeyboardSafeAreaLayoutGuide.swift */; };
@@ -64,6 +67,9 @@
 		496ADB4326B1E91B0016A582 /* ExampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleViewController.swift; sourceTree = "<group>"; };
 		496ADB4D26B346EE0016A582 /* FillingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FillingViewController.swift; sourceTree = "<group>"; };
 		496ADB4F26B3495E0016A582 /* BaseTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewController.swift; sourceTree = "<group>"; };
+		496E7E3C28378A13004615B1 /* ConstraintsListCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConstraintsListCollection.swift; sourceTree = "<group>"; };
+		496E7E3E2837F811004615B1 /* UIView+ConditionalInternal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+ConditionalInternal.swift"; sourceTree = "<group>"; };
+		496E7E40283809D9004615B1 /* UIView+Conditional.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Conditional.swift"; sourceTree = "<group>"; };
 		496EE97E26AED47200C0EEEC /* KeyboardTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardTracker.swift; sourceTree = "<group>"; };
 		49746F46278885240028E523 /* FixedFrameLayoutGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixedFrameLayoutGuide.swift; sourceTree = "<group>"; };
 		4980796D26C12CE90007C155 /* KeyboardSafeAreaLayoutGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardSafeAreaLayoutGuide.swift; sourceTree = "<group>"; };
@@ -206,6 +212,8 @@
 				49CD6B69263975CE0024C330 /* UIView+Scrollable.swift */,
 				49BE83E9265FA4DF001CEC2A /* UIView+ManualLayoutBridging.swift */,
 				49EC263B2822CC59000F8C4B /* UIView+AutoLayoutBridging.swift */,
+				496E7E3E2837F811004615B1 /* UIView+ConditionalInternal.swift */,
+				496E7E40283809D9004615B1 /* UIView+Conditional.swift */,
 			);
 			path = UIView;
 			sourceTree = "<group>";
@@ -246,6 +254,7 @@
 				49CD6B4E263972520024C330 /* LayoutBasisHelper.swift */,
 				49CD6B4F263972520024C330 /* LayoutBasis.swift */,
 				49CD6B50263972520024C330 /* ConstraintsList.swift */,
+				496E7E3C28378A13004615B1 /* ConstraintsListCollection.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -379,7 +388,9 @@
 				49CD6B61263972520024C330 /* LayoutBasisHelper.swift in Sources */,
 				49CD6B57263972520024C330 /* UIView+Filling.swift in Sources */,
 				4933F50226F0F1EE008EEA01 /* AutoHidingStackView.swift in Sources */,
+				496E7E41283809D9004615B1 /* UIView+Conditional.swift in Sources */,
 				49CD6B6D263976160024C330 /* VerticalOverflowScrollView.swift in Sources */,
+				496E7E3D28378A13004615B1 /* ConstraintsListCollection.swift in Sources */,
 				4980798826C18F470007C155 /* AutoSizingTextView.swift in Sources */,
 				49CD6B58263972520024C330 /* UIView+PinningPosition.swift in Sources */,
 				49CD6B24263971900024C330 /* SceneDelegate.swift in Sources */,
@@ -396,6 +407,7 @@
 				49E70492282AC3B100A1EA1F /* AutoSizingTableView.swift in Sources */,
 				49CD6C1D263A0C990024C330 /* MinimumHeightTableViewCell.swift in Sources */,
 				49337D2F27D298D0006BDB1A /* AutoSizingTableHeaderFooterView.swift in Sources */,
+				496E7E3F2837F811004615B1 /* UIView+ConditionalInternal.swift in Sources */,
 				49CD6C1E263A0C990024C330 /* NonAutoLayoutWrappingView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

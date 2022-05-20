@@ -35,6 +35,6 @@ extension UIView {
 			box.leading.layoutAnchorsProvider(in: superview)?.leadingAnchor.constraint(equalTo: leadingAnchor, constant: -resolvedInsets.leading),
 			box.bottom.layoutAnchorsProvider(in: superview)?.bottomAnchor.constraint(equalTo: bottomAnchor, constant: resolvedInsets.bottom),
 			box.trailing.layoutAnchorsProvider(in: superview)?.trailingAnchor.constraint(equalTo: trailingAnchor, constant: resolvedInsets.trailing),
-		])
+		], for: self)
 	}
 }

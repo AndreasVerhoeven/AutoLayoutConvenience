@@ -116,7 +116,7 @@ extension UIView {
 		ConstraintsList.activate([
 			width.flatMap({ $0.layoutConstraint(for: widthAnchor).with(priority: $0.priority) }),
 			height.flatMap({ $0.layoutConstraint(for: heightAnchor).with(priority: $0.priority) }),
-		])
+		], for: self)
 		return self
 	}
 	
@@ -141,7 +141,7 @@ extension UIView {
 		ConstraintsList.activate([
 			width.flatMap({ $0.layoutConstraint(for: widthAnchor, in: self)?.with(priority: $0.priority) }),
 			height.flatMap({ $0.layoutConstraint(for: heightAnchor, in: self)?.with(priority: $0.priority) }),
-		])
+		], for: self)
 		return self
 	}
 
@@ -189,8 +189,8 @@ extension UIView {
 				heightAnchor.constraint(lessThanOrEqualToConstant: heightRange.upperBound).with(priority: priority),
 			]
 		}
-
-		NSLayoutConstraint.activate(constraints)
+		
+		ConstraintsList.activate(constraints, for: self)
 		return self
 	}
 }

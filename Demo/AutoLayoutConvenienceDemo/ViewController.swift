@@ -8,9 +8,21 @@
 import UIKit
 
 class ViewController: UIViewController {
+	var collection: ConstraintsListCollection!
+	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
+		let x = UIView(backgroundColor: .red)
+
+		view.if(is: .verticallyCompact) {
+			self.view.addSubview(x.constrain(widthAndHeight: 100), centeredIn: .superview)
+		} else: {
+			self.view.addSubview(x.constrain(widthAndHeight: 50), pinning: .topCenter, to: .topCenter, of: .safeArea)
+		}
+		
+		
+		/*
 		let demoView = DemoView()
 		demoView.actionButton.addAction(UIAction(handler: { _ in
 			demoView.setSubTitleAnimated(String(repeating: demoView.subLabel.text ?? "", count: 2))
@@ -24,6 +36,7 @@ class ViewController: UIViewController {
 
 		view.addSubview(UIView(backgroundColor: .red), filling: .keyboardFrame)
 		view.addSubview(demoView, filling: .keyboardSafeArea)
+		 */
 	}
 	
 	override func viewDidAppear(_ animated: Bool) {
