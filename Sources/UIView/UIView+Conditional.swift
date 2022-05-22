@@ -76,7 +76,7 @@ extension UIView {
 	
 	/// Any conditional constraint updates for this view should be animated.
 	/// See the discussion in `ConditionalResult.animateChanges()`
-	@discardableResult public func animateConditionalChanges() -> Self {
+	@discardableResult public func enableAnimationsForConditionalUpdates() -> Self {
 		ensureConstraintsListCollection().animateUpdates()
 		return self
 	}
@@ -84,6 +84,11 @@ extension UIView {
 	/// Update any pending conditional constraints for this view.
 	public func updateConditionalConstraintsIfNeeded() {
 		constraintsListCollection?.updateIfNeeded()
+	}
+	
+	/// Mark our conditional constraints as needing an update.
+	public func setConditionalConstraintsNeedsUpdate() {
+		constraintsListCollection?.setNeedsUpdate()
 	}
 	
 	/// Force a conditional constraint update for this view.
@@ -114,10 +119,13 @@ extension UIView {
 }
 
 extension UIView {
+	/// gets the constraints list for this view
 	fileprivate static var collectionListKey = 0
 	fileprivate var constraintsListCollection: ConstraintsListCollection? {
 		objc_getAssociatedObject(self, &Self.collectionListKey) as? ConstraintsListCollection
 	}
+	
+	/// Private method that ensures a constraint lisr collection for this view exists
 	fileprivate func ensureConstraintsListCollection() -> ConstraintsListCollection {
 		if let collection = constraintsListCollection {
 			return collection
@@ -128,40 +136,52 @@ extension UIView {
 		}
 	}
 	
-	fileprivate static var conditionStack = [Condition]()
-	fileprivate static var conditionsDepth = 0
+	/// Used so we can stack  recursively nest multiple `internalIf()` calls and have the right constraints be build.
+	/// E.g. `UIView.if(.verticallyCompact) { UIView.if(.phone) {  addSubview(...) } }` needs to result in the addSubview()-constraints
+	/// requring both `.verticallyCompact` and `.phone`. We do this by keeping track of the  "active conditions."
+	fileprivate static var activeConditions = [Condition]()
+	
+	/// This is used so we only install collections when we have no deeper nesting.
+	fileprivate static var currentIfNestingDepth = 0
 	fileprivate static var allTouchedConstraintsLists = [UIView: ConstraintsListCollection]()
 	
 	fileprivate static func internalIf(view: UIView?, condition: Condition, then: ConditionCallback, else: ConditionCallback) -> ConditionalResult {
-		Self.conditionsDepth += 1
+		Self.currentIfNestingDepth += 1
 		var collections = [UIView: ConstraintsListCollection]()
 		
+		// local function to intercept the constraints created in a block with a given condition.
 		func intercept(condition: Condition, running: ConditionCallback) {
-			Self.conditionStack.append(condition.rebound(to: view))
+			// bind the condition to the view that is passed in, if possible.
+			Self.activeConditions.append(condition.bind(to: view))
 			
 			ConstraintsList.intercept({ list, view in
 				let collection = view.ensureConstraintsListCollection()
 				collections[view] = collection
-				collection.add(list, conditions: Self.conditionStack)
+				collection.add(list, conditions: Self.activeConditions)
 			}, while: running)
 
-			Self.conditionStack.removeLast()
+			Self.activeConditions.removeLast()
 		}
 		
+		// execute both blocks for the given condition. Else is just the negated if condition.
 		UIView.ignoreSpuriousAddSubviewForAutoLayoutCalls {
 			intercept(condition: condition, running: then)
 			intercept(condition: condition.isFalse, running: `else`)
 		}
 		
+		// add the newly created conditions to the list of all touched conditions
 		collections.forEach { Self.allTouchedConstraintsLists[$0.key] = $0.value }
-		Self.conditionsDepth -= 1
-		if Self.conditionsDepth == 0 {
+		Self.currentIfNestingDepth -= 1
+		if Self.currentIfNestingDepth == 0 {
+			// if we're at the outer nested if() block, install all touched conditions
+			// and reset the touch list.
 			for collection in Self.allTouchedConstraintsLists.values {
-				collection.start()
+				collection.install()
 			}
 			Self.allTouchedConstraintsLists.removeAll()
 		}
 		
+		// return a list of collections so the caller can apply methods to it.
 		return ConditionalResult(collections: Array(collections.values))
 	}
 }

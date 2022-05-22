@@ -17,7 +17,8 @@ extension UIView {
 		public typealias ViewEvaluator = (UIView) -> Bool
 		public typealias NoViewEvaluator = () -> Bool
 		
-		/// private data
+		/// we keep the actual condition kind private, so that people are forced to use our
+		/// factory methods and we can change the internal implementation easily.
 		fileprivate var kind: Kind
 		fileprivate init(_ kind: Kind) {
 			self.kind = kind
@@ -182,16 +183,16 @@ extension UIView.Condition {
 	}
 	
 	/// Matches when the vertical size class is compact
-	static var verticalCompact: Self { traits(in: UITraitCollection(verticalSizeClass: .compact)) }
+	static var verticallyCompact: Self { traits(in: UITraitCollection(verticalSizeClass: .compact)) }
 	
 	/// Matches when the vertical size class is regular
-	static var verticalRegular: Self { traits(in: UITraitCollection(verticalSizeClass: .regular)) }
+	static var verticallyRegular: Self { traits(in: UITraitCollection(verticalSizeClass: .regular)) }
 	
 	/// Matches when the horizontal size class is compact
-	static var horizontalCompact: Self { traits(in: UITraitCollection(horizontalSizeClass: .compact)) }
+	static var horizontallyCompact: Self { traits(in: UITraitCollection(horizontalSizeClass: .compact)) }
 	
 	/// Matches when the horizontal size class is regular
-	static var horizontalRegular: Self { traits(in: UITraitCollection(horizontalSizeClass: .regular)) }
+	static var horizontallyRegular: Self { traits(in: UITraitCollection(horizontalSizeClass: .regular)) }
 	
 	/// Matches when the relevant views idion is the given idiom
 	static func idiom(_ idiom: UIUserInterfaceIdiom) -> Self { traits(in: UITraitCollection(userInterfaceIdiom: idiom))  }
@@ -317,10 +318,12 @@ extension UIView.Condition {
 }
 
 internal extension UIView.Condition {
-	/// internal helper
+	/// internal helpers
 	func matches(for view: UIView) -> Bool { kind.matches(for: view) }
 	func viewsNeedingObservers(isForTraits: Bool, view: UIView) -> Set<UIView?> { kind.viewsNeedingObserving(for: view, isForTraits: isForTraits) }
-	func rebound(to view: UIView?) -> Self { Self(kind.rebound(to: view)) }
+	
+	// bind this condition to a view if there is no view assigned bound yet.
+	func bind(to view: UIView?) -> Self { Self(kind.bound(to: view)) }
 }
 
 fileprivate extension UIView.Condition.Kind {
@@ -356,7 +359,7 @@ fileprivate extension UIView.Condition.Kind {
 		}
 	}
 	
-	func rebound(to view: UIView?) -> Self {
+	func bound(to view: UIView?) -> Self {
 		guard let view = view else { return self }
 		if case Self.bound = self {
 			return self

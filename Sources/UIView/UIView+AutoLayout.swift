@@ -17,7 +17,7 @@ extension UIView {
 	/// - Returns: `subview`, useful for chaining with contraint calls
 	@discardableResult public func addSubviewForAutoLayout<ViewType: UIView>(_ subview: ViewType) -> ViewType {
 		guard Self.ignoreSpuriousAddSubviewForAutoLayoutCount == 0 || subview.superview == nil else {
-			assert(subview.superview != self, "You cannot add a subview conditionally to different views - the conditions only apply to the created constraints.")
+			assert(subview.superview == self, "You cannot add a subview conditionally to different views - the conditions only apply to the created constraints.")
 			return subview
 		}
 		

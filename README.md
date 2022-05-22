@@ -448,6 +448,7 @@ Sometimes you want to use different constraints depending on certain conditions.
 You create conditional constraints by calling `UIView.if(_:then:else:)`. If the condition holds, the constraints created in the `then` closure will be active, otherwise the constraints in the `else` closure will be active. It's important to note that this is not an actual-if-else block and that the code in the `then`- and `else` closures will only be run once and that the conditions only apply to the created constraints.
 
 In short, for code in in an `then` or `else` block:
+
  - gets both executed directly, they won't be executed dynamically on changes
  - You can call `addSubview(subview,...)` in both blocks **as long as the superview is the same**: the subview will only be added once to its superview.
  - Constraints in both blocks will be created, but they will be activated / deactived based on the given condition.
@@ -513,13 +514,45 @@ All these constraints apply to a specific view, instead of the view that the con
 
 ##### View specific conditions
 
-#### Coalescing
+By default, conditions apply to the view getting the constraints. If you want to check another view, you have two options:
 
-#### More
+ - use view specific conditions: `.view(someOtherView, is: .verticalCompact)`
+ - use `UIView.if(view: someOtherView, is: .verticallyCompact) { ... }`
+ 
+There's no difference between those two, it's just a matter of preference.
+
+#### Coalescing Updates
+
+When a condition "changes" potentially changes, the conditional constraints will be re-evaluated and the right constraints will be activated. This works by monitoring changes to the view's bounds and/or traitCollection. For simple conditions, the constraints will directly be applied when the condition changes. For more complex conditions, updates to the active constraints are coalesced and are performed at the end of the runloop. This is done so that the conditions are not constantly re-evaluated while view changes are still in flight.
+
+Simple conditions are those that depend on either the bounds or the trait collection of a single view, but not at the same time. Anything else (multiple views or depending on both bounds or traits) are complex conditions that coalesce updates.
+
+#### Enabling direct updates
+
+You can disable coalescing (and thus having direct updates) in two ways:
+
+ - Call `withoutCoalescing()` on a `UIView.if() {} else: {}` call: `UIView.if(.verticalCompact){} else: {}.withoutCoalescing()`
+ - Call `useDirectConditionalUpdates()` on the relevant `UIView`: `myLabel.useDirectConditionalUpdates()`
+ 
+
+#### Forcing Updates
+
+If you use custom callback as conditions, you might want to force updates yourself. You can use:
+
+- `view.setConditionalConstraintsNeedsUpdate()` will re-evaluate the conditions for this view when possible. Will coalesce updates if needed and allowed.
+- `view.updateConditionalConstraintsIfNeeded()` directly re-evaluate conditional constraints if they are marked as needing an update.
+- `view.forceUpdateConditionalConstraints()` directly re-evaluate conditional constraints even if not marked as needing an update.
+
+#### Animations
+
+Layout changes as a result of conditional constraints can be animated. You can - again - do this in two ways:
+	- Call `animateChanges()` on a `UIView.if() {} else: {}` call: `UIView.if(.verticalCompact){} else: {}.animateChanges()` 
+	- Call `enableAnimationsForConditionalUpdates()` on the relevant `UIView`: `myLabel.enableAnimationsForConditionalUpdates()`
 
 #### How it works under the hood
 
 Conditional constraints sprinkle a bit of magic:
+
 	- All constraints using the helper functions in this library are created using `ConstraintsList.activate()`
 	- when we are in `UIView.if()` any created constraints using `ConstraintsList` are intercepted using `ConstraintsList.intercept()`
 	- `UIView.if()` collects all constraints and stores them in the relevant view together with the relevant condition in a `ConstraintListCollection`

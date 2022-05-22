@@ -58,7 +58,7 @@ class DemoView: UIView {
 		addSubview(backgroundView, filling: .safeArea, insets: .all(32))
 
 		// And finally, we a close button to the top leading corner of our background view, conditionally:
-		UIView.if(.verticalCompact) {
+		UIView.if(.verticallyCompact) {
 			// if we're vertically
 			backgroundView.addSubview(closeButton.constrain(size: smallButtonSize), pinning: .center, to: .topTrailing)
 		} else: {
