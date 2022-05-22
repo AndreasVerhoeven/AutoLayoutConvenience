@@ -13,16 +13,27 @@ class ViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		let x = UIView(backgroundColor: .red)
+//		let x = UIView(backgroundColor: .red)
+//		let label = UILabel(text: "bla")
+//		view.addSubview(label, pinnedTo: .bottom, of: .safeArea, horizontally: .center)
+//		
+//		UIView.if(.verticalRegular) {
+//			UIView.if(view: label, is: .width(is: .atLeast(100))) {
+//				self.view.addSubview(x.constrain(widthAndHeight: 100), centeredIn: .superview)
+//			} else: {
+//				self.view.addSubview(x.constrain(widthAndHeight: 20), centeredIn: .superview)
+//			}
+//		} else: {
+//			self.view.addSubview(x.constrain(widthAndHeight: 50), pinning: .topCenter, to: .topCenter, of: .safeArea)
+//		}.withoutCoalescing()//.animateChanges().withoutCoalescing()
+//		
+//		DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
+//			UIView.animate(withDuration: 0.25, delay: 0, options: [.beginFromCurrentState]) {
+//				label.text = "b la vfs fvdv dv dvd vdv"
+//				self.view.layoutIfNeeded()
+//			}
+//		})
 
-		view.if(is: .verticallyCompact) {
-			self.view.addSubview(x.constrain(widthAndHeight: 100), centeredIn: .superview)
-		} else: {
-			self.view.addSubview(x.constrain(widthAndHeight: 50), pinning: .topCenter, to: .topCenter, of: .safeArea)
-		}
-		
-		
-		/*
 		let demoView = DemoView()
 		demoView.actionButton.addAction(UIAction(handler: { _ in
 			demoView.setSubTitleAnimated(String(repeating: demoView.subLabel.text ?? "", count: 2))
@@ -36,7 +47,6 @@ class ViewController: UIViewController {
 
 		view.addSubview(UIView(backgroundColor: .red), filling: .keyboardFrame)
 		view.addSubview(demoView, filling: .keyboardSafeArea)
-		 */
 	}
 	
 	override func viewDidAppear(_ animated: Bool) {

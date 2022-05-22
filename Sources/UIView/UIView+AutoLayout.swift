@@ -8,14 +8,6 @@
 import UIKit
 
 extension UIView {
-	static fileprivate var ignoreSpuriousAddSubviewForAutoLayoutCount = 0
-	
-	static internal func ignoreSpuriousAddSubviewForAutoLayoutCalls(during: () -> Void) {
-		ignoreSpuriousAddSubviewForAutoLayoutCount += 1
-		during()
-		ignoreSpuriousAddSubviewForAutoLayoutCount -= 1
-	}
-	
 	/// Adds a `subview` to `self` for use with **AutoLayout**
 	/// and returns self for use in chaining calls
 	///
@@ -24,11 +16,28 @@ extension UIView {
 	///
 	/// - Returns: `subview`, useful for chaining with contraint calls
 	@discardableResult public func addSubviewForAutoLayout<ViewType: UIView>(_ subview: ViewType) -> ViewType {
-		guard Self.ignoreSpuriousAddSubviewForAutoLayoutCount == 0 || subview.superview == nil else { return subview }
+		guard Self.ignoreSpuriousAddSubviewForAutoLayoutCount == 0 || subview.superview == nil else {
+			assert(subview.superview != self, "You cannot add a subview conditionally to different views - the conditions only apply to the created constraints.")
+			return subview
+		}
 		
 		subview.translatesAutoresizingMaskIntoConstraints = false
 		addSubview(subview)
 		return subview
+	}
+}
+
+extension UIView {
+	static fileprivate var ignoreSpuriousAddSubviewForAutoLayoutCount = 0
+	
+	/// Used by conditional constraints, so that we can write multiple conditions with the same addSubview(subview, ...)
+	/// but with different constraints. Since conditions are all executed once on creation, we want to only add the subview once
+	/// and ignore the other ones while we are in a condition method. This method allows to do that.
+	/// Note that adding the same subview to different superview is not supported and traps - we only conditionally apply the constraints.
+	static internal func ignoreSpuriousAddSubviewForAutoLayoutCalls(during: () -> Void) {
+		ignoreSpuriousAddSubviewForAutoLayoutCount += 1
+		during()
+		ignoreSpuriousAddSubviewForAutoLayoutCount -= 1
 	}
 }
 

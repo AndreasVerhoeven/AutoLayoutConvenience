@@ -16,6 +16,7 @@ class DemoView: UIView {
 	let actionButton = UIButton.platter(title: "Add More Text", titleColor: .white)
 	let cancelButton = UIButton.platter(title: "Revert", backgroundColor: .white)
 	let buttonSize = CGSize(width: 32, height: 32)
+	let smallButtonSize = CGSize(width: 24, height: 24)
 	let textField = UITextField(backgroundColor: .tertiarySystemBackground).constrain(heightBetween: 32..<40)
 
 	// Helper method to animate sub title changes
@@ -56,8 +57,13 @@ class DemoView: UIView {
 		backgroundView.addSubview(content, filling: .readableContent)
 		addSubview(backgroundView, filling: .safeArea, insets: .all(32))
 
-		// And finally, we a close button to the top leading corner of our background view
-		backgroundView.addSubview(closeButton.constrain(size: buttonSize), pinning: .center, to: .topLeading)
+		// And finally, we a close button to the top leading corner of our background view, conditionally:
+		UIView.if(.verticalCompact) {
+			// if we're vertically
+			backgroundView.addSubview(closeButton.constrain(size: smallButtonSize), pinning: .center, to: .topTrailing)
+		} else: {
+			backgroundView.addSubview(closeButton.constrain(size: buttonSize), pinning: .center, to: .topLeading)
+		}
 	}
 
 	override init(frame: CGRect) {

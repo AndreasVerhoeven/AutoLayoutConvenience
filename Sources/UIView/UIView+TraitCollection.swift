@@ -1,5 +1,5 @@
 //
-//  UIView+ConditionalInternal.swift
+//  UIView+TraitCollection.swift
 //  AutoLayoutConvenienceDemo
 //
 //  Created by Andreas Verhoeven on 20/05/2022.
@@ -8,12 +8,16 @@
 import UIKit
 
 extension UIView {
-	/// internal function to monitor
+	/// internal check to see if we have swizzled traitCollectionDidChange already. Since
+	/// this should only be called on the main thread, this is a simple check.
 	private static var hasSwizzledTraitCollectionDidChange = false
 	
+	/// the notification fired when a views `traitCollectionDidChange(_:)` is called. The notification's `object` is the view
+	/// of which the trait collection did change.
 	static internal let traitCollectionDidChange = Notification.Name("com.aveapps.AutoLayoutConvenience.TraitCollectionDidChange")
 	
-	/// internal function that swizzles `traitCollectionDidChange(_:)` to fire of a notification
+	/// internal function that swizzles `traitCollectionDidChange(_:)` to fire of a notification so that
+	/// we can monitor when a view's trait collection changes.
 	internal static func swizzleTraitCollectionDidChangeIfNeeded() {
 		guard Self.hasSwizzledTraitCollectionDidChange == false else { return }
 		Self.hasSwizzledTraitCollectionDidChange = true
