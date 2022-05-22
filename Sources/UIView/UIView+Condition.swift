@@ -146,7 +146,7 @@ extension UIView.Condition {
 	///		- height: the height to check for as a SizeConstrain.
 	///
 	///	- Returns: The created condition
-	static func width(is width: SizeConstrain<CGFloat>, height: SizeConstrain<CGFloat>) -> Self {
+	static func width(is width: SizeConstrain<CGFloat>, heightIs height: SizeConstrain<CGFloat>) -> Self {
 		return .init(.and([.width(width), .height(height)]))
 	}
 	

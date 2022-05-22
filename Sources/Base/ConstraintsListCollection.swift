@@ -9,7 +9,7 @@ import UIKit
 
 /// A ConstraintsListCollection hold a collection of ConstraintsList
 /// where only one of them is active
-public class ConstraintsListCollection: NSObject {
+internal class ConstraintsListCollection: NSObject {
 	private(set) weak var view: UIView?
 	fileprivate var items = [Item]()
 	private var notificationCookies = [NSObjectProtocol]()
@@ -20,11 +20,11 @@ public class ConstraintsListCollection: NSObject {
 	private var coalesceUpdates = true
 	private var shouldAnimateUpdates = false
 	
-	init(view: UIView) {
+	internal init(view: UIView) {
 		self.view = view
 	}
 	
-	public func update() {
+	internal func update() {
 		needsUpdate = false
 		guard let view = view else { return }
 		var listsToDeactivate = [ConstraintsList]()
@@ -63,20 +63,20 @@ public class ConstraintsListCollection: NSObject {
 		items.append(.init(list: list, condition: .all(conditions)))
 	}
 	
-	func updateIfNeeded() {
+	internal func updateIfNeeded() {
 		guard needsUpdate == true else { return }
 		update()
 	}
 	
-	func stopCoalescingUpdates() {
+	internal func stopCoalescingUpdates() {
 		coalesceUpdates = false
 	}
 	
-	func animateUpdates() {
+	internal func animateUpdates() {
 		shouldAnimateUpdates = true
 	}
 	
-	func setNeedsUpdate() {
+	internal func setNeedsUpdate() {
 		if canDirectlyUpdate == true || coalesceUpdates == false {
 			update()
 		} else {

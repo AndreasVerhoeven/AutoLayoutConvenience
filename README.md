@@ -30,6 +30,9 @@ There are 7 major AutoLayout operations:
 - **constraining** you can constrain the **width**, **height** and **aspect ratio** of a view
 - **(dis)allowing shrinking/growing**, you can determine which views can shrink/grow
 
+You can apply created constraints **conditionally** based on a set of simple conditions: pin a view to the top when we are vertically regular, or pin it to the center when we are vertically compact.
+ 
+
 And there are helpers for `UIStackView`:
 
 - creating horizontal/vertical **stacks** with **spacing** and **insets**
@@ -422,6 +425,110 @@ There are some chainable helpers for `setContentCompressionResistancePriority()`
 - `prefersExactVerticalSize()` sets the vertical compression resistance and hugging priority to `.required`
 - `prefersExactHorizontalSize()` sets the compression resistance and hugging priority to `.required` on both axis
 
+
+### Conditional Constraints
+
+Sometimes you want to use different constraints depending on certain conditions. For example, you might want to have a view's height to be 100 points when the screen is vertically regular, but only 20 points when the screen is vertically compact and change the position depending on the vertical size class as well. It's possible to do this manually by overriding `traitCollectionDidChange(_:)` and removing and setting constraints, but it requires a lot of bookkeeping and your layout code will not be in one place anymore. 
+
+**Conditional Constraints** make this possible in an easy way:
+
+	UIView.if(.isVerticallyRegular) {
+		button.constrain(height: 100)
+		view.addSubview(button, pinningTo: .top)
+	} else: {
+		button.constrain(height: 20)
+		view.addSubview(button, pinningTo: .bottom)
+	}
+	
+  
+
+  
+#### Creating Conditional Constraints
+
+You create conditional constraints by calling `UIView.if(_:then:else:)`. If the condition holds, the constraints created in the `then` closure will be active, otherwise the constraints in the `else` closure will be active. It's important to note that this is not an actual-if-else block and that the code in the `then`- and `else` closures will only be run once and that the conditions only apply to the created constraints.
+
+In short, for code in in an `then` or `else` block:
+ - gets both executed directly, they won't be executed dynamically on changes
+ - You can call `addSubview(subview,...)` in both blocks **as long as the superview is the same**: the subview will only be added once to its superview.
+ - Constraints in both blocks will be created, but they will be activated / deactived based on the given condition.
+ - Any other properties are not set conditionally. So, for example, you can't change font sizes dynamically 
+
+	
+#### Conditions
+	
+There are several different kind of conditions that can be used to activate constraints. All these constraints apply to the relevant view. 
+If no custom view is specified, the relevant view is the view that we are adding constraints for.
+
+Sizes:
+
+- `.width(is:)`: the width needs to match. E.g. `.width(is:.atLeast(200))`
+- `.height(is:)`: the height needs to match. E.g. `.height(is:.atMost(100))`
+- `.widthAndHeight(is:)`: the width and height need to match the same value. E.g. `.widthAndHeight(is: .exactly(100))`
+- `.width(is: heightIs:)`: the widt and height need to match. E.g. `.width(is: .exactly(100), heightIs: .atMost(50))`
+
+Traits:
+
+- `.traits(in:)`: the trait collection must contain the given traits. E.g. `.traits(in: UITraitCollection(legibilityWeight: .bold))`
+- `trait(_:,is:)`: a property in the trait collection must match a value. E.g. `.trait(\.legibilityWeight, is: .bold)`
+- `.verticallyCompact`: matches when the trait collection has a vertical compact size class
+- `.verticallyRegular`: matches when the trait collection has a vertical regular size class
+- `.horizontallyCompact`: matches when the trait collection has a horizontal compact size class
+- `.horizontallyRegular`: matches when the trait collection has a horionzital regular size class
+- `.phone`: matches when the trait collection's idiom is phone
+- `.pad`: matches when the trait collection's idiom is pad
+- `.mac`: matches when the trait collection's idiom is mac
+- `.tv`: matches when the trait collection's idiom is tv
+- `.carPlay`: matches when the trait collection's idiom is carPlay
+- `.light`: matches when the trait collection's interface style is light
+- `.dark`: matches when the trait collection's interface style is dark
+- `.leftToRight`: matches when the trait collection's layout direction is left-to-right
+- `.rightToLeft`: matches when the trait collection's layout direction is right-to-left
+
+Callbacks:
+When using callbacks, be careful to not retain views strongly in order to not create retain cycles.
+
+- `.callback({ return someBool })`: matches when the given closure returns true. Does not take an argument.
+- `.callback({ view in return view.isHidden })`: matches when the given closure returns true. Argument is the relevant view.
+
+Combinations:
+
+- `.all(...)`: matches when all conditions match. E.g. `.all(.verticallyCompact, .phone)`
+- `.any(...)`: matches when any of the conditions match. E.g. `.any(.horizontallyCompact, .pad)`
+- `.not(...)`: matches when none of the conditions match. E.g. `.not(.phone, .pad)`
+
+Instance Helpers:
+
+- `.isTrue`: matches when the condition itself match, for expressive purposes. E.g. `.verticallyCompact.isTrue`
+- `.isFalse`: matches when the condition does not match E.g. `.verticallyCompact.isFalse`
+- `.and(...)`: matches when the condition and the other conditions match. E.g. `.verticallyCompact.and(.phone)`
+- `.or(...)`: matches when the condition matches or any of the other conditions match. E.g. `.verticallyCompact.or(.phone)`
+
+Specific View:
+
+All these constraints apply to a specific view, instead of the view that the constraints are created for.
+
+ - `.view(_:,has:)` matches when a specific view has matches a condition. The view is weakly retained. E.g. (`.view(label, has: .width(is: .exactly(100)))`
+ - `.view(_:,is:)` alias for `.view(_:,is:)` for expressive purposes.
+ 
+
+##### View specific conditions
+
+#### Coalescing
+
+#### More
+
+#### How it works under the hood
+
+Conditional constraints sprinkle a bit of magic:
+	- All constraints using the helper functions in this library are created using `ConstraintsList.activate()`
+	- when we are in `UIView.if()` any created constraints using `ConstraintsList` are intercepted using `ConstraintsList.intercept()`
+	- `UIView.if()` collects all constraints and stores them in the relevant view together with the relevant condition in a `ConstraintListCollection`
+	- (**warning:**) `UIView.traitCollectionDidChange(_:)` is swizzled once, so we can intercept trait collection changes
+	- The relevant views are observed for `bounds` changes and `traitCollectionDidChange(_:)` and when changes are detected, we'll re-evaluate all the condition and activate the correct `ConstraintsList`
+	- When we are in `UIView.if()` multiple of the same calls to `view.addSubview(subview)` are ignored for convenience.
+	
+The reason we express the conditions using our own system and only execute the `then` and `else` blocks once is that we don't want to create retain cycles: If we would execute the closures on every change, we need to store the closures and any used views will be retained strongly, leading to retain cycles. 
+Instead, we define conditions using our own system and record the created constraints.	
 
 ### UIStackView
 
