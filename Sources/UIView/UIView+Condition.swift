@@ -204,6 +204,7 @@ extension UIView.Condition {
 	static var pad: Self { idiom(.pad) }
 	
 	/// Matches when we are an mac
+	@available(iOS 14, *)
 	static var mac: Self { idiom(.mac) }
 	
 	/// Matches when we are an tv
