@@ -54,12 +54,14 @@ let backgroundView = UIView(backgroundColor: .systemGroupedBackground)
 let actionButton = UIButton.platter(title: "Add More Text", titleColor: .white)
 let cancelButton = UIButton.platter(title: "Revert", backgroundColor: .white)
 let buttonSize = CGSize(width: 32, height: 32)
+let smallButtonSize = CGSize(width: 24, height: 24)
 ```
 
-The following 6 lines create a view where the `titleLabel` and `subLabel`  are centered in the remaining space of
+The following 8 lines create a view where the `titleLabel` and `subLabel`  are centered in the remaining space of
 the backgroundView and follow the readable content guide;  the buttons are attached to the bottom either vertically 
 or horizontally depending on vertical the size class of the device; the close button is in the top-left corner 
-of the backgroundView.
+of the backgroundView or on the top-right corner, depending on the vertical size class. It will also be smaller in
+vertically compact environments. 
 The labels will automatically become scrollable when they need to.
 ```
 let content = UIView.verticallyStacked(
@@ -69,7 +71,11 @@ let content = UIView.verticallyStacked(
 
 backgroundView.addSubview(content, filling: .readableContent)
 addSubview(backgroundView, filling: .safeArea, insets: .all(32))
-backgroundView.addSubview(closeButton.constrain(size: buttonSize), pinning: .center, to: .topLeading)
+UIView.if(.verticallyCompact) {
+	backgroundView.addSubview(closeButton.constrain(size: smallButtonSize), pinning: .center, to: .topTrailing)
+} else: {
+	backgroundView.addSubview(closeButton.constrain(size: buttonSize), pinning: .center, to: .topLeading)
+}
 
 ```
 
