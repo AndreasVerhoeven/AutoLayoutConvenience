@@ -554,6 +554,34 @@ If you use custom callback as conditions, you might want to force updates yourse
 Layout changes as a result of conditional constraints can be animated. You can - again - do this in two ways:
 	- Call `animateChanges()` on a `UIView.if() {} else: {}` call: `UIView.if(.verticalCompact){} else: {}.animateChanges()` 
 	- Call `enableAnimationsForConditionalUpdates()` on the relevant `UIView`: `myLabel.enableAnimationsForConditionalUpdates()`
+	
+	
+#### Named Configurations
+
+It's also possible to switch configurations by name. By default, any view that uses conditional constraints has an configuration name of `.main`. It's possible to make conditions based on this name, using the `.name(is:)`.  
+
+Names can be changed using `view.activeConditionalConstraintsConfigurationName = ...`, which in turn updates the relevant conditional configurations. 
+There's also a shortcut for adding named conditional configurations: `UIView.addNamedConditionalConfiguration(_:configuration:)`, which is equal to `UIView.if(.name(...), then: configuration)`.
+
+There are four pre-defined configuration names:
+
+- `.main` the default one if no changes are made to the `activeConditionalConstraintsConfigurationName` of a view 
+- `.alternative` usable if you have one alternative configuration
+- `.visible` usable if you have a configuration that is a "visible" state
+- `.hidden` usable if you have a configuration that is a "hidden" state
+
+You can also define your own names using `UIView.Condition.ConfigurationName(rawValue: ...)`.
+
+An example is:
+
+	// create two configurations
+	UIView.addNamedConditionalConfiguration(.main) { button.constrain(widthAndHeight: 44) }
+	UIView.addNamedConditionalConfiguration(.alternative) { button.constrain(widthAndHeight: 24) }.animateChanges()
+	
+	DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+		button.activeConditionalConstraintsConfigurationName = .alternative
+	}
+
 
 #### How it works under the hood
 

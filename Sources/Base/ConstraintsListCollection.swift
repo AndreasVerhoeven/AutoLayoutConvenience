@@ -21,6 +21,15 @@ internal class ConstraintsListCollection: NSObject {
 	private var coalesceUpdates = true // true if we should coalesce updates if possible
 	private var shouldAnimateUpdates = false // true if we should animate updates
 	
+	// the active configuration name
+	internal var activeConfigurationName = UIView.Condition.ConfigurationName.main {
+		didSet {
+			guard activeConfigurationName != oldValue else { return }
+			guard let view = view else { return }
+			NotificationCenter.default.post(name: Self.activeConfigurationNameDidChange, object: view)
+		}
+	}
+	
 	internal init(view: UIView) {
 		self.view = view
 	}
@@ -108,43 +117,49 @@ internal class ConstraintsListCollection: NSObject {
 	
 	/// installs observers for all conditions
 	internal func install() {
+		guard let view = view else { return }
+		
 		// first, remove the old conditions
 		notificationCookies.removeAll()
 		boundsObservers.removeAll()
 		
 		// next, ask all our conditions for the views we need to monitor for traits and the views we need to monitor for bounds
-		let traitsViews = viewsNeedingObservers(isForTraits: true)
-		let boundsViews = viewsNeedingObservers(isForTraits: false)
+		var observers = [UIView: ObserverKind]()
+		for item in items {
+			item.condition.neededObservers(for: view).forEach {
+				guard let view = $0.key else { return }
+				observers[view, default: .none].formUnion($0.value)
+			}
+		}
 		
 		// if there's only one observer, we can always update directly since there's nothing to coalesce. We call these "simple" conditions, as opposed
 		// to "complex" conditions.
-		canDirectlyUpdate = (traitsViews.count + boundsViews.count) == 1
+		canDirectlyUpdate = observers.count <= 1 && observers.first?.value.hasSingleItem == true
 		
 		// register trait observers
-		UIView.swizzleTraitCollectionDidChangeIfNeeded()
-		for view in traitsViews {
+		for (view, kind) in observers where kind.contains(.traits) {
+			UIView.swizzleTraitCollectionDidChangeIfNeeded()
 			notificationCookies.append(NotificationCenter.default.addObserver(forName: UIView.traitCollectionDidChange, object: view, queue: .main, using: { [weak self] notification in
 				self?.setNeedsUpdate()
 			}))
 		}
-
+		
 		// register bounds observers
-		for view in boundsViews {
+		for (view, kind) in observers where kind.contains(.bounds) {
 			boundsObservers.append(view.layer.observe(\CALayer.bounds, changeHandler: { [weak self] _, _ in
+				self?.setNeedsUpdate()
+			}))
+		}
+		
+		// register name observers
+		for (view, kind) in observers where kind.contains(.name) {
+			notificationCookies.append(NotificationCenter.default.addObserver(forName: Self.activeConfigurationNameDidChange, object: view, queue: .main, using: { [weak self] notification in
 				self?.setNeedsUpdate()
 			}))
 		}
 		
 		// and update
 		update()
-	}
-	
-	/// returns the list of views that need to be observed
-	private func viewsNeedingObservers(isForTraits: Bool) -> Set<UIView> {
-		guard let view = view else { return [] }
-		return items.reduce(Set<UIView>()) { partialResult, item in
-			return partialResult.union(item.condition.viewsNeedingObservers(isForTraits: isForTraits, view: view).compactMap({ $0 }))
-		}
 	}
 }
 
@@ -153,5 +168,26 @@ extension ConstraintsListCollection {
 		var id = UUID()
 		var list: ConstraintsList
 		var condition: UIView.Condition
+	}
+}
+
+
+fileprivate extension ConstraintsListCollection {
+	static var activeConfigurationNameDidChange = Notification.Name(rawValue: "com.aveapps.AutoLayoutConvenience.activeConfigurationNameDidChange")
+}
+
+internal extension ConstraintsListCollection {
+	struct ObserverKind: RawRepresentable, OptionSet {
+		var rawValue: Int
+		
+		static let none = Self(rawValue: 0 << 0)
+		static let traits = Self(rawValue: 1 << 0)
+		static let bounds = Self(rawValue: 1 << 1)
+		static let name = Self(rawValue: 1 << 2)
+		static let all: Self = [.traits, .bounds, .name]
+		
+		var hasSingleItem: Bool {
+			return self == .traits || self == .bounds || self == .name
+		}
 	}
 }

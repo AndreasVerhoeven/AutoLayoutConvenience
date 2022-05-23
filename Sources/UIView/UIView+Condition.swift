@@ -27,6 +27,26 @@ extension UIView {
 }
 
 extension UIView.Condition {
+	/// This is a name of a configuration. See `UIView.addNamedConditionalConfiguration(name:configuration:)`
+	public struct ConfigurationName: RawRepresentable, Hashable {
+		public var rawValue: String
+		
+		public init(rawValue: String) {
+			self.rawValue = rawValue
+		}
+		
+		/// A predefined main configuration. This one is active by default.
+		public static let main = ConfigurationName(rawValue: "main")
+		/// A predefined alternative configuration name.
+		public static let alternative = ConfigurationName(rawValue: "alternative")
+		/// A predefined configuration name that can be used for configurations that are "shown".
+		public static let visible = ConfigurationName(rawValue: "shown")
+		/// A predefined configuration name that can be used for configurations that are "hidden".
+		public static let hidden = ConfigurationName(rawValue: "hidden")
+	}
+}
+
+extension UIView.Condition {
 	// MARK: - View
 	
 	/// A specific view needs to have a specific condition
@@ -161,6 +181,9 @@ extension UIView.Condition {
 		return .init(.and([.width(dimension), .height(dimension)]))
 	}
 	
+	// MARK: - Name
+	static func name(is name: ConfigurationName) -> Self { .init(.named(name)) }
+	
 	/// Matches when the traitCollection of the relevant view has the traits in the given trait collection.
 	///
 	/// - Parameters:
@@ -271,6 +294,10 @@ extension UIView.Condition {
 	/// Matches when none of the passed in conditions match
 	static func not(_ conditions: Self...) -> Self { Self.not(conditions) }
 	
+	// MARK: - Constants
+	
+	static var alwaysTrue: Self { .init(.alwaysTrue) }
+	static var alwaysFalse: Self { .init(.alwaysFalse) }
 	
 	// MARK: - Instance
 	
@@ -300,6 +327,9 @@ extension UIView.Condition {
 		case width(SizeConstrain<CGFloat>)
 		case height(SizeConstrain<CGFloat>)
 		
+		// named
+		case named(ConfigurationName)
+		
 		// traits
 		case traits(in: UITraitCollection)
 		case specificTrait(ViewEvaluator)
@@ -307,6 +337,10 @@ extension UIView.Condition {
 		// custom callback
 		case callbackView(ViewEvaluator)
 		case callbackNoView(NoViewEvaluator)
+		
+		// constants
+		case alwaysTrue
+		case alwaysFalse
 		
 		// combinations
 		indirect case and([Kind])
@@ -321,7 +355,7 @@ extension UIView.Condition {
 internal extension UIView.Condition {
 	/// internal helpers
 	func matches(for view: UIView) -> Bool { kind.matches(for: view) }
-	func viewsNeedingObservers(isForTraits: Bool, view: UIView) -> Set<UIView?> { kind.viewsNeedingObserving(for: view, isForTraits: isForTraits) }
+	func neededObservers(for view: UIView) -> [UIView?: ConstraintsListCollection.ObserverKind] { kind.neededObservers(for: view) }
 	
 	// bind this condition to a view if there is no view assigned bound yet.
 	func bind(to view: UIView?) -> Self { Self(kind.bound(to: view)) }
@@ -333,11 +367,16 @@ fileprivate extension UIView.Condition.Kind {
 			case .width(let sizeConstrain): return sizeConstrain.matches(for: view.bounds.width, scale: view.scaleToUse)
 			case .height(let sizeConstrain): return sizeConstrain.matches(for: view.bounds.height, scale: view.scaleToUse)
 				
+			case .named(let name): return view.activeConditionalConstraintsConfigurationName == name
+				
 			case .traits(in: let traitCollection): return view.traitCollection.containsTraits(in: traitCollection)
 			case .specificTrait(let evaluator): return evaluator(view)
 			
 			case .callbackView(let evaluator): return evaluator(view)
 			case .callbackNoView(let evaluator): return evaluator()
+				
+			case .alwaysTrue: return true
+			case .alwaysFalse: return false
 				
 			case .and(let others): return others.allSatisfy { $0.matches(for: view) }
 			case .or(let others): return others.contains { $0.matches(for: view) }
@@ -346,19 +385,23 @@ fileprivate extension UIView.Condition.Kind {
 		}
 	}
 	
-	func viewsNeedingObserving(for view: UIView?, isForTraits: Bool) -> Set<UIView?> {
+	func neededObservers(for view: UIView?) -> [UIView?: ConstraintsListCollection.ObserverKind] {
 		switch self {
-			case .width, .height: return isForTraits == false ? [view] : []
-			case .traits, .specificTrait: return isForTraits == true ? [view] : []
-			case .callbackView, .callbackNoView: return [view]
+			case .width, .height: return [view: .bounds]
+			case .traits, .specificTrait: return [view: .traits]
+			case .named: return [view: .name]
+			case .callbackView, .callbackNoView: return [view: .all]
+			case .alwaysTrue, .alwaysFalse: return [:]
+			case .bound(let bounded): return bounded.kind.neededObservers(for: view)
 			case .and(let others), .or(let others), .not(let others):
-				return others.reduce([]) { partialResult, item in
-					return partialResult.union(item.viewsNeedingObserving(for: view, isForTraits: isForTraits))
+				var observers = [UIView?: ConstraintsListCollection.ObserverKind]()
+				for other in others {
+					other.neededObservers(for: view).forEach { observers[$0.key, default: .none].formUnion($0.value)  }
 				}
-			case .bound(let bounded):
-				return bounded.kind.viewsNeedingObserving(for: bounded.view, isForTraits: isForTraits)
+				return observers
 		}
 	}
+
 	
 	func bound(to view: UIView?) -> Self {
 		guard let view = view else { return self }

@@ -33,12 +33,12 @@ extension UIView {
 	///
 	/// - Returns: returns a `ConditionalResult` that can be used stop updates from coalescing or automatically animate changed.
 	@discardableResult public static func `if`(_ condition: Condition, then: ConditionCallback, else: ConditionCallback = {}) -> ConditionalResult {
-		UIView.internalIf(view: nil, condition: condition, then: then, else: `else`)
+		return UIView.internalIf(view: nil, condition: condition, then: then, else: `else`)
 	}
 	
 	// alias of `if(_:then:else:)`
 	@discardableResult public static func conditionallyConstrain(if condition: Condition, then: ConditionCallback, else: ConditionCallback = {}) -> ConditionalResult {
-		UIView.internalIf(view: nil, condition: condition, then: then, else: `else`)
+		return UIView.internalIf(view: nil, condition: condition, then: then, else: `else`)
 	}
 	
 	/// Creates conditional constraints where the condition applies to the given view. Constraints created in the `then` or `else` callbacks
@@ -63,17 +63,46 @@ extension UIView {
 	///
 	/// - Returns: returns a `ConditionalResult` that can be used stop updates from coalescing or automatically animate changed.
 	@discardableResult public static func `if`(view: UIView, is condition: Condition, then: ConditionCallback, else: ConditionCallback = {}) -> ConditionalResult {
-		UIView.internalIf(view: view, condition: condition, then: then, else: `else`)
+		return UIView.internalIf(view: view, condition: condition, then: then, else: `else`)
 	}
 	
 	/// alias of `UIView.if(view:is:then:else)` for expressive purposes.
 	@discardableResult public static func `if`(view: UIView, has condition: Condition, then: ConditionCallback, else: ConditionCallback = {}) -> ConditionalResult {
-		UIView.internalIf(view: view, condition: condition, then: then, else: `else`)
+		return UIView.internalIf(view: view, condition: condition, then: then, else: `else`)
 	}
 	
-	// alias of `if(view:is:then:else:)`
+	/// alias of `if(view:is:then:else:)`
 	@discardableResult public static func conditionallyConstrain(ifView view: UIView, is condition: Condition, then: ConditionCallback, else: ConditionCallback = {}) -> ConditionalResult {
-		UIView.internalIf(view: nil, condition: condition, then: then, else: `else`)
+		return UIView.internalIf(view: nil, condition: condition, then: then, else: `else`)
+	}
+	
+	/// Creates conditional constraints where the condition applies to the given view if that view's
+	/// `activeConditionalConstraintsConfigurationName` == `name`t. Constraints created in the configuration
+	/// will only be applied when the given name is active. This allows you to apply different constraints to the same view
+	/// and have them automatically be actived/deactivated depending on the active configuration.
+	///
+	/// It is possible to call `addSubview(subview, ...)` multiple times inside of different `addNamedConditionalConfiguration`
+	/// configuration callbacks without the view hierarchy changing: the constraints for those `addSubview()` calls will be conditionally
+	/// set.
+	///
+	/// **Note that you cannot conditionally add a subview to different superviews: that's an error.** This mechanism
+	/// only makes the constraints conditional, it doesn't conditionally move views to different super views.
+	///
+	///  **Also note** that the configuration block is only executed once, not dynamically.
+	///  If you need custom logic to apply to those constraints, use a `.callback({})-condition`.
+	///
+	/// - Parameters:
+	///  	- name: the name for this configuration.
+	///  	- configuration: a block where all the AutoLayoutConvenience constraints created will only be activated when the given conditional configuration name is active for the view.
+	@discardableResult public static func addNamedConditionalConfiguration(_ name: UIView.Condition.ConfigurationName, configuration: ConditionCallback) -> ConditionalResult {
+		return UIView.internalIf(view: nil, condition: .name(is: name), then: configuration, else: {})
+	}
+	
+	/// Helper for `addNamedConditionalConfiguration(name:configuration)` that sets multiple configurations at once.
+	@discardableResult public static func addNamedConditionalConfigurations(configurations: [UIView.Condition.ConfigurationName: ConditionCallback]) -> ConditionalResult {
+		UIView.internalIf(view: nil, condition: .alwaysTrue, then: {
+			configurations.forEach { UIView.addNamedConditionalConfiguration($0.key, configuration: $0.value) }
+		}, else: {})
 	}
 	
 	/// Any conditional  constraint updates for this view should be directly applied instead of being coalesced.
@@ -105,6 +134,12 @@ extension UIView {
 		constraintsListCollection?.update()
 	}
 	
+	/// If using named conditions, this is the name of active configuration. Defaults to `main`
+	public var activeConditionalConstraintsConfigurationName: UIView.Condition.ConfigurationName {
+		get { constraintsListCollection?.activeConfigurationName ?? .main }
+		set { ensureConstraintsListCollection().activeConfigurationName = newValue }
+	}
+
 	/// The result of a conditional function. Can be used to apply properties to all of the created constraints.
 	public struct ConditionalResult {
 		fileprivate var collections = [ConstraintsListCollection]()
