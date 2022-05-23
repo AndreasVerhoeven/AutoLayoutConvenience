@@ -29,7 +29,7 @@ extension UIView {
 		
 		let block: @convention(block) (UIView, UITraitCollection?) -> Void = { view, traitCollection in
 			originalFunction?(view, selector, traitCollection)
-			NotificationCenter.default.post(name: Self.traitCollectionDidChange, object: view)
+			NotificationCenter.default.post(name: UIView.traitCollectionDidChange, object: view)
 		}
 		let newImplementation = imp_implementationWithBlock(block)
 		let originalImplementation: IMP

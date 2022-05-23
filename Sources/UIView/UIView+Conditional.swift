@@ -36,6 +36,11 @@ extension UIView {
 		UIView.internalIf(view: nil, condition: condition, then: then, else: `else`)
 	}
 	
+	// alias of `if(_:then:else:)`
+	@discardableResult public static func conditionallyConstrain(if condition: Condition, then: ConditionCallback, else: ConditionCallback = {}) -> ConditionalResult {
+		UIView.internalIf(view: nil, condition: condition, then: then, else: `else`)
+	}
+	
 	/// Creates conditional constraints where the condition applies to the given view. Constraints created in the `then` or `else` callbacks
 	/// will only be applied when the given conditions apply. This allows you to apply different constraints to the same view
 	/// and have them automatically be actived/deactivated depending on the given conditions.
@@ -66,6 +71,10 @@ extension UIView {
 		UIView.internalIf(view: view, condition: condition, then: then, else: `else`)
 	}
 	
+	// alias of `if(view:is:then:else:)`
+	@discardableResult public static func conditionallyConstrain(ifView view: UIView, is condition: Condition, then: ConditionCallback, else: ConditionCallback = {}) -> ConditionalResult {
+		UIView.internalIf(view: nil, condition: condition, then: then, else: `else`)
+	}
 	
 	/// Any conditional  constraint updates for this view should be directly applied instead of being coalesced.
 	/// See the discussion in `#ConditionalResult.withoutCoalescing()`
