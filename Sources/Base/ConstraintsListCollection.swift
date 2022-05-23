@@ -120,6 +120,7 @@ internal class ConstraintsListCollection: NSObject {
 		guard let view = view else { return }
 		
 		// first, remove the old conditions
+		notificationCookies.forEach { NotificationCenter.default.removeObserver($0) }
 		notificationCookies.removeAll()
 		boundsObservers.removeAll()
 		
@@ -160,6 +161,10 @@ internal class ConstraintsListCollection: NSObject {
 		
 		// and update
 		update()
+	}
+	
+	deinit {
+		notificationCookies.forEach { NotificationCenter.default.removeObserver($0) }
 	}
 }
 
