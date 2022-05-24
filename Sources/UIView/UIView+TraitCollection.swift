@@ -22,8 +22,14 @@ extension UIView {
 		guard Self.hasSwizzledTraitCollectionDidChange == false else { return }
 		Self.hasSwizzledTraitCollectionDidChange = true
 		
+		swizzleTraitCollectionDidChange(for: UIView.self)
+		swizzleTraitCollectionDidChange(for: UIImageView.self)
+		
+	}
+	
+	private static func swizzleTraitCollectionDidChange(for viewClass: AnyClass) {
 		let selector = #selector(traitCollectionDidChange(_:))
-		guard let originalMethod = class_getInstanceMethod(UIView.self, selector) else { return }
+		guard let originalMethod = class_getInstanceMethod(viewClass, selector) else { return }
 		typealias OriginalFunction = @convention(c) (UIView, Selector, UITraitCollection?) -> Void
 		var originalFunction: OriginalFunction?
 		
@@ -33,7 +39,7 @@ extension UIView {
 		}
 		let newImplementation = imp_implementationWithBlock(block)
 		let originalImplementation: IMP
-		if(!class_addMethod(UIView.self, selector, newImplementation, method_getTypeEncoding(originalMethod))) {
+		if(!class_addMethod(viewClass, selector, newImplementation, method_getTypeEncoding(originalMethod))) {
 			originalImplementation = method_setImplementation(originalMethod, newImplementation)
 		} else {
 			originalImplementation = method_getImplementation(originalMethod)
