@@ -46,7 +46,7 @@ extension UIView.Condition {
 	}
 }
 
-extension UIView.Condition {
+public extension UIView.Condition {
 	// MARK: - View
 	
 	/// A specific view needs to have a specific condition
