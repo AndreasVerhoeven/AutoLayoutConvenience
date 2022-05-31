@@ -43,6 +43,14 @@ public class ConstraintsList: NSObject {
 		interceptors.removeLast()
 	}
 
+	internal static func grouped(_ running: () -> Void, for view: UIView) -> ConstraintsList {
+		var constraints = [NSLayoutConstraint]()
+		ConstraintsList.intercept({ list, _ in
+			constraints.append(contentsOf: list.all)
+		}, while: running)
+		return ConstraintsList.activate(constraints, for: view)
+	}
+	
 	/// Activates a list of optional constraints and returns a constraint list
 	@discardableResult public static func activate(_ constraints: [NSLayoutConstraint?], for view: UIView) -> ConstraintsList {
 		let list = ConstraintsList(constraints: constraints.compactMap({ $0 }), view: view)
@@ -53,7 +61,7 @@ public class ConstraintsList: NSObject {
 		}
 		return list
 	}
-
+	
 	// all constraints in the list
 	public var all: [NSLayoutConstraint] {
 		var items = Array<NSLayoutConstraint>()

@@ -164,6 +164,14 @@ Filling is done by specifying the 4 edges to constrain to (`BoxLayout`), with op
 	// Fills the view by constraining to the specified edges
 	addSubview(subview, filling: .top(.safeArea, leading: .safeArea, bottom: .layoutMargins, trailing: .readableContent))
 
+You can also fill and position in one go, making the subview not being any larger than the given box:
+
+	// pins subview at the center while being as large as possible, but never extending the safe area (insetted by 8 pts)
+	addSubview(subview, fillingAtMost: .safeArea, insets: .all(8), pinnedTo: .center)
+	
+	// pins the topLeading point of the subview to the center of the subview while being as large as possible,
+	//  but never extending the safe area (insetted by 8 pts)
+	addSubview(subview, fillingAtMost: .safeArea, insets: .all(8), pinning: .topLeading, to: .center)
 
 ### Centering
 
