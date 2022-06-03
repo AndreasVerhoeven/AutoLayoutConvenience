@@ -12,7 +12,7 @@ class ViewController: UIViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		
+
 		let demoView = DemoView()
 		demoView.actionButton.addAction(UIAction(handler: { _ in
 			demoView.setSubTitleAnimated(String(repeating: demoView.subLabel.text ?? "", count: 2))

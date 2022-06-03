@@ -603,7 +603,22 @@ Conditional constraints sprinkle a bit of magic:
 	- When we are in `UIView.if()` multiple of the same calls to `view.addSubview(subview)` are ignored for convenience.
 	
 The reason we express the conditions using our own system and only execute the `then` and `else` blocks once is that we don't want to create retain cycles: If we would execute the closures on every change, we need to store the closures and any used views will be retained strongly, leading to retain cycles. 
-Instead, we define conditions using our own system and record the created constraints.	
+Instead, we define conditions using our own system and record the created constraints.
+
+
+### Batching constraints activation
+
+Sometimes you have two constraints that depend on each other but you want to add them in a certain order. This can cause exceptions, since views that constrain each other need to be in the same hierarchy. In order to solve this, you can batch constraints activation:
+
+	let bottomView = UIView(backgroundColor: .red).constrain(widthAndHeight: 50)
+	let topView = UIView(backgroundColor: .green).constrain(widthAndHeight: 100)
+	
+	UIView.batchConstraints {
+		addSubview(bottomView, pinning: .center, to: .topLeading, of: .relative(topView))
+		addSubview(topView, centeredIn: .safeArea)
+	}
+	
+Without `UIView.batchConstraints()`, the first `addSubview()` call would crash, since `topView` is not yet in the view hierarchy. Wrapping those two calls in one `UIView.batchConstraints {}` solves this, since all constraints created in its closure will only be activated after the closure has run and all views have been added to the hierarchy already. 
 
 ### UIStackView
 

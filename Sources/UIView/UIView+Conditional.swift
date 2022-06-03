@@ -160,6 +160,23 @@ extension UIView {
 			return self
 		}
 	}
+	
+	/// All constraints created in the given block are only activated after running the block: this allows creating
+	/// inter-view constraints using addSubview() without running into exceptions when the views are not
+	/// yet in the same hierarchy.
+	///
+	/// Note: it is safe to nest calls to this function: only at the end outer call will constraints be activated.
+	///
+	/// - Example:
+	/// E.g.
+	/// 	addSubview(someView, filling: .relative(someOtherView))
+	///		addSubview(someOtherView, centeredIn: .superview)
+	///
+	/// - Parameters:
+	///  	- running: a block where all the AutoLayoutConvenience constraints created will only be activated after the block ran
+	static func batchConstraints(_ running: () -> Void) {
+		ConstraintsList.delayActivation(running)
+	}
 }
 
 extension UIView {

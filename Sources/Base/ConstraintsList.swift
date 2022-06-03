@@ -27,6 +27,8 @@ public class ConstraintsList: NSObject {
 	public var lastBaseline: NSLayoutConstraint?
 
 	public var others = [NSLayoutConstraint]()
+	
+	private var shouldBeDelayedActivated = false
 
 	public init(constraints: [NSLayoutConstraint] = [], view: UIView? = nil) {
 		super.init()
@@ -60,6 +62,22 @@ public class ConstraintsList: NSObject {
 			list.activate()
 		}
 		return list
+	}
+	
+	fileprivate static var delayedActivationLists = Set<ConstraintsList>()
+	fileprivate static var delayedActivationCount = 0
+	fileprivate static var isActivationDelayed: Bool { delayedActivationCount > 0 }
+	
+	internal static func delayActivation(_ running: () -> Void) {
+		delayedActivationCount += 1
+		running()
+		delayedActivationCount -= 1
+		
+		guard delayedActivationCount == 0 else { return }
+		for list in delayedActivationLists where list.shouldBeDelayedActivated && list.view != nil {
+			list.activate()
+		}
+		delayedActivationLists.removeAll()
 	}
 	
 	// all constraints in the list
@@ -158,11 +176,19 @@ public class ConstraintsList: NSObject {
 
 	// activates all constraints
 	public func activate() {
-		NSLayoutConstraint.activate(all)
+		if Self.isActivationDelayed == true {
+			shouldBeDelayedActivated = true
+			Self.delayedActivationLists.insert(self)
+		} else {
+			NSLayoutConstraint.activate(all)
+		}
 	}
 
 	// deactivates all constraints
 	public func deactivate() {
+		if Self.isActivationDelayed == true {
+			shouldBeDelayedActivated = false
+		}
 		NSLayoutConstraint.deactivate(all)
 	}
 }
