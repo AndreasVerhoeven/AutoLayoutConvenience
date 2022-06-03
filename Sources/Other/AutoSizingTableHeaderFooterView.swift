@@ -139,7 +139,7 @@ public class AutoSizingTableHeaderFooterView: UIView {
 			tableView.setNeedsLayout()
 		}
 		
-		if automaticallyAnimateChanges == false || bounds.height == 0 || isInitialLayoutCycle == true || isInUpdateHeaderViewCount > 1 {
+		if automaticallyAnimateChanges == false || bounds.height == 0 || isInitialLayoutCycle == true || isInUpdateHeaderViewCount > 1 || window == nil {
 			isInitialLayoutCycle = false
 			updates()
 		} else {
