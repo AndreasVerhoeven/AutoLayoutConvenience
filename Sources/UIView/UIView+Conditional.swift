@@ -174,7 +174,7 @@ extension UIView {
 	///
 	/// - Parameters:
 	///  	- running: a block where all the AutoLayoutConvenience constraints created will only be activated after the block ran
-	static func batchConstraints(_ running: () -> Void) {
+	public static func batchConstraints(_ running: () -> Void) {
 		ConstraintsList.delayActivation(running)
 	}
 }
