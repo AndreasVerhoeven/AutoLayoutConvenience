@@ -30,7 +30,9 @@ public class ManualLayoutHostedInAutoLayoutBridgingView: UIView {
 		self.constrainedOnAxis = axis
 		super.init(frame: .zero)
 		
+		preservesSuperviewLayoutMargins = true
 		updateStackViewAxis()
+		stackView.preservesSuperviewLayoutMargins = true
 		stackView.callback = { self.layoutSubviews() }
 		stackView.addArrangedSubviews(view)
 		addSubview(stackView, filling: .superview)
