@@ -120,7 +120,10 @@ public class AutoSizingTableHeaderFooterView: UIView {
 		
 		// figure out the size of our view and make sure the height matches
 		let wantedSize = wantedSize(for: width, usesFallbackWidth: false)
-		guard wantedSize.height != bounds.height else { return }
+		guard wantedSize.height != bounds.height else {
+			isInitialLayoutCycle = false
+			return
+		}
 		isInUpdateHeaderViewCount += 1
 		
 		let updates = {
