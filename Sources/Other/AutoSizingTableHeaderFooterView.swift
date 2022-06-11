@@ -143,7 +143,7 @@ public class AutoSizingTableHeaderFooterView: UIView {
 			isInitialLayoutCycle = false
 			updates()
 		} else {
-			UIView.animate(withDuration: 1, delay: 0, options: [.allowUserInteraction, .allowAnimatedContent, .beginFromCurrentState], animations: updates)
+			UIView.animate(withDuration: 0.3, delay: 0, options: [.allowUserInteraction, .allowAnimatedContent, .beginFromCurrentState], animations: updates)
 		}
 		
 		isInUpdateHeaderViewCount -= 1
