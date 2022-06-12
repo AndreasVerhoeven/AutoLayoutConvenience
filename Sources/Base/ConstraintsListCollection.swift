@@ -152,6 +152,13 @@ internal class ConstraintsListCollection: NSObject {
 			}))
 		}
 		
+		// register hidden observers
+		for (view, kind) in observers where kind.contains(.hidden) {
+			boundsObservers.append(view.observe(\UIView.isHidden, changeHandler: { [weak self] _, _ in
+				self?.setNeedsUpdate()
+			}))
+		}
+		
 		// register name observers
 		for (view, kind) in observers where kind.contains(.name) {
 			notificationCookies.append(NotificationCenter.default.addObserver(forName: Self.activeConfigurationNameDidChange, object: view, queue: .main, using: { [weak self] notification in
@@ -189,10 +196,11 @@ internal extension ConstraintsListCollection {
 		static let traits = Self(rawValue: 1 << 0)
 		static let bounds = Self(rawValue: 1 << 1)
 		static let name = Self(rawValue: 1 << 2)
-		static let all: Self = [.traits, .bounds, .name]
+		static let hidden = Self(rawValue: 1 << 3)
+		static let all: Self = [.traits, .bounds, .name, .hidden]
 		
 		var hasSingleItem: Bool {
-			return self == .traits || self == .bounds || self == .name
+			return self == .traits || self == .bounds || self == .name || self == .hidden
 		}
 	}
 }

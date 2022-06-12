@@ -481,6 +481,11 @@ Sizes:
 - `.widthAndHeight(is:)`: the width and height need to match the same value. E.g. `.widthAndHeight(is: .exactly(100))`
 - `.width(is: heightIs:)`: the widt and height need to match. E.g. `.width(is: .exactly(100), heightIs: .atMost(50))`
 
+Visibility:
+
+- `.hidden`: the view needs to be hidden. E.g. `(.view(someView, is: .hidden))`
+- `.visible`: the view needs to be not hidden. E.g. `(.view(someView, is: .visible))`
+
 Traits:
 
 - `.traits(in:)`: the trait collection must contain the given traits. E.g. `.traits(in: UITraitCollection(legibilityWeight: .bold))`

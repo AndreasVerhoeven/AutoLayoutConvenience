@@ -250,6 +250,14 @@ public extension UIView.Condition {
 	/// Matches when we are an right-to-left
 	static var rightToLeft: Self { traits(in: UITraitCollection(layoutDirection: .rightToLeft)) }
 	
+	// MARK: - Visibility
+	
+	///  matches when the view is hidden
+	static var hidden: Self { .init(.hidden) }
+	
+	/// matches when the view is not hidden
+	static var visible: Self { .init(.hidden).isFalse }
+	
 	// MARK: - Callback
 	
 	/// Matches when the given callback returns true. The relevant view will be passed in as an argument.
@@ -338,6 +346,9 @@ extension UIView.Condition {
 		case callbackView(ViewEvaluator)
 		case callbackNoView(NoViewEvaluator)
 		
+		// visibility
+		case hidden
+		
 		// constants
 		case alwaysTrue
 		case alwaysFalse
@@ -375,6 +386,8 @@ fileprivate extension UIView.Condition.Kind {
 			case .callbackView(let evaluator): return evaluator(view)
 			case .callbackNoView(let evaluator): return evaluator()
 				
+			case .hidden: return view.isHidden
+				
 			case .alwaysTrue: return true
 			case .alwaysFalse: return false
 				
@@ -391,6 +404,7 @@ fileprivate extension UIView.Condition.Kind {
 			case .traits, .specificTrait: return [view: .traits]
 			case .named: return [view: .name]
 			case .callbackView, .callbackNoView: return [view: .all]
+			case .hidden: return [view: .hidden]
 			case .alwaysTrue, .alwaysFalse: return [:]
 			case .bound(let bounded): return bounded.kind.neededObservers(for: view)
 			case .and(let others), .or(let others), .not(let others):
