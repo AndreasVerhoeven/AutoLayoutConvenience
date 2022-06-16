@@ -43,6 +43,7 @@ extension UIStackView {
 		if let insets = insets {
 			self.directionalLayoutMargins = insets
 			self.isLayoutMarginsRelativeArrangement = true
+			self.insetsLayoutMarginsFromSafeArea = false
 		}
 	}
 
