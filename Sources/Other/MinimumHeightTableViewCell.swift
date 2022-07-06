@@ -12,7 +12,7 @@ import UIKit
 open class MinimumHeightTableCell: UITableViewCell {
 
 	/// The defaults height used for all instances of this class
-	open static var defaultMinimumHeight: CGFloat? = nil
+	public static var defaultMinimumHeight: CGFloat? = nil
 
 	/// The minimum height for this cell for AutoLayout purposes:
 	/// if nil, no minimum height will be enforced
