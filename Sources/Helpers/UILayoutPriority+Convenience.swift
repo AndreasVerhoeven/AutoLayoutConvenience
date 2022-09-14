@@ -42,7 +42,7 @@ public extension UILayoutPriority {
 	///
 	/// - Returns: A layout priority that is lower by `value` than the current priority
 	func lower(_ value: Float) -> UILayoutPriority {
-		return offsetted(value)
+		return offsetted(-value)
 	}
 
 	/// Layout priority offsetted
