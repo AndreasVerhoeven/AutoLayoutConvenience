@@ -115,7 +115,7 @@ extension UIView {
 		return self
 	}
 
-	/// Removes any existing width
+	/// Removes any existing width constraint
 	///
 	/// - Returns: returns `self`, useful for chaining
 	@discardableResult public func removeWidthConstraints() -> Self {
@@ -124,11 +124,29 @@ extension UIView {
 		return self
 	}
 
-	/// Removes any existing width or height constraint
+	/// Removes any existing height constraint
 	///
 	/// - Returns: returns `self`, useful for chaining
 	@discardableResult public func removeHeightConstraints() -> Self {
 		let constraintsToRemove = constraints.filter { $0.firstAttribute == .height }
+		removeConstraints(constraintsToRemove)
+		return self
+	}
+	
+	/// Removes any existing constant width constraint
+	///
+	/// - Returns: returns `self`, useful for chaining
+	@discardableResult public func removeConstantWidthConstraints() -> Self {
+		let constraintsToRemove = constraints.filter { $0.firstAttribute == .width && $0.secondItem == nil }
+		removeConstraints(constraintsToRemove)
+		return self
+	}
+	
+	/// Removes any existing constant height constraint
+	///
+	/// - Returns: returns `self`, useful for chaining
+	@discardableResult public func removeConstantHeightConstraints() -> Self {
+		let constraintsToRemove = constraints.filter { $0.firstAttribute == .height && $0.secondItem == nil }
 		removeConstraints(constraintsToRemove)
 		return self
 	}
