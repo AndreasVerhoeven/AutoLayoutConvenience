@@ -25,7 +25,7 @@ class ViewController: UIViewController {
 		}), for: .editingDidEndOnExit)
 
 		view.addSubview(UIView(backgroundColor: .red), filling: .keyboardFrame)
-		//view.addSubview(demoView, filling: .keyboardSafeArea)
+		view.addSubview(demoView, filling: .keyboardSafeArea)
 	}
 	
 	override func viewDidAppear(_ animated: Bool) {

@@ -35,9 +35,7 @@ extension UIView {
 		let observer = NotificationCenter.default.addObserver(forName: Self.traitCollectionDidChange, object: self, queue: .main) { _ in
 			callback()
 		}
-		return Cancellable(cancelsOnDeInit: false) {
-			NotificationCenter.default.removeObserver(observer)
-		}
+		return Cancellable(notificationCenterObserver: observer)
 	}
 	
 	private static func swizzleTraitCollectionDidChange(for viewClass: AnyClass) {
