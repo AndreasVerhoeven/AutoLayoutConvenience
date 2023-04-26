@@ -13,8 +13,8 @@ import UIKit
 internal class ConstraintsListCollection: NSObject {
 	private weak var view: UIView? // the view we are for, weak to not cause retain cycles.
 	private var items = [Item]() // our items: being the conditions+lists
-	private var notificationCookies = [NSObjectProtocol]() // registered observer cookies
-	private var boundsObservers = [NSKeyValueObservation]() // registered bounds oberserves
+	private var cancellables = [Cancellable]() // registered observers
+	private var boundsObservers = [NSKeyValueObservation]() // registered bounds oberservers
 	private var activeItemIds = Set<UUID>() // the list of ids of items that is active
 	private var canDirectlyUpdate = false // true if we can do direct updates when something changes (we're not tracking complex conditions).
 	private var needsUpdate = true // true if we need an update
@@ -120,8 +120,7 @@ internal class ConstraintsListCollection: NSObject {
 		guard let view = view else { return }
 		
 		// first, remove the old conditions
-		notificationCookies.forEach { NotificationCenter.default.removeObserver($0) }
-		notificationCookies.removeAll()
+		cancellables.removeAll()
 		boundsObservers.removeAll()
 		
 		// next, ask all our conditions for the views we need to monitor for traits and the views we need to monitor for bounds
@@ -139,10 +138,9 @@ internal class ConstraintsListCollection: NSObject {
 		
 		// register trait observers
 		for (view, kind) in observers where kind.contains(.traits) {
-			UIView.swizzleTraitCollectionDidChangeIfNeeded()
-			notificationCookies.append(NotificationCenter.default.addObserver(forName: UIView.traitCollectionDidChange, object: view, queue: .main, using: { [weak self] notification in
+			cancellables.append(view.monitorTraitCollectionChanges({ [weak self] in
 				self?.setNeedsUpdate()
-			}))
+			}).automaticallyCancellingOnDeInit)
 		}
 		
 		// register bounds observers
@@ -161,17 +159,13 @@ internal class ConstraintsListCollection: NSObject {
 		
 		// register name observers
 		for (view, kind) in observers where kind.contains(.name) {
-			notificationCookies.append(NotificationCenter.default.addObserver(forName: Self.activeConfigurationNameDidChange, object: view, queue: .main, using: { [weak self] notification in
+			cancellables.append(view.monitorActiveConfigurationName({ [weak self] in
 				self?.setNeedsUpdate()
-			}))
+			}).automaticallyCancellingOnDeInit)
 		}
 		
 		// and update
 		update()
-	}
-	
-	deinit {
-		notificationCookies.forEach { NotificationCenter.default.removeObserver($0) }
 	}
 }
 
@@ -187,6 +181,14 @@ extension ConstraintsListCollection {
 fileprivate extension ConstraintsListCollection {
 	static var activeConfigurationNameDidChange = Notification.Name(rawValue: "com.aveapps.AutoLayoutConvenience.activeConfigurationNameDidChange")
 }
+
+fileprivate extension UIView {
+	func monitorActiveConfigurationName(_ callback: @escaping () -> Void) -> Cancellable {
+		let observer = NotificationCenter.default.addObserver(forName: ConstraintsListCollection.activeConfigurationNameDidChange, object: self, queue: .main, using: { _ in callback() })
+		return Cancellable(notificationCenterObserver: observer)
+	}
+}
+								
 
 internal extension ConstraintsListCollection {
 	struct ObserverKind: RawRepresentable, OptionSet {

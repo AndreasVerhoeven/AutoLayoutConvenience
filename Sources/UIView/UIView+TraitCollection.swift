@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import ObjectiveC.runtime
 
 extension UIView {
 	/// internal check to see if we have swizzled traitCollectionDidChange already. Since
@@ -24,7 +25,19 @@ extension UIView {
 		
 		swizzleTraitCollectionDidChange(for: UIView.self)
 		swizzleTraitCollectionDidChange(for: UIImageView.self)
+		swizzleTraitCollectionDidChange(for: UILabel.self)
+	}
+	
+	/// Monitors changes to trait collection of this view. You need to hold onto the return value; releasing it will stop the observation.
+	public func monitorTraitCollectionChanges(_ callback: @escaping () -> Void) -> Cancellable {
+		Self.swizzleTraitCollectionDidChangeIfNeeded()
 		
+		let observer = NotificationCenter.default.addObserver(forName: Self.traitCollectionDidChange, object: self, queue: .main) { _ in
+			callback()
+		}
+		return Cancellable(cancelsOnDeInit: false) {
+			NotificationCenter.default.removeObserver(observer)
+		}
 	}
 	
 	private static func swizzleTraitCollectionDidChange(for viewClass: AnyClass) {
