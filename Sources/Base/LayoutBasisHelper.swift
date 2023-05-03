@@ -117,6 +117,26 @@ public extension BaseLayout {
 	static func keyboardFrameOf(_ view: UIView) -> Self {
 		return Self(.keyboardFrameOf(view))
 	}
+	
+	/// Anchored to the leading side of the area that is excluded by the specific excludable area (.e.g safeArea)
+	static func excludedLeadingSideOf(_ area: ExcludableArea) -> Self {
+		return Self(.excludedLeadingSideOf(area))
+	}
+	
+	/// Anchored to the trailing side of the area that is excluded by the specific excludable area (.e.g safeArea)
+	static func excludedTrailingSideOf(_ area: ExcludableArea) -> Self {
+		return Self(.excludedTrailingSideOf(area))
+	}
+	
+	/// Anchored to the top side of the area that is excluded by the specific excludable area (.e.g safeArea)
+	static func excludedTopSideOf(_ area: ExcludableArea) -> Self {
+		return Self(.excludedTopSideOf(area))
+	}
+	
+	/// Anchored to the bottom side of the area that is excluded by the specific excludable area (.e.g safeArea)
+	static func excludedBottomSideOf(_ area: ExcludableArea) -> Self {
+		return Self(.excludedBottomSideOf(area))
+	}
 }
 
 // MARK: - Layout Factories
@@ -296,6 +316,11 @@ extension LayoutAnchorable {
 
 			case .keyboardFrame: return baseView?.keyboardFrameLayoutGuide
 			case .keyboardFrameOf(let view): return view.keyboardFrameLayoutGuide
+				
+			case .excludedTopSideOf(let area): return area.excludableLayoutGuides(in: baseView)?.top
+			case .excludedBottomSideOf(let area): return area.excludableLayoutGuides(in: baseView)?.bottom
+			case .excludedLeadingSideOf(let area): return area.excludableLayoutGuides(in: baseView)?.leading
+			case .excludedTrailingSideOf(let area): return area.excludableLayoutGuides(in: baseView)?.trailing
 		}
 	}
 	
@@ -310,7 +335,33 @@ extension LayoutAnchorable {
 	}
 }
 
-// Mark: - LayoutAnchorable Helpers
+// MARK: - ExcludableArea Helpers
+extension ExcludableArea {
+	internal func excludableLayoutGuides(in baseView: UIView?) -> UIView.ExcludedAreaLayoutGuides? {
+		switch self {
+			case .layoutMargins: return baseView?.excludedByLayoutMarginsGuides
+			case .layoutMarginsOf(let view): return view.excludedByLayoutMarginsGuides
+				
+			case .readableContent: return baseView?.unreadableContentLayoutGuides
+			case .readableContentOf(let view): return view.unreadableContentLayoutGuides
+				
+			case .safeArea: return baseView?.unsafeAreaLayoutGuides
+			case .safeAreaOf(let view): return view.unsafeAreaLayoutGuides
+		}
+	}
+	
+	internal func retargeted(to view: UIView?) -> Self {
+		guard let view = view else { return self }
+		
+		switch self {
+			case .layoutMargins, .layoutMarginsOf: return .layoutMarginsOf(view)
+			case .readableContent, .readableContentOf: return .readableContentOf(view)
+			case .safeArea, .safeAreaOf: return .safeAreaOf(view)
+		}
+	}
+}
+
+// MARK: - LayoutAnchorable Helpers
 extension LayoutAnchorable {
 	/// Returns the same layout, but for another view
 	internal func retargeted(to view: UIView?) -> Self {
@@ -336,6 +387,11 @@ extension LayoutAnchorable {
 
 			case .keyboardSafeArea, .keyboardSafeAreaOf: return .keyboardSafeAreaOf(view)
 			case .keyboardFrame, .keyboardFrameOf: return .keyboardFrameOf(view)
+				
+			case .excludedLeadingSideOf(let area): return .excludedLeadingSideOf(area.retargeted(to: view))
+			case .excludedTrailingSideOf(let area): return .excludedTrailingSideOf(area.retargeted(to: view))
+			case .excludedBottomSideOf(let area): return .excludedBottomSideOf(area.retargeted(to: view))
+			case .excludedTopSideOf(let area): return .excludedTopSideOf(area.retargeted(to: view))
 		}
 	}
 

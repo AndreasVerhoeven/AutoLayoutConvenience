@@ -23,7 +23,7 @@ class ViewController: UIViewController {
 		demoView.textField.addAction(UIAction(handler: { _ in
 			demoView.endEditing(true)
 		}), for: .editingDidEndOnExit)
-
+		
 		view.addSubview(UIView(backgroundColor: .red), filling: .keyboardFrame)
 		view.addSubview(demoView, filling: .keyboardSafeArea)
 	}

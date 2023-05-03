@@ -56,6 +56,29 @@ public protocol BaselineLayoutAnchorsProvider {
 extension UIView: LayoutAnchorsProvider, BaselineLayoutAnchorsProvider {}
 extension UILayoutGuide: LayoutAnchorsProvider {}
 
+// MARK: -
+
+/// Represents an area that we can use the excluded area from.
+/// E.g., if you want to fill the bottom "unsafe" area, you can use this with `.excludedBottomSideOf(.safeArea)`
+public enum ExcludableArea: Equatable {
+	/// the safeArea of the relevant view
+	case safeArea
+	
+	/// the safeArea of a specific view
+	case safeAreaOf(UIView)
+		
+	/// the layoutMarginsGuide of the relevant view
+	case layoutMargins
+	
+	/// the layoutMarginsGuide of a specific view
+	case layoutMarginsOf(UIView)
+	
+	/// the readableContentLayoutGuide of the relevant view
+	case readableContent
+	
+	/// the readableContentLayoutGuide of a specific view
+	case readableContentOf(UIView)
+}
 
 // MARK: -
 
@@ -123,6 +146,18 @@ public enum LayoutAnchorable: Equatable {
 
 	/// Anchored to the custom `keyboardFrameLayoutGuide` of a specific view
 	case keyboardFrameOf(UIView)
+	
+	/// Anchored to the leading side of the area that is excluded by the specific excludable area (.e.g safeArea)
+	case excludedLeadingSideOf(ExcludableArea)
+	
+	/// Anchored to the trailing side of the area that is excluded by the specific excludable area (.e.g safeArea)
+	case excludedTrailingSideOf(ExcludableArea)
+	
+	/// Anchored to the top side of the area that is excluded by the specific excludable area (.e.g safeArea)
+	case excludedTopSideOf(ExcludableArea)
+	
+	/// Anchored to the bottom side of the area that is excluded by the specific excludable area (.e.g safeArea)
+	case excludedBottomSideOf(ExcludableArea)
 }
 
 // MARK: - Layouts

@@ -109,6 +109,10 @@ The basics of this library are so called `anchorable layouts`, which define whic
 - `keyboardSafeAreaOf(UIView)` anchors to the `keyboardSafeAreaLayoutGuide` of a specific view
 - `keyboardFrame` anchors to the `keyboardFrameLayoutGuide` of the relevant view
 - `keyboardFrameOf(UIView)` anchors to the `keyboardFrameLayoutGuide` of a specific view
+- `excludedLeadingSideOf(ExcludableArea)` anchors to the leading side of an excludeable area (safeArea, layoutMargins, or readableContent)
+- `excludedTrailingSideOf(ExcludableArea)` anchors to the trailing side of an excludeable area (safeArea, layoutMargins, or readableContent)
+- `excludedBottomSideOf(ExcludableArea)` anchors to the bottom side of an excludeable area (safeArea, layoutMargins, or readableContent)
+- `excludedTopSideOf(ExcludableArea)` anchors to the top side of an excludeable area (safeArea, layoutMargins, or readableContent)
 
 As you can see, there are anchorables that take a specific `UIView` and ones that don't. The ones that don't always apply to the relevant view, which usually is the subview that is being added.
 
@@ -119,6 +123,19 @@ There are also anchors to deal with the keyboard:
 - `keyboardFrame[Of]` which is the frame of the keyboard. If the keyboard is hidden, its height is 0.
 
 Those anchors are implemented using custom `UILayoutGuide` subclasses, which respond to keyboard events. They work best with static views, since they do not track the view changing position.
+
+There are also anchors that deal with excludable areas:
+
+ - `excluded[Leading|Trailing|Top|Bottom]SideOf()`
+ 
+These anchors are implemented using custom UILayoutGuides and they represent the area that is excluded on one of the 4 sides by either:
+
+ - the `.safeArea`, so it's the "unsafe" area
+ - the `.layoutMargins`, so it's the actual margins
+ - the `.readableContent`, so it's the area where you should not place text.
+ 
+ These are implemented in `UIView.unsafeAreaLayoutGuides.[top|bottom|leading|trailing]`, `UIView.unreadableContentGuides.[top|bottom|leading|trailing]` and `UIView.excludedByLayoutMarginGuides.[top|bottom|leading|trailing]`.
+ 
 
 ### Insets
 
