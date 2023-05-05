@@ -309,7 +309,7 @@ extension UIView {
 	}
 
 	internal func constrain(vertically: ConstrainedVerticalLayout,
-								others: [SingleAxisLayout],
+								others: [any SingleAxisLayout],
 								insets insetsValue: NSDirectionalEdgeInsets,
 								retarget view: UIView?) -> [NSLayoutConstraint?] {
 		let insets = Default.resolve(insetsValue)

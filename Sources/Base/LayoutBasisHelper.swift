@@ -13,7 +13,7 @@ public protocol BaseLayout {
 	func retargeted(to view: UIView?) -> Self
 }
 
-public protocol SingleAxisLayout: BaseLayout {
+public protocol SingleAxisLayout: BaseLayout, Equatable {
 	var axis: LayoutAnchorable { get }
 	static func layoutDimension(in layoutAnchorsProvider: LayoutAnchorsProvider) -> NSLayoutDimension
 }
@@ -565,7 +565,7 @@ extension ConstrainedLayout {
 		}
 	}
 	
-	internal static func usableFillLayout(for layout: FillLayout?, others: [SingleAxisLayout], view: UIView?) -> FillLayout {
+	internal static func usableFillLayout(for layout: FillLayout?, others: [any SingleAxisLayout], view: UIView?) -> FillLayout {
 		if let layout = layout {
 			return layout
 		} else if let other = others.first, other.axis.isForSameView(as: view) == true {
@@ -575,7 +575,7 @@ extension ConstrainedLayout {
 		}
 	}
 
-	internal static func usableCenterLayout(for center: MainAxisLayout?, others: [SingleAxisLayout], view: UIView?) -> MainAxisLayout {
+	internal static func usableCenterLayout(for center: MainAxisLayout?, others: [any SingleAxisLayout], view: UIView?) -> MainAxisLayout {
 		if let center = center {
 			return center
 		} else if let other = others.first, other.axis.isForSameView(as: view) == true {

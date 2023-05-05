@@ -164,7 +164,7 @@ public enum LayoutAnchorable: Equatable {
 
 /// This defines the layout anchors for a box layout where
 /// all 4 edges are needed, such as a **filling** operation
-public struct BoxLayout {
+public struct BoxLayout: Equatable {
 	public var top: LayoutAnchorable
 	public var leading: LayoutAnchorable
 	public var bottom: LayoutAnchorable
@@ -173,40 +173,40 @@ public struct BoxLayout {
 
 /// This defines the layout anchors for horizontal layout
 /// where we need the limiting edges in the horizontal axis
-public struct HorizontalAxisLayout {
+public struct HorizontalAxisLayout: Equatable {
 	public var leading: LayoutAnchorable
 	public var trailing: LayoutAnchorable
 }
 
 /// This defines the layout anchors for vertical layout
 /// where we need the limiting edges in the vertical axis
-public struct VerticalAxisLayout {
+public struct VerticalAxisLayout: Equatable {
 	public var top: LayoutAnchorable
 	public var bottom: LayoutAnchorable
 }
 
 /// This defines the layout anchors for a specific point
 /// where we need to know the location in both axis
-public struct PointLayout {
+public struct PointLayout: Equatable {
 	public var x: LayoutAnchorable
 	public var y: LayoutAnchorable
 }
 
 /// This defines the layout for a specific point
 /// on the x axis
-public struct XAxisLayout {
+public struct XAxisLayout: Equatable {
 	public var x: LayoutAnchorable
 }
 
 /// This defines the layout for a specific point
 /// on the y axis
-public struct YAxisLayout {
+public struct YAxisLayout: Equatable {
 	public var y: LayoutAnchorable
 }
 
 /// This defines how a layout is constrained
-public struct ConstrainedLayout<FillLayout: BaseLayout, MainAxisLayout: SingleAxisLayout> {
-	public struct CenteredLayout {
+public struct ConstrainedLayout<FillLayout: BaseLayout & Equatable, MainAxisLayout: SingleAxisLayout>: Equatable {
+	public struct CenteredLayout: Equatable {
 		public var center: MainAxisLayout
 		public var fill: FillLayout
 	}
@@ -214,7 +214,7 @@ public struct ConstrainedLayout<FillLayout: BaseLayout, MainAxisLayout: SingleAx
 	public typealias FillLayout = FillLayout
 	public typealias MainAxisLayout = MainAxisLayout
 
-	public enum Operation {
+	public enum Operation: Equatable {
 		case none
 		case `default`
 		indirect case attached(ConstrainedLayout?)

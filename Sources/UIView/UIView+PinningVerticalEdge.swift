@@ -310,7 +310,7 @@ extension UIView {
 
 	/// Private helper to constrain the opposite axis
 	internal func constrain(horizontally: ConstrainedHorizontalLayout,
-							others: [SingleAxisLayout],
+							others: [any SingleAxisLayout],
 							insets insetsValue: NSDirectionalEdgeInsets,
 							retarget view: UIView?) -> [NSLayoutConstraint?] {
 		let insets = Default.resolve(insetsValue)
