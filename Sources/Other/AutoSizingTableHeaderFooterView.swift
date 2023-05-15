@@ -113,6 +113,7 @@ public class AutoSizingTableHeaderFooterView: UIView {
 	}
 	
 	private func updateLayoutFrame() {
+		guard isInUpdateHeaderViewCount < 10 else { return }
 		guard let tableView = superview as? UITableView else { return }
 		guard tableView.tableHeaderView == self || tableView.tableFooterView == self else { return }
 		let width = tableView.bounds.width
@@ -120,7 +121,7 @@ public class AutoSizingTableHeaderFooterView: UIView {
 		
 		// figure out the size of our view and make sure the height matches
 		let wantedSize = wantedSize(for: width, usesFallbackWidth: false)
-		guard wantedSize.height != bounds.height else {
+		guard wantedSize.height.pixelScale != bounds.height.pixelScale else {
 			isInitialLayoutCycle = false
 			return
 		}
@@ -221,5 +222,11 @@ extension UITableView {
 	/// Makes the `tableFooterView` update its layout if it's an auto-sizing one
 	public func updateAutoSizingTableFooter() {
 		(tableFooterView as? AutoSizingTableHeaderFooterView)?.update()
+	}
+}
+
+extension CGFloat {
+	fileprivate var pixelScale: Int {
+		Int((self * UIScreen.main.scale).rounded())
 	}
 }
