@@ -16,10 +16,17 @@ extension UIView {
 
 
 	/// Return this view wrapped in another view with the given layout
-	public func wrapped(in layout: BoxLayout, insets: NSDirectionalEdgeInsets = Default.insets) -> UIView {
+	public func wrapped(in layout: BoxLayout, preservesSuperviewLayoutMargins: Bool = true, insets: NSDirectionalEdgeInsets = Default.insets) -> UIView {
 		let view = UIView()
+		view.preservesSuperviewLayoutMargins = preservesSuperviewLayoutMargins
 		view.addSubview(self, filling: layout, insets: insets)
 		return view
+	}
+	
+	/// Makes this view `preservesSuperviewLayoutMargins = true` and return self for chaining
+	public func preservingSuperviewLayoutMargins() -> Self {
+		preservesSuperviewLayoutMargins = true
+		return self
 	}
 }
 
