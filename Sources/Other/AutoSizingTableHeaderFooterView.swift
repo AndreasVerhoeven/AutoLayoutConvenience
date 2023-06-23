@@ -184,14 +184,14 @@ extension UITableView {
 	/// The given view will automatically size the `tableHeaderView` using AutoLayout.
 	public var selfSizingTableHeaderView: UIView? {
 		get { (tableHeaderView as? AutoSizingTableHeaderFooterView)?.view }
-		set { tableHeaderView = newValue.flatMap { AutoSizingTableHeaderFooterView(view: $0) } ?? nil }
+		set { tableHeaderView = newValue.flatMap { AutoSizingTableHeaderFooterView(view: $0).presized(in: self) } ?? nil }
 	}
 	
 	/// sets a `tableFooterView` wrapped in an `AutoSizingTableHeaderFooterView`
 	/// The given view will automatically size the `tableFooterView` using AutoLayout.
 	public var selfSizingTableFooterView: UIView? {
 		get { (tableFooterView as? AutoSizingTableHeaderFooterView)?.view }
-		set { tableFooterView = newValue.flatMap { AutoSizingTableHeaderFooterView(view: $0) } ?? nil }
+		set { tableFooterView = newValue.flatMap { AutoSizingTableHeaderFooterView(view: $0).presized(in: self) } ?? nil }
 	}
 }
 
