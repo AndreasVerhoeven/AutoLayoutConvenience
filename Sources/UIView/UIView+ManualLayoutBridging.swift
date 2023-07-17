@@ -117,6 +117,7 @@ public class AutoLayoutHostedInManualLayoutBridgingView: UIView {
 		
 		let stackView = CallbackStackView(axis: .horizontal, alignment: .fill, distribution: .fillProportionally)
 		stackView.callback = { [weak self] in self?.update() }
+		stackView.addArrangedSubviews(view)
 		addSubview(stackView, filling: .superview)
 	}
 	
