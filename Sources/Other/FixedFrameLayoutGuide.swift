@@ -8,7 +8,7 @@
 import UIKit
 
 /// This is a UILayoutGuide that always takes up a fixed position in its owning view.
-class FixedFrameLayoutGuide: UILayoutGuide {
+public class FixedFrameLayoutGuide: UILayoutGuide {
 	/// the frame we want to take up in our owning view
 	public var frame: CGRect = .zero {
 		didSet {
