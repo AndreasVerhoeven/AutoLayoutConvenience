@@ -11,6 +11,7 @@
 		4932513E29F93446003CB4EE /* Cancellable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4932513D29F93446003CB4EE /* Cancellable.swift */; };
 		49337D2F27D298D0006BDB1A /* AutoSizingTableHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49337D2E27D298D0006BDB1A /* AutoSizingTableHeaderFooterView.swift */; };
 		4933F50226F0F1EE008EEA01 /* AutoHidingStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4933F50126F0F1EE008EEA01 /* AutoHidingStackView.swift */; };
+		4960E7272B8564E600258A27 /* StickyBottomFooterTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4960E7262B8564E600258A27 /* StickyBottomFooterTableView.swift */; };
 		4969E367263EE626000F8BDA /* ContentWithFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4969E366263EE626000F8BDA /* ContentWithFooterView.swift */; };
 		496ADB4426B1E91B0016A582 /* ExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496ADB4326B1E91B0016A582 /* ExampleViewController.swift */; };
 		496ADB4E26B346EE0016A582 /* FillingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496ADB4D26B346EE0016A582 /* FillingViewController.swift */; };
@@ -68,6 +69,7 @@
 		4932513D29F93446003CB4EE /* Cancellable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cancellable.swift; sourceTree = "<group>"; };
 		49337D2E27D298D0006BDB1A /* AutoSizingTableHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoSizingTableHeaderFooterView.swift; sourceTree = "<group>"; };
 		4933F50126F0F1EE008EEA01 /* AutoHidingStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoHidingStackView.swift; sourceTree = "<group>"; };
+		4960E7262B8564E600258A27 /* StickyBottomFooterTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickyBottomFooterTableView.swift; sourceTree = "<group>"; };
 		4969E366263EE626000F8BDA /* ContentWithFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentWithFooterView.swift; sourceTree = "<group>"; };
 		496ADB4326B1E91B0016A582 /* ExampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleViewController.swift; sourceTree = "<group>"; };
 		496ADB4D26B346EE0016A582 /* FillingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FillingViewController.swift; sourceTree = "<group>"; };
@@ -296,6 +298,7 @@
 				49E70491282AC3B100A1EA1F /* AutoSizingTableView.swift */,
 				49746F46278885240028E523 /* FixedFrameLayoutGuide.swift */,
 				49337D2E27D298D0006BDB1A /* AutoSizingTableHeaderFooterView.swift */,
+				4960E7262B8564E600258A27 /* StickyBottomFooterTableView.swift */,
 			);
 			path = Other;
 			sourceTree = "<group>";
@@ -372,6 +375,7 @@
 			files = (
 				49CD6B5C263972520024C330 /* AutoAdjustingVerticalStackView.swift in Sources */,
 				49CD6B5B263972520024C330 /* UIView+StackViewHelpers.swift in Sources */,
+				4960E7272B8564E600258A27 /* StickyBottomFooterTableView.swift in Sources */,
 				4980796E26C12CE90007C155 /* KeyboardSafeAreaLayoutGuide.swift in Sources */,
 				49CD6B62263972520024C330 /* LayoutBasis.swift in Sources */,
 				49BE83E4265EBF7E001CEC2A /* UIView+AligningEdges.swift in Sources */,
