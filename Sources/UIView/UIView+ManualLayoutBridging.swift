@@ -101,7 +101,7 @@ public class AutoLayoutHostedInManualLayoutBridgingView: UIView {
 	public var sizeThatFitsBridgingMode: ManualLayoutSizeThatFitsBridgingMode = .fixedSize
 
 	/// Creates a simple bridging view without any contents
-	convenience init(sizeThatFitsBridgingMode: ManualLayoutSizeThatFitsBridgingMode, backgroundColor: UIColor? = nil) {
+	public convenience init(sizeThatFitsBridgingMode: ManualLayoutSizeThatFitsBridgingMode, backgroundColor: UIColor? = nil) {
 		self.init(frame: .zero)
 		self.sizeThatFitsBridgingMode = sizeThatFitsBridgingMode
 		self.backgroundColor = backgroundColor
@@ -109,7 +109,7 @@ public class AutoLayoutHostedInManualLayoutBridgingView: UIView {
 	
 	/// Creates a bridging view that holds an AutoLayout view and that can be used in Manual Layout. When the AutoLayout view needs new layout, it'll call setNeedsLayout() on the bridging view
 	/// and its superview or call the layoutCallback.
-	convenience init(view: UIView, sizeThatFitsBridgingMode: ManualLayoutSizeThatFitsBridgingMode = .boundedSize, layoutCallback: LayoutCallback? = nil) {
+	public convenience init(view: UIView, sizeThatFitsBridgingMode: ManualLayoutSizeThatFitsBridgingMode = .boundedSize, layoutCallback: LayoutCallback? = nil) {
 		self.init(frame: .zero)
 		self.sizeThatFitsBridgingMode = sizeThatFitsBridgingMode
 		self.translatesAutoresizingMaskIntoConstraints = false
