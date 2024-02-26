@@ -24,7 +24,7 @@ public class StickyBottomFooterTableView: UITableView {
 	}
 	
 	/// the blur effect to apply when the sticky footer has sticked to the bottom of the table view.
-	public var stickyFooterBlurEffect: UIBlurEffect? = UIBlurEffect(style: .systemChromeMaterial) {
+	public var stickyFooterBlurEffect: UIBlurEffect? = UIBlurEffect(style: .systemChromeWithFallback) {
 		didSet {
 			reallyUpdatestickyFooterViewLayout(canAnimate: false)
 		}
@@ -189,5 +189,15 @@ public class StickyBottomFooterTableView: UITableView {
 	@available(*, unavailable)
 	required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
+	}
+}
+
+fileprivate extension UIBlurEffect.Style {
+	static var systemChromeWithFallback: Self {
+		if #available(iOS 13, *) {
+			return .systemChromeMaterial
+		} else {
+			return .regular
+		}
 	}
 }
