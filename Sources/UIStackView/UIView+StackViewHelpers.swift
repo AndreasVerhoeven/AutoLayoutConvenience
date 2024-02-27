@@ -336,12 +336,13 @@ extension UIView {
 	/// - Parameters:
 	///		- views: The list of views to add to the stack view
 	///		- alignment: **optional** horizontal alignment, defaults to `.fill`
+	///		- distribution: **optional** distribution of the items, defaults to `.fill`
 	///		- spacing: **optional** the spacing between the views
 	///		- insets: **optional** the inset to apply to the stack view
 	///
 	/// - Returns: the created `UIStackView` with the given views
-	public static func autoAdjustingVerticallyStacked(_ views: UIView..., alignment: UIStackView.Alignment = .fill, spacing: CGFloat = 0, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
-		return autoAdjustingVerticallyStacked(views, alignment: alignment, spacing: spacing, insets: insets)
+	public static func autoAdjustingVerticallyStacked(_ views: UIView..., alignment: UIStackView.Alignment = .fill, distribution: UIStackView.Distribution = .fill, spacing: CGFloat = 0, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
+		return autoAdjustingVerticallyStacked(views, alignment: alignment, distribution: distribution, spacing: spacing, insets: insets)
 	}
 
 	/// Wraps views in a vertically aligned UIStackView that auto adjust to a horizontal stackview if the
@@ -350,12 +351,13 @@ extension UIView {
 	/// - Parameters:
 	///		- views: The list of views to add to the stack view
 	///		- alignment: **optional** horizontal alignment, defaults to `.fill`
+	///		- distribution: **optional** distribution of the items, defaults to `.fill`
 	///		- spacing: **optional** the spacing between the views
 	///		- insets: **optional** the inset to apply to the stack view
 	///
 	/// - Returns: the created `UIStackView` with the given views
-	public static func autoAdjustingVerticallyStacked(_ views: [UIView], alignment: UIStackView.Alignment = .fill, spacing: CGFloat = 0, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
-		return AutoAdjustingVerticalStackView(with: views, alignment: alignment, spacing: spacing, insets: insets)
+	public static func autoAdjustingVerticallyStacked(_ views: [UIView], alignment: UIStackView.Alignment = .fill, distribution: UIStackView.Distribution = .fill, spacing: CGFloat = 0, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
+		return AutoAdjustingVerticalStackView(with: views, alignment: alignment, distribution: distribution, spacing: spacing, insets: insets)
 	}
 
 	/// Wraps views in a horizontally aligned UIStackView that auto adjust to a vertical stackview if the
@@ -364,12 +366,13 @@ extension UIView {
 	/// - Parameters:
 	///		- views: The list of views to add to the stack view
 	///		- alignment: **optional** vertical alignment, defaults to `.fill`
+	///		- distribution: **optional** distribution of the items, defaults to `.fill`
 	///		- spacing: **optional** the spacing between the views
 	///		- insets: **optional** the inset to apply to the stack view
 	///
 	/// - Returns: the created `UIStackView` with the given views
-	public static func autoAdjustingHorizontallyStacked(_ views: UIView..., alignment: UIStackView.Alignment = .fill, spacing: CGFloat = 0, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
-		return autoAdjustingHorizontallyStacked(views, alignment: alignment, spacing: spacing, insets: insets)
+	public static func autoAdjustingHorizontallyStacked(_ views: UIView..., alignment: UIStackView.Alignment = .fill, distribution: UIStackView.Distribution = .fill, spacing: CGFloat = 0, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
+		return autoAdjustingHorizontallyStacked(views, alignment: alignment, distribution: distribution, spacing: spacing, insets: insets)
 	}
 
 	/// Wraps views in a horizontally aligned UIStackView that auto adjust to a vertical stackview if the
@@ -378,11 +381,12 @@ extension UIView {
 	/// - Parameters:
 	///		- views: The list of views to add to the stack view
 	///		- alignment: **optional** vertical alignment, defaults to `.fill`
+	///		- distribution: **optional** distribution of the items, defaults to `.fill`
 	///		- spacing: **optional** the spacing between the views
 	///		- insets: **optional** the inset to apply to the stack view
 	///
 	/// - Returns: the created `UIStackView` with the given views
-	public static func autoAdjustingHorizontallyStacked(_ views: [UIView], alignment: UIStackView.Alignment = .fill, spacing: CGFloat = 0, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
-		return AutoAdjustingHorizontalStackView(with: views, alignment: alignment, spacing: spacing, insets: insets)
+	public static func autoAdjustingHorizontallyStacked(_ views: [UIView], alignment: UIStackView.Alignment = .fill, distribution: UIStackView.Distribution = .fill, spacing: CGFloat = 0, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
+		return AutoAdjustingHorizontalStackView(with: views, alignment: alignment, distribution: distribution, spacing: spacing, insets: insets)
 	}
 }
