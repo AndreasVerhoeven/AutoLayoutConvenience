@@ -113,7 +113,7 @@ public class StickyBottomFooterTableView: UITableView {
 			stickyFooterWrapperView.backgroundColor = isSticking ? stickyFooterBackgroundColor : nil
 		}
 		
-		if canAnimate == true && isSticking != isFooterViewStickingToBottom {
+		if canAnimate == true && isSticking != isFooterViewStickingToBottom && window != nil {
 			UIView.animate(withDuration: 0.25, delay: 0, options: [.beginFromCurrentState, .allowUserInteraction], animations: updates)
 		} else {
 			updates()

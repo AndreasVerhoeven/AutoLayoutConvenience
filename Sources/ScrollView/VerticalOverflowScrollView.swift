@@ -30,6 +30,8 @@ public class VerticalOverflowScrollView: UIScrollView {
 
 	// MARK: - Private
 	private func setup() {
+		preservesSuperviewLayoutMargins = true
+		
 		showsVerticalScrollIndicator = true
 		showsHorizontalScrollIndicator = false
 
