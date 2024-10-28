@@ -10,10 +10,10 @@ import UIKit
 public extension UILayoutPriority {
 	// WORKAROUND (iOS 11, *) UIStackView adds a 50% width constraint with priority 759 or 760
 	//                        for labels.
-	static var stackViewWorkaroundHigh = UILayoutPriority(rawValue: 951)
+	static let stackViewWorkaroundHigh = UILayoutPriority(rawValue: 951)
 
 	// WORKAROUND (iOS 11, *) self sizing cells needs a height constraint of 999
-	static var selfSizingCellHeightWorkaround = UILayoutPriority(rawValue: 999)
+	static let selfSizingCellHeightWorkaround = UILayoutPriority(rawValue: 999)
 
 	/// One higher that the current priority
 	var higher: UILayoutPriority {

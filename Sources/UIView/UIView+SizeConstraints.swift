@@ -14,7 +14,7 @@ public enum SizeConstrainType {
 }
 
 // Generic size constraint
-public struct SizeConstrain<T> {
+@MainActor public struct SizeConstrain<T> {
 	public var type: SizeConstrainType
 	public var value: T
 	public var priority: UILayoutPriority = .required

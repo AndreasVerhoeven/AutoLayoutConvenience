@@ -226,7 +226,7 @@ extension UITableView {
 }
 
 extension CGFloat {
-	fileprivate var pixelScale: Int {
+	@MainActor fileprivate var pixelScale: Int {
 		Int((self * UIScreen.main.scale).rounded())
 	}
 }

@@ -141,7 +141,7 @@ extension UIView {
 	}
 
 	/// The result of a conditional function. Can be used to apply properties to all of the created constraints.
-	public struct ConditionalResult {
+	@MainActor public struct ConditionalResult {
 		fileprivate var collections = [ConstraintsListCollection]()
 		
 		/// When there are multiple conditions, all conditional constraint updates will be coalesced

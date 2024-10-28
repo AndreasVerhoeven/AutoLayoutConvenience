@@ -10,12 +10,12 @@ import UIKit
 // MARK: - Layout Protocols
 public protocol BaseLayout {
 	init(_ all: LayoutAnchorable)
-	func retargeted(to view: UIView?) -> Self
+	@MainActor func retargeted(to view: UIView?) -> Self
 }
 
 public protocol SingleAxisLayout: BaseLayout, Equatable {
 	var axis: LayoutAnchorable { get }
-	static func layoutDimension(in layoutAnchorsProvider: LayoutAnchorsProvider) -> NSLayoutDimension
+	@MainActor static func layoutDimension(in layoutAnchorsProvider: LayoutAnchorsProvider) -> NSLayoutDimension
 }
 
 // MARK: - BaseLayout Factory methods
@@ -219,7 +219,7 @@ extension YAxisLayout: SingleAxisLayout {
 // MARK: - Layout Helpers
 
 extension SingleAxisLayout {
-	public func retargeted(to view: UIView?) -> Self {
+	@MainActor public func retargeted(to view: UIView?) -> Self {
 		return Self(axis.retargeted(to: view))
 	}
 }
@@ -229,7 +229,7 @@ public extension BoxLayout {
 		self.init(top: all, leading: all, bottom: all, trailing: all)
 	}
 
-	func retargeted(to view: UIView?) -> Self {
+	@MainActor func retargeted(to view: UIView?) -> Self {
 		return Self(top: top.retargeted(to: view), leading: leading.retargeted(to: view), bottom: bottom.retargeted(to: view), trailing: trailing.retargeted(to: view))
 	}
 }
@@ -239,7 +239,7 @@ public extension HorizontalAxisLayout {
 		self.init(leading: all, trailing: all)
 	}
 
-	func retargeted(to view: UIView?) -> Self {
+	@MainActor func retargeted(to view: UIView?) -> Self {
 		return Self(leading: leading.retargeted(to: view), trailing: trailing.retargeted(to: view))
 	}
 }
@@ -249,7 +249,7 @@ public extension VerticalAxisLayout {
 		self.init(top: all, bottom: all)
 	}
 
-	func retargeted(to view: UIView?) -> Self {
+	@MainActor func retargeted(to view: UIView?) -> Self {
 		return Self(top: top.retargeted(to: view), bottom: bottom.retargeted(to: view))
 	}
 }
@@ -259,7 +259,7 @@ public extension PointLayout {
 		self.init(x: all, y: all)
 	}
 
-	func retargeted(to view: UIView?) -> Self {
+	@MainActor func retargeted(to view: UIView?) -> Self {
 		return Self(x: x.retargeted(to: view), y: y.retargeted(to: view))
 	}
 }
@@ -364,7 +364,7 @@ extension ExcludableArea {
 // MARK: - LayoutAnchorable Helpers
 extension LayoutAnchorable {
 	/// Returns the same layout, but for another view
-	internal func retargeted(to view: UIView?) -> Self {
+	@MainActor internal func retargeted(to view: UIView?) -> Self {
 		guard let view = view else { return self }
 		switch self {
 			case .none: return self
@@ -396,7 +396,7 @@ extension LayoutAnchorable {
 	}
 
 	/// Returns true if this is the default layout
-	internal var isDefault: Bool {
+	@MainActor internal var isDefault: Bool {
 		if case .default = self {
 			return true
 		} else {
@@ -405,13 +405,13 @@ extension LayoutAnchorable {
 	}
 
 	/// Returns the view that we will base layout on
-	internal func targetedView(in baseView: UIView?) -> UIView? {
+	@MainActor internal func targetedView(in baseView: UIView?) -> UIView? {
 		let provider = layoutAnchorsProvider(in: baseView)
 		return (provider as? UILayoutGuide)?.owningView ?? provider as? UIView
 	}
 
 	/// check if the same view is targeted
-	func isForSameView(as view: UIView?) -> Bool {
+	@MainActor func isForSameView(as view: UIView?) -> Bool {
 		return targetedView(in: view) == view
 	}
 }
@@ -492,12 +492,12 @@ public extension ConstrainedLayout where FillLayout == HorizontalAxisLayout {
 }
 
 extension ConstrainedLayout where FillLayout == HorizontalAxisLayout, MainAxisLayout == XAxisLayout {
-	fileprivate var resolved: Self {
+	@MainActor fileprivate var resolved: Self {
 		guard isDefault == true else { return self }
 		return UIView.Default.Resolved.constrainedHorizontalLayout
 	}
 	
-	internal func resolve(_ vertically: VerticalAxisLayout) -> Self {
+	@MainActor internal func resolve(_ vertically: VerticalAxisLayout) -> Self {
 		let value = resolved
 		guard value.isSpecific == false else { return self }
 		if vertically.top == vertically.bottom {
@@ -565,7 +565,7 @@ extension ConstrainedLayout {
 		}
 	}
 	
-	internal static func usableFillLayout(for layout: FillLayout?, others: [any SingleAxisLayout], view: UIView?) -> FillLayout {
+	@MainActor internal static func usableFillLayout(for layout: FillLayout?, others: [any SingleAxisLayout], view: UIView?) -> FillLayout {
 		if let layout = layout {
 			return layout
 		} else if let other = others.first, other.axis.isForSameView(as: view) == true {
@@ -575,7 +575,7 @@ extension ConstrainedLayout {
 		}
 	}
 
-	internal static func usableCenterLayout(for center: MainAxisLayout?, others: [any SingleAxisLayout], view: UIView?) -> MainAxisLayout {
+	@MainActor internal static func usableCenterLayout(for center: MainAxisLayout?, others: [any SingleAxisLayout], view: UIView?) -> MainAxisLayout {
 		if let center = center {
 			return center
 		} else if let other = others.first, other.axis.isForSameView(as: view) == true {
@@ -617,12 +617,12 @@ extension ConstrainedLayout where FillLayout: SingleAxisSegmentLayout {
 
 
 extension ConstrainedLayout where FillLayout == VerticalAxisLayout, MainAxisLayout == YAxisLayout {
-	fileprivate var resolved: Self {
+	@MainActor fileprivate var resolved: Self {
 		guard isDefault == true else { return self }
 		return UIView.Default.Resolved.constrainedVerticalLayout
 	}
 	
-	internal func resolve(_ horizontally: HorizontalAxisLayout) -> Self {
+	@MainActor internal func resolve(_ horizontally: HorizontalAxisLayout) -> Self {
 		let value = resolved
 		guard value.isSpecific == false else { return self }
 		if horizontally.leading == horizontally.trailing {

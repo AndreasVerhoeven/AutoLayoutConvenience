@@ -10,7 +10,7 @@ import UIKit
 /// A ConstraintsListCollection hold a collection of ConstraintsList
 /// where only one of them is active. The collection (re)-evaluates the conditions
 /// when needed and activates the correct set of constraints.
-internal class ConstraintsListCollection: NSObject {
+@MainActor internal class ConstraintsListCollection: NSObject {
 	private weak var view: UIView? // the view we are for, weak to not cause retain cycles.
 	private var items = [Item]() // our items: being the conditions+lists
 	private var cancellables = [Cancellable]() // registered observers
@@ -146,14 +146,18 @@ internal class ConstraintsListCollection: NSObject {
 		// register bounds observers
 		for (view, kind) in observers where kind.contains(.bounds) {
 			boundsObservers.append(view.layer.observe(\CALayer.bounds, changeHandler: { [weak self] _, _ in
-				self?.setNeedsUpdate()
+				MainActor.assumeIsolated {
+					self?.setNeedsUpdate()
+				}
 			}))
 		}
 		
 		// register hidden observers
 		for (view, kind) in observers where kind.contains(.hidden) {
 			boundsObservers.append(view.observe(\UIView.isHidden, changeHandler: { [weak self] _, _ in
-				self?.setNeedsUpdate()
+				MainActor.assumeIsolated {
+					self?.setNeedsUpdate()
+				}
 			}))
 		}
 		
@@ -183,8 +187,12 @@ fileprivate extension ConstraintsListCollection {
 }
 
 fileprivate extension UIView {
-	func monitorActiveConfigurationName(_ callback: @escaping () -> Void) -> Cancellable {
-		let observer = NotificationCenter.default.addObserver(forName: ConstraintsListCollection.activeConfigurationNameDidChange, object: self, queue: .main, using: { _ in callback() })
+	func monitorActiveConfigurationName(_ callback: @escaping @MainActor () -> Void) -> Cancellable {
+		let observer = NotificationCenter.default.addObserver(forName: ConstraintsListCollection.activeConfigurationNameDidChange, object: self, queue: .main, using: { _ in
+			MainActor.assumeIsolated {
+				callback()
+			}
+		})
 		return Cancellable(notificationCenterObserver: observer)
 	}
 }

@@ -32,7 +32,7 @@ import UIKit
 
 /// Abstraction protocol for things that provide NSLayoutAnchors:
 /// usually either a `UIView` or a `UILayoutGuide`
-public protocol LayoutAnchorsProvider {
+@MainActor public protocol LayoutAnchorsProvider {
 	var leadingAnchor: NSLayoutXAxisAnchor { get }
 	var trailingAnchor: NSLayoutXAxisAnchor { get }
 	var leftAnchor: NSLayoutXAxisAnchor { get }
@@ -47,7 +47,7 @@ public protocol LayoutAnchorsProvider {
 
 /// Abstraction protocol for things that provide
 /// baseline layout anchors
-public protocol BaselineLayoutAnchorsProvider {
+@MainActor public protocol BaselineLayoutAnchorsProvider {
 	var firstBaselineAnchor: NSLayoutYAxisAnchor { get }
 	var lastBaselineAnchor: NSLayoutYAxisAnchor { get }
 }
@@ -60,7 +60,7 @@ extension UILayoutGuide: LayoutAnchorsProvider {}
 
 /// Represents an area that we can use the excluded area from.
 /// E.g., if you want to fill the bottom "unsafe" area, you can use this with `.excludedBottomSideOf(.safeArea)`
-public enum ExcludableArea: Equatable {
+@MainActor public enum ExcludableArea: Equatable {
 	/// the safeArea of the relevant view
 	case safeArea
 	
@@ -85,7 +85,7 @@ public enum ExcludableArea: Equatable {
 /// A `LayoutAnchorable` defines to what a layout
 /// operation is anchored and can be asked for an appropriate
 /// `LayoutAnchorsProvider`
-public enum LayoutAnchorable: Equatable {
+@MainActor public enum LayoutAnchorable: Equatable {
 	/// Not anchored to anything, essentially a no-op
 	case none
 
@@ -240,7 +240,7 @@ public typealias ConstrainedVerticalLayout = ConstrainedLayout<VerticalAxisLayou
 /// intrinsic content size
 ///
 ///		addSubview(subview, pinnedTo: .leading, spacing: 4)
-public enum HorizontalLayoutEdge {
+@MainActor public enum HorizontalLayoutEdge {
 	case leading
 	case centerX
 	case trailing
@@ -254,7 +254,7 @@ public enum HorizontalLayoutEdge {
 ///
 ///		subview.constrain(height: 22)
 ///		addSubview(subview, pinning: .top, to: .bottom, of: siblingView)
-public enum VerticalLayoutEdge {
+@MainActor public enum VerticalLayoutEdge {
 	case top
 	case centerY
 	case bottom
@@ -271,7 +271,7 @@ public enum VerticalLayoutEdge {
 /// defined or if the view has an intrinsic size:
 ///
 /// 	addSubview(subview, pinnedTo: topLeading, in: .safeArea)
-public enum LayoutPosition: Int {
+@MainActor public enum LayoutPosition: Int {
 	case topLeading
 	case topCenter
 	case topTrailing

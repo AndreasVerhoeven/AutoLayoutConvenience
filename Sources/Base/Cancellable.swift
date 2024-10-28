@@ -10,12 +10,12 @@ import Foundation
 /// Object that models something that can be cancelled. Upon calling cancel() the callback will be called.
 /// If `cancelOnDeInit` is true, the `cancel()` method will automatically be called on deinit of this object,
 /// effectively making this object keeping the operation it is tied to alive.
-public final class Cancellable: NSObject {
-	private(set) public var callback: (() -> Void)?
+@MainActor public final class Cancellable: NSObject {
+	private(set) public var callback: (@MainActor () -> Void)?
 	private(set) public var cancelsOnDeInit: Bool
 	
 	/// Creates a Cancellable.
-	public init(cancelsOnDeInit: Bool = true, callback: @escaping () -> Void) {
+	public init(cancelsOnDeInit: Bool = true, callback: @escaping @MainActor () -> Void) {
 		self.cancelsOnDeInit = cancelsOnDeInit
 		self.callback = callback
 		super.init()
@@ -37,7 +37,16 @@ public final class Cancellable: NSObject {
 	
 	deinit {
 		guard cancelsOnDeInit == true else { return }
-		cancel()
+		if Thread.isMainThread == true {
+			MainActor.assumeIsolated {
+				cancel()
+			}
+		} else {
+			guard let callback = callback else { return }
+			Task { @MainActor [callback] in
+				callback()
+			}
+		}
 	}
 	
 	/// Cancels the object once.

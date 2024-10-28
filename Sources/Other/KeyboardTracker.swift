@@ -8,7 +8,7 @@
 import UIKit
 
 /// Tracks keyboard notifications
-@objcMembers class KeyboardTracker: NSObject, @unchecked Sendable {
+@MainActor @objcMembers class KeyboardTracker: NSObject {
 	static let didUpdateNotification = Notification.Name(rawValue: "KeyboardTracker.DidUpdateNotification")
 	typealias Callback = (KeyboardTracker) -> Void
 
@@ -27,12 +27,20 @@ import UIKit
 	private var observers = [UUID: Callback]()
 	private var lastKeyboardFrameWhenVisible = CGRect.zero
 
-	struct Cancellable: @unchecked Sendable {
+	struct Cancellable {
 		weak var tracker: KeyboardTracker?
 		let uuid = UUID()
 
 		func cancel() {
-			tracker?.removeObserver(self)
+			if Thread.isMainThread == true {
+				MainActor.assumeIsolated {
+					tracker?.removeObserver(self)
+				}
+			} else {
+				Task { @MainActor [tracker] in
+					tracker?.removeObserver(self)
+				}
+			}
 		}
 	}
 

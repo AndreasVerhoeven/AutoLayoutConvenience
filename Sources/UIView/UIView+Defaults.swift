@@ -54,19 +54,19 @@ extension UIView {
 // MARK: - Resolving
 extension UIView.Default {
 	// Helper method to quicklt resolve spacing
-	internal static func resolve(_ spacing: CGFloat) -> CGFloat {
+	@MainActor internal static func resolve(_ spacing: CGFloat) -> CGFloat {
 		return spacing == self.spacing ? Resolved.spacing : spacing
 	}
 
 	// Helper method to quicklt resolve insets
-	internal static func resolve(_ insets: NSDirectionalEdgeInsets) -> NSDirectionalEdgeInsets {
+	@MainActor internal static func resolve(_ insets: NSDirectionalEdgeInsets) -> NSDirectionalEdgeInsets {
 		return NSDirectionalEdgeInsets(top: resolve(insets.top), leading: resolve(insets.leading), bottom: resolve(insets.bottom), trailing: resolve(insets.trailing))
 	}
 }
 
 extension UIView.Default {
 	/// This holds the static data that are our custom defaults
-	internal class Resolved {
+	@MainActor internal class Resolved {
 		private static var layoutAnchorableStack = [LayoutAnchorable]()
 		private static var insetsStack = [NSDirectionalEdgeInsets]()
 		private static var spacingStack = [CGFloat]()

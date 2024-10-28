@@ -13,7 +13,7 @@ extension UIView {
 	/// Conditions come in two flavors:
 	/// 	- specific  ones, where the condition should apply to a specific view
 	///		- unspecific ones, where the condition applies to the view being constrained or added
-	public struct Condition {
+	@MainActor public struct Condition {
 		public typealias ViewEvaluator = (UIView) -> Bool
 		public typealias NoViewEvaluator = () -> Bool
 		
@@ -28,7 +28,7 @@ extension UIView {
 
 extension UIView.Condition {
 	/// This is a name of a configuration. See `UIView.addNamedConditionalConfiguration(name:configuration:)`
-	public struct ConfigurationName: RawRepresentable, Hashable {
+	public struct ConfigurationName: RawRepresentable, Hashable, Sendable {
 		public var rawValue: String
 		
 		public init(rawValue: String) {
@@ -325,8 +325,8 @@ public extension UIView.Condition {
 // MARK: - Private
 
 extension UIView.Condition {
-	fileprivate enum Kind {
-		struct BoundCondition {
+	@MainActor fileprivate enum Kind {
+		@MainActor struct BoundCondition {
 			weak var view: UIView?
 			var kind: Kind
 		}
@@ -373,7 +373,7 @@ internal extension UIView.Condition {
 }
 
 fileprivate extension UIView.Condition.Kind {
-	func matches(for view: UIView) -> Bool {
+	@MainActor func matches(for view: UIView) -> Bool {
 		switch self {
 			case .width(let sizeConstrain): return sizeConstrain.matches(for: view.bounds.width, scale: view.scaleToUse)
 			case .height(let sizeConstrain): return sizeConstrain.matches(for: view.bounds.height, scale: view.scaleToUse)

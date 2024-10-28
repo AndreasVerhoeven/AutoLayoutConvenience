@@ -8,9 +8,9 @@
 import UIKit
 
 /// Determines how `autoLayoutSizeThatFits()` works exactly.
-public struct ManualLayoutSizeThatFitsBridgingMode {
+public struct ManualLayoutSizeThatFitsBridgingMode: Sendable {
 	/// Determines how a dimension in the bridges sizeThatFits can grow
-	public enum Dimension {
+	public enum Dimension: Sendable {
 		/// The dimension should be fixed to the given size. If size == .greatestFiniteMagnitude, we'll try to be as small as possible
 		case fixed
 
@@ -38,17 +38,23 @@ public struct ManualLayoutSizeThatFitsBridgingMode {
 	/// The vertical bridging mode
 	public var vertical: Dimension = .fixed
 
+	/// Creates a bridging mode
+	public init(horizontal: Dimension, vertical: Dimension) {
+		self.horizontal = horizontal
+		self.vertical = vertical
+	}
+
 	/// the width should be the same as the passed in width, the height should not exceed the passed in height, but can be smaller
-	public static var fixedWidth = Self(horizontal: .fixed, vertical: .bounded)
+	public static let fixedWidth = Self(horizontal: .fixed, vertical: .bounded)
 
 	/// the height should be the same as the passed in height, the width should not exceed the passed in width, but can be smaller
-	public static var fixedHeight = Self(horizontal: .bounded, vertical: .fixed)
+	public static let fixedHeight = Self(horizontal: .bounded, vertical: .fixed)
 
 	/// The view should have the exact same dimensions as the passed in size, if possible
-	public static var fixedSize = Self(horizontal: .fixed, vertical: .fixed)
-	
+	public static let fixedSize = Self(horizontal: .fixed, vertical: .fixed)
+
 	/// The view should be smaller than the given dimensions, if possible
-	public static var boundedSize = Self(horizontal: .bounded, vertical: .bounded)
+	public static let boundedSize = Self(horizontal: .bounded, vertical: .bounded)
 }
 
 extension UIView {

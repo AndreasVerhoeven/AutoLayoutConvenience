@@ -10,7 +10,7 @@ import UIKit
 
 /// A ConstraintsList hold a list of constraints
 /// that were created using one of our helper methods.
-public class ConstraintsList: NSObject {
+@MainActor public class ConstraintsList: NSObject {
 	public weak var view: UIView?
 
 	public var leading: NSLayoutConstraint?

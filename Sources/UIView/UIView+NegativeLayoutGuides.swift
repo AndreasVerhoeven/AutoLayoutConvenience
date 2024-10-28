@@ -28,7 +28,7 @@ extension UIView {
 	}
 	
 	/// A struct that provides easy access to all 4 sides of the area that is excluded by another guide
-	public struct ExcludedAreaLayoutGuides {
+	@MainActor public struct ExcludedAreaLayoutGuides {
 		fileprivate weak var view: UIView?
 		fileprivate var layoutGuide: UILayoutGuide
 		
