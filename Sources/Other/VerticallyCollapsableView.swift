@@ -119,18 +119,6 @@ open class VerticallyCollapsableView: UIView {
 		self.innerContainerView.frame.origin.y = 0
 	}
 
-	open override var bounds: CGRect {
-		didSet {
-			print("X")
-		}
-	}
-
-	open override var center: CGPoint {
-		didSet {
-			print("Y")
-		}
-	}
-
 	public override init(frame: CGRect) {
 		super.init(frame: frame)
 
