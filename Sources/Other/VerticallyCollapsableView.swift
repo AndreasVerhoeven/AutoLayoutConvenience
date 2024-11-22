@@ -20,15 +20,25 @@ open class VerticallyCollapsableView: UIView {
 	public let contentView = UIView()
 
 	/// Convenience init for adding a view to the content view directly.
-	public convenience init(view: UIView) {
+	public convenience init(view: UIView, edge: Edge = .top) {
 		self.init(frame: .zero)
 		contentView.addSubview(view, filling: .superview)
+		updatePinnedToEdge()
+	}
+
+	/// Convenience init for initializing some properties directly
+	public convenience init(animationOptions: AnimationOptions, edge: Edge = .top) {
+		self.init(frame: .zero)
+		self.animationOptions = animationOptions
+		self.edge = edge
+		updatePinnedToEdge()
 	}
 
 	/// Convenience init for adding a view to the content view directly.
-	public convenience init(animationOptions: AnimationOptions) {
+	public convenience init(edge: Edge) {
 		self.init(frame: .zero)
-		self.animationOptions = animationOptions
+		self.edge = edge
+		updatePinnedToEdge()
 	}
 
 	/// If true, this view is expanded to its actual height. If false, it will have a height of 0.
@@ -57,6 +67,20 @@ open class VerticallyCollapsableView: UIView {
 		}
 	}
 
+	/// defines which edge we are pinned to
+	public enum Edge {
+		case top
+		case bottom
+	}
+
+	/// The edge we try to stick too
+	var edge = Edge.top {
+		didSet {
+			guard edge != oldValue else { return }
+			updatePinnedToEdge()
+		}
+	}
+
 	/// Defines the options we have for animation
 	public struct AnimationOptions: RawRepresentable, OptionSet {
 		public var rawValue: Int
@@ -77,7 +101,7 @@ open class VerticallyCollapsableView: UIView {
 		public static let dontRelayout = Self(rawValue: 1 << 2)
 
 		/// The default animation options
-		public static let `default`: Self = [.fade, .scale]
+		public static let `default`: Self = [.fade]
 	}
 
 	/// the options to use when animating from/to expanded state.
@@ -109,14 +133,32 @@ open class VerticallyCollapsableView: UIView {
 		}
 	}
 
+	private func updatePinnedToEdge() {
+		UIView.performWithoutAnimation {
+			switch edge {
+				case .top:
+					innerContainerView.activeConditionalConstraintsConfigurationName = .main
+
+				case .bottom:
+					innerContainerView.activeConditionalConstraintsConfigurationName = .alternative
+			}
+		}
+	}
+
 	// MARK: - UIView
 	open override func layoutSubviews() {
 		super.layoutSubviews()
 
-		/// pin those at 0 during animations
-		self.contentView.frame.origin.y = 0
-		self.containerView.frame.origin.y = 0
-		self.innerContainerView.frame.origin.y = 0
+		switch edge {
+			case .top:
+				/// pin those at 0 during animations
+				self.contentView.frame.origin.y = 0
+				self.containerView.frame.origin.y = 0
+				self.innerContainerView.frame.origin.y = 0
+
+			case .bottom:
+				break
+		}
 	}
 
 	public override init(frame: CGRect) {
@@ -126,7 +168,14 @@ open class VerticallyCollapsableView: UIView {
 		addSubview(containerView, filling: .superview)
 
 		containerView.clipsToBounds = true
-		containerView.addSubview(innerContainerView, pinnedTo: .top)
+
+		UIView.addNamedConditionalConfiguration(.main) {
+			containerView.addSubview(innerContainerView, pinnedTo: .top)
+		}
+
+		UIView.addNamedConditionalConfiguration(.alternative) {
+			containerView.addSubview(innerContainerView, pinnedTo: .bottom)
+		}
 
 		UIView.addNamedConditionalConfiguration(.hidden) {
 			containerView.constrain(height: 0)
