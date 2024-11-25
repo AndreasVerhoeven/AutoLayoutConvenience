@@ -92,39 +92,39 @@ extension SizeConstrain where T: SingleAxisLayout {
 		return atMost(.relative(view), priority: priority, multiplier: 0.5, constant: constant)
 	}
 
-	/// Makes the view at least `multiplier` times  another layout.
+	/// Makes the view at least `multiplier` multipliedBy  another layout.
 	/// Note that the layout that is being referenced should already be in the same view hierarchy.
-	public static func atLeast(_ value: T, times multiplier: CGFloat, priority: UILayoutPriority = .required, constant: CGFloat = 0) -> Self {
+	public static func atLeast(_ value: T, multipliedBy multiplier: CGFloat, priority: UILayoutPriority = .required, constant: CGFloat = 0) -> Self {
 		return atLeast(value, priority: priority, multiplier: multiplier, constant: constant)
 	}
 
-	/// Makes the view at least `multiplier` times  another view.
+	/// Makes the view at least `multiplier` multipliedBy  another view.
 	/// Note that the view that is being referenced should already be in the same view hierarchy.
-	public static func atLeast(sameAs view: UIView, times multiplier: CGFloat, priority: UILayoutPriority = .required, constant: CGFloat = 0) -> Self {
+	public static func atLeast(sameAs view: UIView, multipliedBy multiplier: CGFloat, priority: UILayoutPriority = .required, constant: CGFloat = 0) -> Self {
 		return atLeast(.relative(view), priority: priority, multiplier: multiplier, constant: constant)
 	}
 
-	/// Makes the view exactly `multiplier` times  another layout.
+	/// Makes the view exactly `multiplier` multipliedBy  another layout.
 	/// Note that the layout that is being referenced should already be in the same view hierarchy.
-	public static func exactly(_ value: T, times multiplier: CGFloat, priority: UILayoutPriority = .required, constant: CGFloat = 0) -> Self {
+	public static func exactly(_ value: T, multipliedBy multiplier: CGFloat, priority: UILayoutPriority = .required, constant: CGFloat = 0) -> Self {
 		return exactly(value, priority: priority, multiplier: multiplier, constant: constant)
 	}
 
-	/// Makes the view exactly `multiplier` times  another view.
+	/// Makes the view exactly `multiplier` multipliedBy  another view.
 	/// Note that the view that is being referenced should already be in the same view hierarchy.
-	public static func exactly(sameAs view: UIView, times multiplier: CGFloat, priority: UILayoutPriority = .required, constant: CGFloat = 0) -> Self {
+	public static func exactly(sameAs view: UIView, multipliedBy multiplier: CGFloat, priority: UILayoutPriority = .required, constant: CGFloat = 0) -> Self {
 		return exactly(.relative(view), priority: priority, multiplier: multiplier, constant: constant)
 	}
 
-	/// Makes the view at most `multiplier` times  another layout.
+	/// Makes the view at most `multiplier` multipliedBy  another layout.
 	/// Note that the layout that is being referenced should already be in the same view hierarchy.
-	public static func atMost(_ value: T, times multiplier: CGFloat, priority: UILayoutPriority = .required, constant: CGFloat = 0) -> Self {
+	public static func atMost(_ value: T, multipliedBy multiplier: CGFloat, priority: UILayoutPriority = .required, constant: CGFloat = 0) -> Self {
 		return exactly(value, priority: priority, multiplier: multiplier, constant: constant)
 	}
 
-	/// Makes the view at most `multiplier` times  another view.
+	/// Makes the view at most `multiplier` multipliedBy  another view.
 	/// Note that the view that is being referenced should already be in the same view hierarchy.
-	public static func atMost(sameAs view: UIView, times multiplier: CGFloat, priority: UILayoutPriority = .required, constant: CGFloat = 0) -> Self {
+	public static func atMost(sameAs view: UIView, multipliedBy multiplier: CGFloat, priority: UILayoutPriority = .required, constant: CGFloat = 0) -> Self {
 		return exactly(.relative(view), priority: priority, multiplier: multiplier, constant: constant)
 	}
 }
