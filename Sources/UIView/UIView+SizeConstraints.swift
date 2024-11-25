@@ -38,24 +38,24 @@ public struct SizeConstrain<T> {
 }
 
 extension SizeConstrain where T: SingleAxisLayout {
-	/// Makes the view at least half of another layout.
-	/// Note that the layout that is being referenced should already be in the same view hierarchy.
-	public static func atLeast(halfOf value: T, priority: UILayoutPriority = .required, constant: CGFloat = 0) -> Self {
-		return atLeast(value, priority: priority, multiplier: 0.5, constant: constant)
-	}
-	
 	/// Makes the view at exactly half of another layout.
 	/// Note that the layout that is being referenced should already be in the same view hierarchy.
 	public static func exactly(halfOf value: T, priority: UILayoutPriority = .required, constant: CGFloat = 0) -> Self {
 		return exactly(value, priority: priority, multiplier: 0.5, constant: constant)
 	}
-	
+
 	/// Makes the view at most half of another layout.
 	/// Note that the layout that is being referenced should already be in the same view hierarchy.
 	public static func atMost(halfOf value: T, priority: UILayoutPriority = .required, constant: CGFloat = 0) -> Self {
 		return atMost(value, priority: priority, multiplier: 0.5, constant: constant)
 	}
-	
+
+	/// Makes the view at least half of another layout.
+	/// Note that the layout that is being referenced should already be in the same view hierarchy.
+	public static func atLeast(halfOf value: T, priority: UILayoutPriority = .required, constant: CGFloat = 0) -> Self {
+		return atLeast(value, priority: priority, multiplier: 0.5, constant: constant)
+	}
+
 	/// Makes the view at most the same dimension as another view. Convenience for `atLeast(.relative(view))`
 	/// Note that the layout that is being referenced should already be in the same view hierarchy.
 	public static func atLeast(sameAs view: UIView, priority: UILayoutPriority = .required, multiplier: CGFloat = 1, constant: CGFloat = 0) -> Self {
@@ -90,6 +90,42 @@ extension SizeConstrain where T: SingleAxisLayout {
 	/// Note that the layout that is being referenced should already be in the same view hierarchy.
 	public static func atMost(halfOf view: UIView, priority: UILayoutPriority = .required, constant: CGFloat = 0) -> Self {
 		return atMost(.relative(view), priority: priority, multiplier: 0.5, constant: constant)
+	}
+
+	/// Makes the view at least `multiplier` times  another layout.
+	/// Note that the layout that is being referenced should already be in the same view hierarchy.
+	public static func atLeast(_ value: T, times multiplier: CGFloat, priority: UILayoutPriority = .required, constant: CGFloat = 0) -> Self {
+		return atLeast(value, priority: priority, multiplier: multiplier, constant: constant)
+	}
+
+	/// Makes the view at least `multiplier` times  another view.
+	/// Note that the view that is being referenced should already be in the same view hierarchy.
+	public static func atLeast(sameAs view: UIView, times multiplier: CGFloat, priority: UILayoutPriority = .required, constant: CGFloat = 0) -> Self {
+		return atLeast(.relative(view), priority: priority, multiplier: multiplier, constant: constant)
+	}
+
+	/// Makes the view exactly `multiplier` times  another layout.
+	/// Note that the layout that is being referenced should already be in the same view hierarchy.
+	public static func exactly(_ value: T, times multiplier: CGFloat, priority: UILayoutPriority = .required, constant: CGFloat = 0) -> Self {
+		return exactly(value, priority: priority, multiplier: multiplier, constant: constant)
+	}
+
+	/// Makes the view exactly `multiplier` times  another view.
+	/// Note that the view that is being referenced should already be in the same view hierarchy.
+	public static func exactly(sameAs view: UIView, times multiplier: CGFloat, priority: UILayoutPriority = .required, constant: CGFloat = 0) -> Self {
+		return exactly(.relative(view), priority: priority, multiplier: multiplier, constant: constant)
+	}
+
+	/// Makes the view at most `multiplier` times  another layout.
+	/// Note that the layout that is being referenced should already be in the same view hierarchy.
+	public static func atMost(_ value: T, times multiplier: CGFloat, priority: UILayoutPriority = .required, constant: CGFloat = 0) -> Self {
+		return exactly(value, priority: priority, multiplier: multiplier, constant: constant)
+	}
+
+	/// Makes the view at most `multiplier` times  another view.
+	/// Note that the view that is being referenced should already be in the same view hierarchy.
+	public static func atMost(sameAs view: UIView, times multiplier: CGFloat, priority: UILayoutPriority = .required, constant: CGFloat = 0) -> Self {
+		return exactly(.relative(view), priority: priority, multiplier: multiplier, constant: constant)
 	}
 }
 
@@ -141,6 +177,32 @@ extension UIView {
 		ConstraintsList.activate([
 			width.flatMap({ $0.layoutConstraint(for: widthAnchor, in: self)?.with(priority: $0.priority) }),
 			height.flatMap({ $0.layoutConstraint(for: heightAnchor, in: self)?.with(priority: $0.priority) }),
+		], for: self)
+		return self
+	}
+
+	/// Constrains this view's `width` to a given `height` of another layout
+	///
+	/// - Parameters:
+	///  - width: the constrained height to constrain the width of, one of .atLeast, .exactly, .atMost
+	///
+	/// - Returns: returns `self`, useful for chaining
+	@discardableResult public func constrain(widthAsHeightOf height: SizeConstrain<YAxisLayout>) -> Self {
+		ConstraintsList.activate([
+			height.layoutConstraint(for: widthAnchor, in: self)?.with(priority: height.priority),
+		], for: self)
+		return self
+	}
+
+	/// Constrains this view's `height` to a given `width` of another layout
+	///
+	/// - Parameters:
+	///  - height: the constrained width to constrain the height of, one of .atLeast, .exactly, .atMost
+	///
+	/// - Returns: returns `self`, useful for chaining
+	@discardableResult public func constrain(heightAsWidthOf width: SizeConstrain<XAxisLayout>) -> Self {
+		ConstraintsList.activate([
+			width.layoutConstraint(for: heightAnchor, in: self)?.with(priority: width.priority),
 		], for: self)
 		return self
 	}

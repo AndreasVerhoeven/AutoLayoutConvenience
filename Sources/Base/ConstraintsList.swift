@@ -10,42 +10,78 @@ import UIKit
 
 /// A ConstraintsList hold a list of constraints
 /// that were created using one of our helper methods.
-public class ConstraintsList: NSObject {
-	public weak var view: UIView?
+final public class ConstraintsList: NSObject {
+	/// the view the constraints should be valid for
+	public private(set) weak var view: UIView?
 
-	public var leading: NSLayoutConstraint?
-	public var trailing: NSLayoutConstraint?
-	public var top: NSLayoutConstraint?
-	public var bottom: NSLayoutConstraint?
+	/// all the constraints
+	public private(set) var all = [NSLayoutConstraint]()
 
-	public var centerX: NSLayoutConstraint?
-	public var centerY: NSLayoutConstraint?
-	public var height: NSLayoutConstraint?
-	public var width :NSLayoutConstraint?
+	/// the identifier of this list
+	public var identifier: Identifier?
 
-	public var firstBaseline: NSLayoutConstraint?
-	public var lastBaseline: NSLayoutConstraint?
+	// MARK: - Specific constraints
+	public var allLeading: [NSLayoutConstraint] { allMatching(.leading, or: .leadingMargin) }
+	public var allTrailing: [NSLayoutConstraint] { allMatching(.trailing, or: .trailingMargin) }
 
-	public var others = [NSLayoutConstraint]()
-	
-	private var shouldBeDelayedActivated = false
+	public var allTop: [NSLayoutConstraint] { allMatching(.top, or: .topMargin) }
+	public var allBottom: [NSLayoutConstraint] { allMatching(.bottom, or: .bottomMargin) }
 
-	public init(constraints: [NSLayoutConstraint] = [], view: UIView? = nil) {
+	public var allCenterX: [NSLayoutConstraint] { allMatching(.centerX, or: .centerXWithinMargins) }
+	public var allCenterY: [NSLayoutConstraint] { allMatching(.centerY, or: .centerYWithinMargins) }
+
+	public var allHeight: [NSLayoutConstraint] { all.filter { $0.firstAttribute == .height } }
+	public var allWidth: [NSLayoutConstraint] { all.filter { $0.firstAttribute == .width } }
+
+	public var allFirstBaseline: [NSLayoutConstraint] { all.filter { $0.firstAttribute == .firstBaseline } }
+	public var allLastBaseline: [NSLayoutConstraint] { all.filter { $0.firstAttribute == .lastBaseline } }
+
+	public var others: [NSLayoutConstraint] {
+		return all.filter { constraint in
+			switch constraint.firstAttribute {
+				case .bottom, .bottomMargin: return false
+				case .top, .topMargin: return false
+				case .leading, .leadingMargin: return false
+				case .trailing, .trailingMargin: return false
+				case .centerX, .centerXWithinMargins: return false
+				case .centerY, .centerYWithinMargins: return false
+				case .height: return false
+				case .width: return false
+				case .firstBaseline: return false
+				case .lastBaseline: return false
+
+				case .left, .right, .leftMargin, .rightMargin, .notAnAttribute:
+					fallthrough
+				@unknown default:
+					return true
+			}
+		}
+	}
+
+	// MARK: - Convenience accessors, returning the first such given constraint
+	public var leading: NSLayoutConstraint? { allLeading.first }
+	public var trailing: NSLayoutConstraint? { allTrailing.first }
+	public var top: NSLayoutConstraint? { allTop.first }
+	public var bottom: NSLayoutConstraint? { allBottom.first }
+
+	public var centerX: NSLayoutConstraint? {allCenterX.first }
+	public var centerY: NSLayoutConstraint? { allCenterY.first }
+	public var height: NSLayoutConstraint? { allHeight.first }
+	public var width :NSLayoutConstraint? {allWidth.first }
+
+	public var firstBaseline: NSLayoutConstraint? { allFirstBaseline.first }
+	public var lastBaseline: NSLayoutConstraint? { allLastBaseline.first }
+
+	/// creates a constraints list
+	public init(constraints: [NSLayoutConstraint] = [], view: UIView? = nil, identifier: Identifier? = nil) {
 		super.init()
 		self.view = view
+		self.identifier = identifier
 		replaceConstraints(constraints)
 	}
-	
-	
-	internal typealias Interceptor = (ConstraintsList, UIView) -> Void
-	static internal var interceptors = [Interceptor]()
-	internal static func intercept(_ callback: @escaping Interceptor, while running: () -> Void) {
-		interceptors.append(callback)
-		running()
-		interceptors.removeLast()
-	}
 
-	internal static func grouped(_ running: () -> Void, for view: UIView) -> ConstraintsList {
+	/// groups all constraints created in this block in a single list
+	public static func grouped(_ running: () -> Void, for view: UIView) -> ConstraintsList {
 		var constraints = [NSLayoutConstraint]()
 		ConstraintsList.intercept({ list, _ in
 			constraints.append(contentsOf: list.all)
@@ -64,10 +100,80 @@ public class ConstraintsList: NSObject {
 		return list
 	}
 	
+	/// changes the priority of all constraints
+	@discardableResult public func changePriority(_ priority: UILayoutPriority) -> ConstraintsList {
+		all.forEach {$0.priority = priority}
+		return self
+	}
+
+	/// The insets derived from the top, leading, bottom and trailing insets.
+	/// If there are multiple top/leading/bottom/trailing constraints, the first one will be used for the getter,
+	/// but setting them changes them all
+	public var insets: NSDirectionalEdgeInsets {
+		get {
+			var insets = NSDirectionalEdgeInsets.zero
+			insets.top = -(top?.constant ?? 0)
+			insets.leading = -(leading?.constant ?? 0)
+			insets.bottom = bottom?.constant ?? 0
+			insets.trailing = trailing?.constant ?? 0
+			return insets
+		}
+		set {
+			allTop.forEach { $0.constant = -newValue.top }
+			allLeading.forEach { $0.constant = -newValue.leading }
+			allBottom.forEach { $0.constant = newValue.bottom }
+			allTrailing.forEach { $0.constant = newValue.trailing }
+		}
+	}
+
+	/// replaces the existing constraints
+	public func replaceConstraints(_ constraints: [NSLayoutConstraint]) {
+		all = constraints
+	}
+
+	/// replaces the existing constraints
+	public func replace(with block: @autoclosure () -> ConstraintsList) {
+		deactivate()
+		replaceConstraints(block().all)
+	}
+
+	/// replaces the existing constraints
+	public func replace(by block: () -> ConstraintsList) {
+		deactivate()
+		replaceConstraints(block().all)
+	}
+
+	/// activates all constraints
+	public func activate() {
+		if Self.isActivationDelayed == true {
+			shouldBeDelayedActivated = true
+			Self.delayedActivationLists.insert(self)
+		} else {
+			NSLayoutConstraint.activate(all)
+		}
+	}
+
+	/// deactivates all constraints
+	public func deactivate() {
+		if Self.isActivationDelayed == true {
+			shouldBeDelayedActivated = false
+		}
+		NSLayoutConstraint.deactivate(all)
+	}
+
+	// MARK: - Internal
+	// MARK: Delayed Activation
+
+	/// delayed activation does what it says: it delays activating the constraints in all lists
+	/// until a later point - this can be useful when constrains depend upon multiple views:
+	/// they first need to be all added to the hierarchy before they can be activated - this helps with that
 	fileprivate static var delayedActivationLists = Set<ConstraintsList>()
 	fileprivate static var delayedActivationCount = 0
 	fileprivate static var isActivationDelayed: Bool { delayedActivationCount > 0 }
-	
+
+	/// if true, activation of the constraints in this list should be delayed until a later point in time
+	private var shouldBeDelayedActivated = false
+
 	internal static func delayActivation(_ running: () -> Void) {
 		delayedActivationCount += 1
 		running()
@@ -79,116 +185,42 @@ public class ConstraintsList: NSObject {
 		}
 		delayedActivationLists.removeAll()
 	}
-	
-	// all constraints in the list
-	public var all: [NSLayoutConstraint] {
-		var items = Array<NSLayoutConstraint>()
-		leading.map {items.append($0)}
-		trailing.map {items.append($0)}
-		top.map {items.append($0)}
-		bottom.map {items.append($0)}
-		centerX.map {items.append($0)}
-		centerY.map {items.append($0)}
-		height.map {items.append($0)}
-		width.map {items.append($0)}
-		firstBaseline.map {items.append($0)}
-		lastBaseline.map {items.append($0)}
-		items.append(contentsOf: others)
-		return items
+
+	// MARK: Intercepting
+	internal typealias Interceptor = (ConstraintsList, UIView) -> Void
+	static internal var interceptors = [Interceptor]()
+
+	/// Intercepts all created constraint lists and hand them over to a callback
+	internal static func intercept(_ callback: @escaping Interceptor, while running: () -> Void) {
+		interceptors.append(callback)
+		running()
+		interceptors.removeLast()
 	}
 
-	// changes the priority of all constraints
-	@discardableResult public func changePriority(_ priority: UILayoutPriority) -> ConstraintsList {
-		all.forEach {$0.priority = priority}
-		return self
-	}
-
-	// The insets derived from the top, leading, bottom and trailing insets
-	public var insets: NSDirectionalEdgeInsets {
-		get {
-			var insets = NSDirectionalEdgeInsets.zero
-			insets.top = -(top?.constant ?? 0)
-			insets.leading = -(leading?.constant ?? 0)
-			insets.bottom = bottom?.constant ?? 0
-			insets.trailing = trailing?.constant ?? 0
-			return insets
-		}
-		set {
-			top?.constant = -newValue.top
-			leading?.constant = -newValue.leading
-			bottom?.constant = newValue.bottom
-			trailing?.constant = newValue.trailing
-		}
-	}
-
-	// replaces the existing constraints
-	public func replaceConstraints(_ constraints: [NSLayoutConstraint]) {
-		leading = nil
-		trailing = nil
-		top = nil
-		bottom = nil
-		centerX = nil
-		centerY = nil
-		height = nil
-		width = nil
-		firstBaseline = nil
-		lastBaseline = nil
-
-		func assign(_ value: NSLayoutConstraint, to path: ReferenceWritableKeyPath<ConstraintsList, NSLayoutConstraint?>) {
-			if self[keyPath: path] == nil {
-				self[keyPath: path] = value
-			} else {
-				others.append(value)
-			}
-		}
-
-		for constraint in constraints {
-			switch constraint.firstAttribute {
-				case .bottom, .bottomMargin: assign(constraint, to: \.bottom)
-				case .top, .topMargin: assign(constraint, to: \.top)
-				case .leading, .leadingMargin: assign(constraint, to: \.leading)
-				case .trailing, .trailingMargin: assign(constraint, to: \.trailing)
-				case .centerX, .centerXWithinMargins: assign(constraint, to: \.centerX)
-				case .centerY, .centerYWithinMargins: assign(constraint, to: \.centerY)
-				case .height: assign(constraint, to: \.height)
-				case .width: assign(constraint, to: \.width)
-				case .firstBaseline: assign(constraint, to: \.firstBaseline)
-				case .lastBaseline: assign(constraint, to: \.lastBaseline)
-
-				case .left, .right, .leftMargin, .rightMargin, .notAnAttribute:
-					fallthrough
-				@unknown default:
-					others.append(constraint)
-			}
-		}
-	}
-
-	// replaces the existing constraints
-	public func replace(with block: @autoclosure () -> ConstraintsList) {
-		deactivate()
-		replaceConstraints(block().all)
-	}
-
-	public func replace(by block: () -> ConstraintsList) {
-		deactivate()
-		replaceConstraints(block().all)
-	}
-
-	// activates all constraints
-	public func activate() {
-		if Self.isActivationDelayed == true {
-			shouldBeDelayedActivated = true
-			Self.delayedActivationLists.insert(self)
-		} else {
-			NSLayoutConstraint.activate(all)
-		}
-	}
-
-	// deactivates all constraints
-	public func deactivate() {
-		if Self.isActivationDelayed == true {
-			shouldBeDelayedActivated = false
-		}
-		NSLayoutConstraint.deactivate(all)
+	// MARK: - Privates
+	private func allMatching(_ a: NSLayoutConstraint.Attribute, or  b: NSLayoutConstraint.Attribute) -> [NSLayoutConstraint] {
+		return all.filter { $0.firstAttribute == a || $0.secondAttribute == b }
 	}
 }
+
+extension ConstraintsList {
+	/// Representing an identified constraint list
+	public struct Identifier: RawRepresentable, Hashable {
+		public var rawValue: String
+
+		public init(rawValue: String) {
+			self.rawValue = rawValue
+		}
+
+		public static func custom(_ value: String) -> Self {
+			return Self(rawValue: value)
+		}
+
+		public static let main = Self(rawValue: "main")
+		public static let width = Self(rawValue: "width")
+		public static let height = Self(rawValue: "height")
+		public static let size = Self(rawValue: "size")
+		public static let box = Self(rawValue: "box")
+	}
+}
+

@@ -111,7 +111,7 @@ extension UIView {
 	/// - Returns: returns `self`, useful for chaining
 	@discardableResult public func removeSizeConstraints() -> Self {
 		let constraintsToRemove = constraints.filter { $0.firstAttribute == .width || $0.firstAttribute == .height }
-		removeConstraints(constraintsToRemove)
+		NSLayoutConstraint.deactivate(constraintsToRemove)
 		return self
 	}
 
@@ -120,7 +120,7 @@ extension UIView {
 	/// - Returns: returns `self`, useful for chaining
 	@discardableResult public func removeWidthConstraints() -> Self {
 		let constraintsToRemove = constraints.filter { $0.firstAttribute == .width }
-		removeConstraints(constraintsToRemove)
+		NSLayoutConstraint.deactivate(constraintsToRemove)
 		return self
 	}
 
@@ -129,7 +129,7 @@ extension UIView {
 	/// - Returns: returns `self`, useful for chaining
 	@discardableResult public func removeHeightConstraints() -> Self {
 		let constraintsToRemove = constraints.filter { $0.firstAttribute == .height }
-		removeConstraints(constraintsToRemove)
+		NSLayoutConstraint.deactivate(constraintsToRemove)
 		return self
 	}
 	
@@ -138,7 +138,7 @@ extension UIView {
 	/// - Returns: returns `self`, useful for chaining
 	@discardableResult public func removeConstantWidthConstraints() -> Self {
 		let constraintsToRemove = constraints.filter { $0.firstAttribute == .width && $0.secondItem == nil }
-		removeConstraints(constraintsToRemove)
+		NSLayoutConstraint.deactivate(constraintsToRemove)
 		return self
 	}
 	
@@ -147,7 +147,7 @@ extension UIView {
 	/// - Returns: returns `self`, useful for chaining
 	@discardableResult public func removeConstantHeightConstraints() -> Self {
 		let constraintsToRemove = constraints.filter { $0.firstAttribute == .height && $0.secondItem == nil }
-		removeConstraints(constraintsToRemove)
+		NSLayoutConstraint.deactivate(constraintsToRemove)
 		return self
 	}
 }

@@ -406,6 +406,19 @@ Examples:
 	/// removing existing size constraints and setting a new size constraint
 	view.removeSizeConstraints().constrain(size: CGSize(width: 100, height: 100))
 	
+### Constraining width/height dynamically
+
+There are also convenience methods for constraining a view to a fixed width/height
+dynamically, so you can easily update it without keeping track of the NSLayoutConstraints.
+
+Use these if the width/height need to change to another hardcoded value.
+
+	view.constrainedFixedWidth = 100 // view will be constrained to 100 width
+	view.constrainedFixedWidth = 200 // view will now be constrained to 200 width
+	
+	view.constrainedFixedHeight = 100 // view will be constrained to 100 width
+	view.constrainedFixedSize = CGSize(100, 150) // view will be constrained to 100-width, 150 height
+	
 	
 ### Constraining to other layouts
 
@@ -419,6 +432,12 @@ Examples:
 	
 	// short hand for constraining to views directly
 	view.constrain(width: .exactly(as: otherView), height: .atLeast(halfOf: otherView))
+	
+	// 20% of our superview
+	view.constrain(width: .exactly(.superview, times: 0.2))
+	
+	// 20% of `otherView`
+	view.constrain(width: .exactly(sameAs: otherView, times: 0.2))
 	
 
 Examples of constraining aspect ratio:
@@ -617,16 +636,44 @@ An example is:
 
 Conditional constraints sprinkle a bit of magic:
 
-	- All constraints using the helper functions in this library are created using `ConstraintsList.activate()`
-	- when we are in `UIView.if()` any created constraints using `ConstraintsList` are intercepted using `ConstraintsList.intercept()`
-	- `UIView.if()` collects all constraints and stores them in the relevant view together with the relevant condition in a `ConstraintListCollection`
-	- (**warning:**) `UIView.traitCollectionDidChange(_:)` is swizzled once, so we can intercept trait collection changes
-	- The relevant views are observed for `bounds` changes and `traitCollectionDidChange(_:)` and when changes are detected, we'll re-evaluate all the condition and activate the correct `ConstraintsList`
-	- When we are in `UIView.if()` multiple of the same calls to `view.addSubview(subview)` are ignored for convenience.
+- All constraints using the helper functions in this library are created using `ConstraintsList.activate()`
+- when we are in `UIView.if()` any created constraints using `ConstraintsList` are intercepted using `ConstraintsList.intercept()`
+- `UIView.if()` collects all constraints and stores them in the relevant view together with the relevant condition in a `ConstraintListCollection`
+- (**warning:**) `UIView.traitCollectionDidChange(_:)` is swizzled once, so we can intercept trait collection changes
+- The relevant views are observed for `bounds` changes and `traitCollectionDidChange(_:)` and when changes are detected, we'll re-evaluate all the condition and activate the correct `ConstraintsList`
+- When we are in `UIView.if()` multiple of the same calls to `view.addSubview(subview)` are ignored for convenience.
 	
 The reason we express the conditions using our own system and only execute the `then` and `else` blocks once is that we don't want to create retain cycles: If we would execute the closures on every change, we need to store the closures and any used views will be retained strongly, leading to retain cycles. 
 Instead, we define conditions using our own system and record the created constraints.
 
+
+### Stored Constraints
+
+Keeping track of constraints can sometimes be annoying: you have to capture and store ConstrainstList, deactivate it, set up new constraints just to make a small change, because some NSLayoutConstraint options require a reconfiguration. To make this simpler, you can use `Stored Constraints`. If you use `addStoredConstraints()`/`replaceStoredConstraints()`, the system will automatically save the constraints you create in its closure under an `identifier`. The next time you call this method with the same identifier, the old constraints will automatically be deactivated and the new ones you create in the closure will be installed.
+
+Note that `replaceStoredConstraints` will also work if no constraints have been set up yet, but for readability there's an alias `addStoredConstraints` that does exactly thr same.
+
+The identifier is of type `ConstraintsList.Identifier`. There are a few standard identifier (`main`, `width`, `height`), but you can also name your own with `.custom("MyName")`. All the Stored Constraints methods default to `.main`, so you can use it without giving an identifier. 
+
+#### Example
+
+	let topView = UIView().constrain(height: 50)
+	view.addSubview(topView, pinnedTo: .topCenter, of: .layoutMargins)
+	
+	topView.addStoredConstraints(for: .width) {
+		// half of the superview
+		topView.constrain(width: .exactly(.superview, times: 0.5))
+	}
+	
+	DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+		UIView.animate(duration: 0.25) {
+			topView.replaceStoredConstraints(for: .width) {
+				// 70% of the superview
+				topView.constrain(width: .exactly(.superview, times: 0.7))
+			}
+		}
+	}
+	
 
 ### Batching constraints activation
 

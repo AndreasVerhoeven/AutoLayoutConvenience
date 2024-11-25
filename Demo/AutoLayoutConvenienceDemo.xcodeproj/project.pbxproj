@@ -63,6 +63,8 @@
 		49E70490282AC37B00A1EA1F /* AutoSizingCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E7048F282AC37B00A1EA1F /* AutoSizingCollectionView.swift */; };
 		49E70492282AC3B100A1EA1F /* AutoSizingTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E70491282AC3B100A1EA1F /* AutoSizingTableView.swift */; };
 		49EC263C2822CC59000F8C4B /* UIView+AutoLayoutBridging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49EC263B2822CC59000F8C4B /* UIView+AutoLayoutBridging.swift */; };
+		49F870802CF3D486007A0710 /* UIView+DynamicConstantSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F8707F2CF3D486007A0710 /* UIView+DynamicConstantSize.swift */; };
+		49F870822CF50520007A0710 /* UIView+NamedConstraintLists.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F870812CF50520007A0710 /* UIView+NamedConstraintLists.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -124,6 +126,8 @@
 		49E7048F282AC37B00A1EA1F /* AutoSizingCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoSizingCollectionView.swift; sourceTree = "<group>"; };
 		49E70491282AC3B100A1EA1F /* AutoSizingTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoSizingTableView.swift; sourceTree = "<group>"; };
 		49EC263B2822CC59000F8C4B /* UIView+AutoLayoutBridging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+AutoLayoutBridging.swift"; sourceTree = "<group>"; };
+		49F8707F2CF3D486007A0710 /* UIView+DynamicConstantSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+DynamicConstantSize.swift"; sourceTree = "<group>"; };
+		49F870812CF50520007A0710 /* UIView+NamedConstraintLists.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+NamedConstraintLists.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -214,6 +218,7 @@
 				49CD6B3C263972520024C330 /* UIView+Centering.swift */,
 				49CD6B3D263972520024C330 /* UIView+AutoLayout.swift */,
 				49BE83E5265ECB53001CEC2A /* UIView+SizeConstraints.swift */,
+				49F8707F2CF3D486007A0710 /* UIView+DynamicConstantSize.swift */,
 				49CD6B3E263972520024C330 /* UIView+PinningVerticalEdge.swift */,
 				49CD6B3F263972520024C330 /* UIView+PinningHorizontalEdge.swift */,
 				49BE83E3265EBF7E001CEC2A /* UIView+AligningEdges.swift */,
@@ -225,6 +230,7 @@
 				496E7E3E2837F811004615B1 /* UIView+TraitCollection.swift */,
 				496E7E40283809D9004615B1 /* UIView+Conditional.swift */,
 				496E7E42283944B4004615B1 /* UIView+Condition.swift */,
+				49F870812CF50520007A0710 /* UIView+NamedConstraintLists.swift */,
 				490DB00C2A02789A00DA4ABE /* UIView+NegativeLayoutGuides.swift */,
 			);
 			path = UIView;
@@ -378,6 +384,7 @@
 			files = (
 				49CD6B5C263972520024C330 /* AutoAdjustingVerticalStackView.swift in Sources */,
 				49CD6B5B263972520024C330 /* UIView+StackViewHelpers.swift in Sources */,
+				49F870802CF3D486007A0710 /* UIView+DynamicConstantSize.swift in Sources */,
 				4960E7272B8564E600258A27 /* StickyBottomFooterTableView.swift in Sources */,
 				4980796E26C12CE90007C155 /* KeyboardSafeAreaLayoutGuide.swift in Sources */,
 				49CD6B62263972520024C330 /* LayoutBasis.swift in Sources */,
@@ -410,6 +417,7 @@
 				4933F50226F0F1EE008EEA01 /* AutoHidingStackView.swift in Sources */,
 				496E7E41283809D9004615B1 /* UIView+Conditional.swift in Sources */,
 				49CD6B6D263976160024C330 /* VerticalOverflowScrollView.swift in Sources */,
+				49F870822CF50520007A0710 /* UIView+NamedConstraintLists.swift in Sources */,
 				496E7E3D28378A13004615B1 /* ConstraintsListCollection.swift in Sources */,
 				4980798826C18F470007C155 /* AutoSizingTextView.swift in Sources */,
 				49CD6B58263972520024C330 /* UIView+PinningPosition.swift in Sources */,
