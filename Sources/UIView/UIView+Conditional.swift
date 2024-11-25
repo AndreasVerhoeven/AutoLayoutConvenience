@@ -216,6 +216,7 @@ extension UIView {
 			Self.activeConditions.append(condition.bind(to: view))
 			
 			ConstraintsList.intercept({ list, view in
+				guard let view else { return }
 				let collection = view.ensureConstraintsListCollection()
 				collections[view] = collection
 				collection.add(list, conditions: Self.activeConditions)

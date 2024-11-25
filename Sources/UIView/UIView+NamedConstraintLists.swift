@@ -45,13 +45,18 @@ extension UIView {
 			superview?.setNeedsLayout()
 			superview?.layoutIfNeeded()
 		}
-		
+
 		return list
 	}
 
 	/// Returns the stored constrainst list for the given identifier
 	public func storedConstraintsList(for identifier: ConstraintsList.Identifier = .main) -> ConstraintsList? {
 		return namedConstraintsList.items[identifier]
+	}
+
+	/// Activates or deactivates the sotred constraints list for the given identifier
+	public func setStoredConstraints(for identifier: ConstraintsList.Identifier = .main, isActive: Bool) {
+		storedConstraintsList(for: identifier)?.isActive = isActive
 	}
 
 	fileprivate static var namedCollectionListKey = 0

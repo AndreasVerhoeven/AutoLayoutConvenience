@@ -28,7 +28,12 @@ public class AutoSizingTableHeaderFooterView: UIView {
 	
 	/// This view stops AutoLayout messages from bubbling up to parent views
 	private let wrapperView = UIView()
-	
+
+	public typealias Callback = () -> Void
+
+	/// will be called when we updated our layout frame
+	public var didUpdateLayoutFrameCallback: Callback?
+
 	/// Creates an `AutoSizingTableHeaderFooterView` with a given view
 	public init(view: UIView) {
 		self.view = view
@@ -149,7 +154,9 @@ public class AutoSizingTableHeaderFooterView: UIView {
 		} else {
 			UIView.animate(withDuration: 0.3, delay: 0, options: [.allowUserInteraction, .allowAnimatedContent, .beginFromCurrentState], animations: updates)
 		}
-		
+
+		didUpdateLayoutFrameCallback?()
+
 		isInUpdateHeaderViewCount -= 1
 	}
 	

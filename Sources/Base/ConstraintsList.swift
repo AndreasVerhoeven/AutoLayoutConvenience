@@ -72,25 +72,44 @@ final public class ConstraintsList: NSObject {
 	public var firstBaseline: NSLayoutConstraint? { allFirstBaseline.first }
 	public var lastBaseline: NSLayoutConstraint? { allLastBaseline.first }
 
+	/// This is true if all constraints are active
+	public var isActive: Bool {
+		get { _isActive }
+		set {
+			guard _isActive != newValue else { return }
+			if newValue == true {
+				activate()
+			} else {
+				deactivate()
+			}
+		}
+	}
+
 	/// creates a constraints list
 	public init(constraints: [NSLayoutConstraint] = [], view: UIView? = nil, identifier: Identifier? = nil) {
 		super.init()
 		self.view = view
 		self.identifier = identifier
-		replaceConstraints(constraints)
+		self.all = constraints
+	}
+
+	/// creates a constraints list by capturing the constraints in the given closure
+	public init(capturingConstraintsIn running: () -> Void, for view: UIView? = nil) {
+		super.init()
+		replaceByCapturingConstraintsIn(running, for: view)
 	}
 
 	/// groups all constraints created in this block in a single list
-	public static func grouped(_ running: () -> Void, for view: UIView) -> ConstraintsList {
+	public static func grouped(_ running: () -> Void, for view: UIView?) -> ConstraintsList {
 		var constraints = [NSLayoutConstraint]()
 		ConstraintsList.intercept({ list, _ in
 			constraints.append(contentsOf: list.all)
 		}, while: running)
 		return ConstraintsList.activate(constraints, for: view)
 	}
-	
+
 	/// Activates a list of optional constraints and returns a constraint list
-	@discardableResult public static func activate(_ constraints: [NSLayoutConstraint?], for view: UIView) -> ConstraintsList {
+	@discardableResult public static func activate(_ constraints: [NSLayoutConstraint?], for view: UIView?) -> ConstraintsList {
 		let list = ConstraintsList(constraints: constraints.compactMap({ $0 }), view: view)
 		if Self.interceptors.isEmpty == false {
 			interceptors.last?(list, view)
@@ -99,7 +118,7 @@ final public class ConstraintsList: NSObject {
 		}
 		return list
 	}
-	
+
 	/// changes the priority of all constraints
 	@discardableResult public func changePriority(_ priority: UILayoutPriority) -> ConstraintsList {
 		all.forEach {$0.priority = priority}
@@ -129,18 +148,33 @@ final public class ConstraintsList: NSObject {
 	/// replaces the existing constraints
 	public func replaceConstraints(_ constraints: [NSLayoutConstraint]) {
 		all = constraints
+		isActive = constraints.allSatisfy { $0.isActive }
 	}
 
 	/// replaces the existing constraints
 	public func replace(with block: @autoclosure () -> ConstraintsList) {
 		deactivate()
-		replaceConstraints(block().all)
+
+		let newList = block()
+		view = newList.view
+		_isActive = newList.isActive
+		all = newList.all
 	}
 
 	/// replaces the existing constraints
 	public func replace(by block: () -> ConstraintsList) {
 		deactivate()
-		replaceConstraints(block().all)
+
+		let newList = block()
+		view = newList.view
+		_isActive = newList.isActive
+		all = newList.all
+	}
+
+	/// replaces the existing constraints with the captured constraints from the closure
+	public func replaceByCapturingConstraintsIn(_ running: () -> Void, for view: UIView? = nil) {
+		deactivate()
+		replace(with: ConstraintsList.grouped(running, for: view))
 	}
 
 	/// activates all constraints
@@ -149,6 +183,7 @@ final public class ConstraintsList: NSObject {
 			shouldBeDelayedActivated = true
 			Self.delayedActivationLists.insert(self)
 		} else {
+			_isActive = true
 			NSLayoutConstraint.activate(all)
 		}
 	}
@@ -158,6 +193,7 @@ final public class ConstraintsList: NSObject {
 		if Self.isActivationDelayed == true {
 			shouldBeDelayedActivated = false
 		}
+		_isActive = false
 		NSLayoutConstraint.deactivate(all)
 	}
 
@@ -178,7 +214,7 @@ final public class ConstraintsList: NSObject {
 		delayedActivationCount += 1
 		running()
 		delayedActivationCount -= 1
-		
+
 		guard delayedActivationCount == 0 else { return }
 		for list in delayedActivationLists where list.shouldBeDelayedActivated && list.view != nil {
 			list.activate()
@@ -187,7 +223,7 @@ final public class ConstraintsList: NSObject {
 	}
 
 	// MARK: Intercepting
-	internal typealias Interceptor = (ConstraintsList, UIView) -> Void
+	internal typealias Interceptor = (ConstraintsList, UIView?) -> Void
 	static internal var interceptors = [Interceptor]()
 
 	/// Intercepts all created constraint lists and hand them over to a callback
@@ -198,6 +234,8 @@ final public class ConstraintsList: NSObject {
 	}
 
 	// MARK: - Privates
+	private var _isActive = false
+
 	private func allMatching(_ a: NSLayoutConstraint.Attribute, or  b: NSLayoutConstraint.Attribute) -> [NSLayoutConstraint] {
 		return all.filter { $0.firstAttribute == a || $0.secondAttribute == b }
 	}
@@ -217,10 +255,26 @@ extension ConstraintsList {
 		}
 
 		public static let main = Self(rawValue: "main")
+		public static let alternative = Self(rawValue: "alternative")
+
 		public static let width = Self(rawValue: "width")
 		public static let height = Self(rawValue: "height")
 		public static let size = Self(rawValue: "size")
+
+		public static let minimumWidth = Self(rawValue: "minimumWidth")
+		public static let minimumHeight = Self(rawValue: "minimumHeight")
+		public static let minimumSize = Self(rawValue: "minimumSize")
+
+		public static let maximumWidth = Self(rawValue: "maximumWidth")
+		public static let maximumHeight = Self(rawValue: "maximumHeight")
+		public static let maximumSize = Self(rawValue: "maximumSize")
+
+		public static let aspectRatio = Self(rawValue: "aspectRatio")
+		public static let mimimumAspectRatio = Self(rawValue: "mimimumAspectRatio")
+		public static let maximumAspectRatio = Self(rawValue: "maximumAspectRatio")
+
 		public static let box = Self(rawValue: "box")
 	}
 }
+
 
