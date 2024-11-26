@@ -1,5 +1,5 @@
 //
-//  VerticallyCollapsableView.swift
+//  CollapsableView.swift
 //  AutoLayoutConvenienceDemo
 //
 //  Created by Andreas Verhoeven on 21/11/2024.
@@ -7,15 +7,16 @@
 
 import UIKit
 
-/// This view can be vertically collapsed to 0 height, while its
+/// This view can be collapsed to 0 height/width, while its
 /// contents isn't resized, but clipped.
 /// This can be useful if you have a list of views and want to collapse
 /// something for a short while, while not deforming/resizing the other view.
 ///
 /// You can add anything to the `contentView`, as long as you make sure
-/// that it has a defined height: either by setting an explicit height constraint on
-/// it or adding a subview that has an intrinsic or defined height.
-open class VerticallyCollapsableView: UIView {
+/// that it has a defined height/width depending on the edge you set:
+/// either by setting an explicit height constraint on it or adding a
+/// subview that has an intrinsic or defined height.
+open class CollapsableView: UIView {
 	/// the content view we show. Add your own subviews here.
 	public let contentView = UIView()
 
@@ -71,6 +72,26 @@ open class VerticallyCollapsableView: UIView {
 	public enum Edge {
 		case top
 		case bottom
+		case leading
+		case trailing
+
+		fileprivate var isVertical: Bool {
+			switch self {
+				case .top: return true
+				case .bottom: return true
+				case .leading: return false
+				case .trailing: return false
+			}
+		}
+
+		fileprivate var edgeConditionalName: UIView.Condition.ConfigurationName {
+			switch self {
+				case .top: return .top
+				case .bottom: return .bottom
+				case .leading: return .leading
+				case .trailing: return .trailing
+			}
+		}
 	}
 
 	/// The edge we try to stick too
@@ -129,19 +150,26 @@ open class VerticallyCollapsableView: UIView {
 		innerContainerView.transform = (animationOptions.contains(.scale) == true && isExpanded == false ? CGAffineTransform(scaleX: 0.9, y: 0.9) : .identity)
 
 		UIView.performWithoutAnimation {
-			containerView.activeConditionalConstraintsConfigurationName = (isExpanded == true ? .main : .hidden)
+			updateExpandedState()
 		}
+	}
+
+	private func updateExpandedState() {
+		containerView.activeConditionalConstraintsConfigurationName = stateConditionalName(isExpanded: isExpanded, isVertical: edge.isVertical)
 	}
 
 	private func updatePinnedToEdge() {
 		UIView.performWithoutAnimation {
-			switch edge {
-				case .top:
-					innerContainerView.activeConditionalConstraintsConfigurationName = .main
+			innerContainerView.activeConditionalConstraintsConfigurationName = edge.edgeConditionalName
+		}
+	}
 
-				case .bottom:
-					innerContainerView.activeConditionalConstraintsConfigurationName = .alternative
-			}
+	private func stateConditionalName(isExpanded: Bool, isVertical: Bool) -> UIView.Condition.ConfigurationName {
+		switch (isExpanded, edge.isVertical) {
+			case (true, true): return .combined(.expanded, .vertical)
+			case (true, false): return .combined(.expanded, .horizontal)
+			case (false, true): return .combined(.collapsed, .vertical)
+			case (false, false): return .combined(.collapsed, .vertical)
 		}
 	}
 
@@ -158,6 +186,12 @@ open class VerticallyCollapsableView: UIView {
 
 			case .bottom:
 				break
+
+			case .leading:
+				break
+
+			case .trailing:
+				break
 		}
 	}
 
@@ -169,20 +203,42 @@ open class VerticallyCollapsableView: UIView {
 
 		containerView.clipsToBounds = true
 
-		UIView.addNamedConditionalConfiguration(.main) {
+		// set up edge constraints
+		UIView.addNamedConditionalConfiguration(Edge.top.edgeConditionalName) {
 			containerView.addSubview(innerContainerView, pinnedTo: .top)
 		}
 
-		UIView.addNamedConditionalConfiguration(.alternative) {
+		UIView.addNamedConditionalConfiguration(Edge.bottom.edgeConditionalName) {
 			containerView.addSubview(innerContainerView, pinnedTo: .bottom)
 		}
 
-		UIView.addNamedConditionalConfiguration(.hidden) {
+		UIView.addNamedConditionalConfiguration(Edge.leading.edgeConditionalName) {
+			containerView.addSubview(innerContainerView, pinnedTo: .leading)
+		}
+
+		UIView.addNamedConditionalConfiguration(Edge.trailing.edgeConditionalName) {
+			containerView.addSubview(innerContainerView, pinnedTo: .trailing)
+		}
+
+		// set up collapsed state constraints
+		UIView.addNamedConditionalConfiguration(stateConditionalName(isExpanded: false, isVertical: false)) {
+			containerView.constrain(width: 0)
+		}
+
+		UIView.addNamedConditionalConfiguration(stateConditionalName(isExpanded: true, isVertical: false)) {
+			containerView.constrain(width: .exactly(sameAs: innerContainerView))
+		}
+
+		UIView.addNamedConditionalConfiguration(stateConditionalName(isExpanded: false, isVertical: true)) {
 			containerView.constrain(height: 0)
 		}
-		UIView.addNamedConditionalConfiguration(.main) {
+
+		UIView.addNamedConditionalConfiguration(stateConditionalName(isExpanded: true, isVertical: true)) {
 			containerView.constrain(height: .exactly(sameAs: innerContainerView))
 		}
+
+		updatePinnedToEdge()
+		updateExpandedState()
 	}
 
 	@available(*, unavailable)

@@ -27,22 +27,60 @@ extension UIView {
 }
 
 extension UIView.Condition {
-	/// This is a name of a configuration. See `UIView.addNamedConditionalConfiguration(name:configuration:)`
+	/// This is a name of a configuration. Don't use $ signs in the name `UIView.addNamedConditionalConfiguration(name:configuration:)`
 	public struct ConfigurationName: RawRepresentable, Hashable {
 		public var rawValue: String
-		
+
 		public init(rawValue: String) {
 			self.rawValue = rawValue
 		}
-		
+
+		/// Creates a new configuration name that's a combination of several other ones
+		public static func combined(_ names: Self...) -> Self {
+			return Self(rawValue: names.lazy.map(\.rawValue).joined(separator: "$"))
+		}
+
 		/// A predefined main configuration. This one is active by default.
-		public static let main = ConfigurationName(rawValue: "main")
+		public static let main = Self(rawValue: "main")
+
 		/// A predefined alternative configuration name.
-		public static let alternative = ConfigurationName(rawValue: "alternative")
+		public static let alternative = Self(rawValue: "alternative")
+
+		/// A predefined configuration name that can be used for configurations that are "active".
+		public static let active = Self(rawValue: "active")
+
+		/// A predefined configuration name that can be used for configurations that are "inactive".
+		public static let inactive = Self(rawValue: "inactive")
+
+		/// A predefined configuration name that can be used for configurations that are "expanded".
+		public static let expanded = Self(rawValue: "expanded")
+
+		/// A predefined configuration name that can be used for configurations that are "collapsed".
+		public static let collapsed = Self(rawValue: "collapsed")
+
 		/// A predefined configuration name that can be used for configurations that are "shown".
-		public static let visible = ConfigurationName(rawValue: "shown")
+		public static let visible = Self(rawValue: "shown")
+
 		/// A predefined configuration name that can be used for configurations that are "hidden".
-		public static let hidden = ConfigurationName(rawValue: "hidden")
+		public static let hidden = Self(rawValue: "hidden")
+
+		/// A predefined configuration name that can be used for configurations that are `top`
+		public static let top = Self(rawValue: "top")
+
+		/// A predefined configuration name that can be used for configurations that are `leading`
+		public static let leading = Self(rawValue: "leading")
+
+		/// A predefined configuration name that can be used for configurations that are `bottom`
+		public static let bottom = Self(rawValue: "bottom")
+
+		/// A predefined configuration name that can be used for configurations that are `trailing`
+		public static let trailing = Self(rawValue: "trailing")
+
+		/// A predefined configuration name that can be used for configurations that are `vertical`
+		public static let vertical = Self(rawValue: "vertical")
+
+		/// A predefined configuration name that can be used for configurations that are `horizontal`
+		public static let horizontal = Self(rawValue: "horizontal")
 	}
 }
 

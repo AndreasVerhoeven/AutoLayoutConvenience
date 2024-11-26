@@ -11,7 +11,7 @@
 		4932513E29F93446003CB4EE /* Cancellable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4932513D29F93446003CB4EE /* Cancellable.swift */; };
 		49337D2F27D298D0006BDB1A /* AutoSizingTableHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49337D2E27D298D0006BDB1A /* AutoSizingTableHeaderFooterView.swift */; };
 		4933F50226F0F1EE008EEA01 /* AutoHidingStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4933F50126F0F1EE008EEA01 /* AutoHidingStackView.swift */; };
-		4960C7822CEF758100FBB7F2 /* VerticallyCollapsableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4960C7812CEF758100FBB7F2 /* VerticallyCollapsableView.swift */; };
+		4960C7822CEF758100FBB7F2 /* CollapsableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4960C7812CEF758100FBB7F2 /* CollapsableView.swift */; };
 		4960E7272B8564E600258A27 /* StickyBottomFooterTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4960E7262B8564E600258A27 /* StickyBottomFooterTableView.swift */; };
 		4969E367263EE626000F8BDA /* ContentWithFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4969E366263EE626000F8BDA /* ContentWithFooterView.swift */; };
 		496ADB4426B1E91B0016A582 /* ExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496ADB4326B1E91B0016A582 /* ExampleViewController.swift */; };
@@ -72,7 +72,7 @@
 		4932513D29F93446003CB4EE /* Cancellable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cancellable.swift; sourceTree = "<group>"; };
 		49337D2E27D298D0006BDB1A /* AutoSizingTableHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoSizingTableHeaderFooterView.swift; sourceTree = "<group>"; };
 		4933F50126F0F1EE008EEA01 /* AutoHidingStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoHidingStackView.swift; sourceTree = "<group>"; };
-		4960C7812CEF758100FBB7F2 /* VerticallyCollapsableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticallyCollapsableView.swift; sourceTree = "<group>"; };
+		4960C7812CEF758100FBB7F2 /* CollapsableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsableView.swift; sourceTree = "<group>"; };
 		4960E7262B8564E600258A27 /* StickyBottomFooterTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickyBottomFooterTableView.swift; sourceTree = "<group>"; };
 		4969E366263EE626000F8BDA /* ContentWithFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentWithFooterView.swift; sourceTree = "<group>"; };
 		496ADB4326B1E91B0016A582 /* ExampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleViewController.swift; sourceTree = "<group>"; };
@@ -307,7 +307,7 @@
 				49746F46278885240028E523 /* FixedFrameLayoutGuide.swift */,
 				49337D2E27D298D0006BDB1A /* AutoSizingTableHeaderFooterView.swift */,
 				4960E7262B8564E600258A27 /* StickyBottomFooterTableView.swift */,
-				4960C7812CEF758100FBB7F2 /* VerticallyCollapsableView.swift */,
+				4960C7812CEF758100FBB7F2 /* CollapsableView.swift */,
 			);
 			path = Other;
 			sourceTree = "<group>";
@@ -401,7 +401,7 @@
 				496ADB4E26B346EE0016A582 /* FillingViewController.swift in Sources */,
 				49CD6B54263972520024C330 /* UIView+AutoLayout.swift in Sources */,
 				4969E367263EE626000F8BDA /* ContentWithFooterView.swift in Sources */,
-				4960C7822CEF758100FBB7F2 /* VerticallyCollapsableView.swift in Sources */,
+				4960C7822CEF758100FBB7F2 /* CollapsableView.swift in Sources */,
 				49CD6B7426397B340024C330 /* PlatterButton.swift in Sources */,
 				49746F47278885240028E523 /* FixedFrameLayoutGuide.swift in Sources */,
 				490DB00D2A02789A00DA4ABE /* UIView+NegativeLayoutGuides.swift in Sources */,
