@@ -165,7 +165,7 @@ open class CollapsableView: UIView {
 	}
 
 	private func stateConditionalName(isExpanded: Bool, isVertical: Bool) -> UIView.Condition.ConfigurationName {
-		switch (isExpanded, edge.isVertical) {
+		switch (isExpanded, isVertical) {
 			case (true, true): return .combined(.expanded, .vertical)
 			case (true, false): return .combined(.expanded, .horizontal)
 			case (false, true): return .combined(.collapsed, .vertical)
