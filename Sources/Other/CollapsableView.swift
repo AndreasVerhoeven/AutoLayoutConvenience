@@ -169,7 +169,7 @@ open class CollapsableView: UIView {
 			case (true, true): return .combined(.expanded, .vertical)
 			case (true, false): return .combined(.expanded, .horizontal)
 			case (false, true): return .combined(.collapsed, .vertical)
-			case (false, false): return .combined(.collapsed, .vertical)
+			case (false, false): return .combined(.collapsed, .horizontal)
 		}
 	}
 
