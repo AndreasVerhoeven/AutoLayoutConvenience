@@ -119,13 +119,13 @@ extension SizeConstrain where T: SingleAxisLayout {
 	/// Makes the view at most `multiplier` multipliedBy  another layout.
 	/// Note that the layout that is being referenced should already be in the same view hierarchy.
 	public static func atMost(_ value: T, multipliedBy multiplier: CGFloat, priority: UILayoutPriority = .required, constant: CGFloat = 0) -> Self {
-		return exactly(value, priority: priority, multiplier: multiplier, constant: constant)
+		return atMost(value, priority: priority, multiplier: multiplier, constant: constant)
 	}
 
 	/// Makes the view at most `multiplier` multipliedBy  another view.
 	/// Note that the view that is being referenced should already be in the same view hierarchy.
 	public static func atMost(sameAs view: UIView, multipliedBy multiplier: CGFloat, priority: UILayoutPriority = .required, constant: CGFloat = 0) -> Self {
-		return exactly(.relative(view), priority: priority, multiplier: multiplier, constant: constant)
+		return atMost(.relative(view), priority: priority, multiplier: multiplier, constant: constant)
 	}
 }
 
