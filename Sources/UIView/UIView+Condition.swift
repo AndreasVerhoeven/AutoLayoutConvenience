@@ -284,6 +284,11 @@ public extension UIView.Condition {
 		return .init(.specificTrait({ $0.traitCollection.preferredContentSizeCategory.isAccessibilityCategory }))
 	}
 
+	/// Matches when the preferredContentSizeCategory is not an accessibility size
+	static var contentSizeCategoryIsNotAccessibility: Self {
+		return .init(.specificTrait({ $0.traitCollection.preferredContentSizeCategory.isAccessibilityCategory == false }))
+	}
+
 	/// Matches when the preferredContentSizeCategory is >= size
 	static func contentSizeCategory(isAtLeast size: UIContentSizeCategory) -> Self {
 		return .init(.specificTrait({ $0.traitCollection.preferredContentSizeCategory >= size }))
