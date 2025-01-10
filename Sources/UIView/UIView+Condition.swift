@@ -257,7 +257,43 @@ public extension UIView.Condition {
 	
 	/// Matches when the relevant views idion is the given idiom
 	static func idiom(_ idiom: UIUserInterfaceIdiom) -> Self { traits(in: UITraitCollection(userInterfaceIdiom: idiom))  }
-	
+
+
+	/// Matches when the preferredContentSizeCategory is a given size
+	static func contentSizeCategory(is size: UIContentSizeCategory) -> Self {
+		return .init(.specificTrait({ $0.traitCollection.preferredContentSizeCategory == size }))
+	}
+
+	/// Matches when the preferredContentSizeCategory is not a given size
+	static func contentSizeCategory(isNot size: UIContentSizeCategory) -> Self {
+		return .init(.specificTrait({ $0.traitCollection.preferredContentSizeCategory != size }))
+	}
+
+	/// Matches when the preferredContentSizeCategory is larger than a given size
+	static func contentSizeCategory(isLargerThan size: UIContentSizeCategory) -> Self {
+		return .init(.specificTrait({ $0.traitCollection.preferredContentSizeCategory > size }))
+	}
+
+	/// Matches when the preferredContentSizeCategory is smaller than a given size
+	static func contentSizeCategory(isSmallerThan size: UIContentSizeCategory) -> Self {
+		return .init(.specificTrait({ $0.traitCollection.preferredContentSizeCategory > size }))
+	}
+
+	/// Matches when the preferredContentSizeCategory is an accessibility size
+	static var contentSizeCategoryIsAccessibility: Self {
+		return .init(.specificTrait({ $0.traitCollection.preferredContentSizeCategory.isAccessibilityCategory }))
+	}
+
+	/// Matches when the preferredContentSizeCategory is >= size
+	static func contentSizeCategory(isAtLeast size: UIContentSizeCategory) -> Self {
+		return .init(.specificTrait({ $0.traitCollection.preferredContentSizeCategory >= size }))
+	}
+
+	/// Matches when the preferredContentSizeCategory is <= size
+	static func contentSizeCategory(isAtMost size: UIContentSizeCategory) -> Self {
+		return .init(.specificTrait({ $0.traitCollection.preferredContentSizeCategory <= size }))
+	}
+
 	/// Matches when we are an iPhone
 	static var phone: Self { idiom(.phone) }
 	
@@ -379,7 +415,7 @@ extension UIView.Condition {
 		// traits
 		case traits(in: UITraitCollection)
 		case specificTrait(ViewEvaluator)
-		
+
 		// custom callback
 		case callbackView(ViewEvaluator)
 		case callbackNoView(NoViewEvaluator)
