@@ -15,6 +15,13 @@ public class KeyboardFrameLayoutGuide: UILayoutGuide {
 	private var keyboardTrackingCancellable: KeyboardTracker.Cancellable?
 	private var heightConstraint: NSLayoutConstraint?
 
+	/// iff true, the whole view hierarchy will be invalidated on update - if false, only the owningView will be invalidated
+	public var invalidatesLayoutInWholeHierarchy = true
+
+	/// call this to ensure interactive keyboard dismissal is properly tracked
+	public static func ensureInteractiveKeyboardDismissalTracking() {
+		UIScrollView.swizzleKeyboardDismissModeIfNeeded()
+	}
 
 	// MARK: - Privates
 	private func setup() {
@@ -44,7 +51,13 @@ public class KeyboardFrameLayoutGuide: UILayoutGuide {
 		keyboardTracker.perform {
 			self.heightConstraint?.constant = newBottomInset
 			guard forceLayout == true else { return }
-			owningView.forceLayoutInViewHierarchy()
+
+			if self.invalidatesLayoutInWholeHierarchy  == true {
+				owningView.forceLayoutInViewHierarchy()
+			} else {
+				owningView.setNeedsLayout()
+				owningView.layoutIfNeeded()
+			}
 		}
 	}
 

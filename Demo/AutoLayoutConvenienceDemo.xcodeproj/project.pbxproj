@@ -26,6 +26,7 @@
 		4980796E26C12CE90007C155 /* KeyboardSafeAreaLayoutGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4980796D26C12CE90007C155 /* KeyboardSafeAreaLayoutGuide.swift */; };
 		4980797026C12EF20007C155 /* KeyboardFrameLayoutGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4980796F26C12EF20007C155 /* KeyboardFrameLayoutGuide.swift */; };
 		4980798826C18F470007C155 /* AutoSizingTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4980798726C18F470007C155 /* AutoSizingTextView.swift */; };
+		4994C3E82D52B7E400100028 /* UIScrollView+InteractiveKeyboardDismissal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4994C3E72D52B7E400100028 /* UIScrollView+InteractiveKeyboardDismissal.swift */; };
 		49BE83E4265EBF7E001CEC2A /* UIView+AligningEdges.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BE83E3265EBF7E001CEC2A /* UIView+AligningEdges.swift */; };
 		49BE83E6265ECB53001CEC2A /* UIView+SizeConstraints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BE83E5265ECB53001CEC2A /* UIView+SizeConstraints.swift */; };
 		49BE83EA265FA4DF001CEC2A /* UIView+ManualLayoutBridging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BE83E9265FA4DF001CEC2A /* UIView+ManualLayoutBridging.swift */; };
@@ -87,6 +88,7 @@
 		4980796D26C12CE90007C155 /* KeyboardSafeAreaLayoutGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardSafeAreaLayoutGuide.swift; sourceTree = "<group>"; };
 		4980796F26C12EF20007C155 /* KeyboardFrameLayoutGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardFrameLayoutGuide.swift; sourceTree = "<group>"; };
 		4980798726C18F470007C155 /* AutoSizingTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoSizingTextView.swift; sourceTree = "<group>"; };
+		4994C3E72D52B7E400100028 /* UIScrollView+InteractiveKeyboardDismissal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScrollView+InteractiveKeyboardDismissal.swift"; sourceTree = "<group>"; };
 		49BE83E3265EBF7E001CEC2A /* UIView+AligningEdges.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+AligningEdges.swift"; sourceTree = "<group>"; };
 		49BE83E5265ECB53001CEC2A /* UIView+SizeConstraints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+SizeConstraints.swift"; sourceTree = "<group>"; };
 		49BE83E9265FA4DF001CEC2A /* UIView+ManualLayoutBridging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+ManualLayoutBridging.swift"; sourceTree = "<group>"; };
@@ -230,6 +232,7 @@
 				496E7E3E2837F811004615B1 /* UIView+TraitCollection.swift */,
 				496E7E40283809D9004615B1 /* UIView+Conditional.swift */,
 				496E7E42283944B4004615B1 /* UIView+Condition.swift */,
+				4994C3E72D52B7E400100028 /* UIScrollView+InteractiveKeyboardDismissal.swift */,
 				49F870812CF50520007A0710 /* UIView+NamedConstraintLists.swift */,
 				490DB00C2A02789A00DA4ABE /* UIView+NegativeLayoutGuides.swift */,
 			);
@@ -435,6 +438,7 @@
 				49E70492282AC3B100A1EA1F /* AutoSizingTableView.swift in Sources */,
 				49CD6C1D263A0C990024C330 /* MinimumHeightTableViewCell.swift in Sources */,
 				49337D2F27D298D0006BDB1A /* AutoSizingTableHeaderFooterView.swift in Sources */,
+				4994C3E82D52B7E400100028 /* UIScrollView+InteractiveKeyboardDismissal.swift in Sources */,
 				496E7E3F2837F811004615B1 /* UIView+TraitCollection.swift in Sources */,
 				49CD6C1E263A0C990024C330 /* NonAutoLayoutWrappingView.swift in Sources */,
 			);
