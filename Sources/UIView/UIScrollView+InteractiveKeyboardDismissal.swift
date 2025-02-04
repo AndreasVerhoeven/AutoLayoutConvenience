@@ -8,11 +8,11 @@
 import UIKit
 
 extension UIScrollView {
-	/// internal check to see if we have swizzled traitCollectionDidChange already. Since
+	/// internal check to see if we have swizzled setKeyboardDismissMode: already. Since
 	/// this should only be called on the main thread, this is a simple check.
 	private static var hasSwizzledKeyboardDismissMode = false
 
-	/// internal function that swizzles `traitCollectionDidChange(_:)` to fire of a notification so that
+	/// internal function that swizzles `setKeyboardDismissMode(_:)` to fire of a notification so that
 	/// we can monitor when a view's trait collection changes.
 	internal static func swizzleKeyboardDismissModeIfNeeded() {
 		guard Self.hasSwizzledKeyboardDismissMode == false else { return }
@@ -53,4 +53,3 @@ extension UIScrollView {
 		originalFunction = unsafeBitCast(originalImplementation, to: OriginalFunction.self)
 	}
 }
-
