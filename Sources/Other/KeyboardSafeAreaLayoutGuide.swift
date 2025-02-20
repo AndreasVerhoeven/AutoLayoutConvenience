@@ -19,6 +19,9 @@ public class KeyboardSafeAreaLayoutGuide: UILayoutGuide {
 	/// iff true, the whole view hierarchy will be invalidated on update - if false, only the owningView will be invalidated
 	public var invalidatesLayoutInWholeHierarchy = true
 
+	/// if true, we ignore any transforms in the view hierarchy
+	public var ignoreHierarchyTransforms = true
+
 	/// call this to ensure interactive keyboard dismissal is properly tracked
 	public static func ensureInteractiveKeyboardDismissalTracking() {
 		UIScrollView.swizzleKeyboardDismissModeIfNeeded()
@@ -62,11 +65,35 @@ public class KeyboardSafeAreaLayoutGuide: UILayoutGuide {
 		}
 	}
 
-	private var effectiveContentInsets: UIEdgeInsets {
+	private var owningBoundsInScreenCoordinates: CGRect {
 		guard let owningView = owningView else { return .zero }
 
+		if ignoreHierarchyTransforms == true {
+			var bounds = owningView.bounds
+
+			var view: UIView? = owningView
+			while let currentView = view {
+				// this is cut up into smaller expressions, because the Swift compiler could't handle it
+				let viewOffCenterWidth = currentView.bounds.width * currentView.layer.anchorPoint.x
+				let viewOffCenterHeight = currentView.bounds.height * currentView.layer.anchorPoint.y
+				bounds.origin.x += currentView.center.x - viewOffCenterWidth
+				bounds.origin.y += currentView.center.y - viewOffCenterHeight
+
+				view = currentView.superview
+			}
+
+			return bounds
+
+		} else {
+			return owningView.convert(owningView.bounds, to: nil)
+		}
+	}
+
+	private var effectiveContentInsets: UIEdgeInsets {
+		guard owningView != nil else { return .zero }
+
 		// we're only interested in vertical insets
-		let boundsInScreenCoordinates = owningView.convert(owningView.bounds, to: nil)
+		let boundsInScreenCoordinates = owningBoundsInScreenCoordinates
 		var keyboardScreenFrame = keyboardTracker.keyboardScreenFrame
 		keyboardScreenFrame.origin.x = boundsInScreenCoordinates.minX
 		keyboardScreenFrame.size.width = boundsInScreenCoordinates.width
