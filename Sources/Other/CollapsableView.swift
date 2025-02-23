@@ -33,6 +33,7 @@ open class CollapsableView: UIView {
 		self.animationOptions = animationOptions
 		self.edge = edge
 		updatePinnedToEdge()
+		updateExpandedState()
 	}
 
 	/// Convenience init for adding a view to the content view directly.
@@ -40,6 +41,7 @@ open class CollapsableView: UIView {
 		self.init(frame: .zero)
 		self.edge = edge
 		updatePinnedToEdge()
+		updateExpandedState()
 	}
 
 	/// If true, this view is expanded to its actual height. If false, it will have a height of 0.
@@ -99,6 +101,7 @@ open class CollapsableView: UIView {
 		didSet {
 			guard edge != oldValue else { return }
 			updatePinnedToEdge()
+			updateExpandedState()
 		}
 	}
 
