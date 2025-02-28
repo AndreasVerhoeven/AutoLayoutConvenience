@@ -101,8 +101,10 @@ import UIKit
 			case .changed:
 				if currentlyTrackingPanGestureRecognizer != nil {
 					let pointInScreen = gestureRecognizer.location(in: nil)
-					keyboardInteractiveDismissalOffset = max(0, pointInScreen.y - storedKeyboardScreenFrame.minY)
-					notifyObservers()
+					let newKeyboardInteractiveDismissalOffset = max(0, pointInScreen.y - storedKeyboardScreenFrame.minY)
+					if keyboardInteractiveDismissalOffset != newKeyboardInteractiveDismissalOffset {
+						notifyObservers()
+					}
 				}
 
 			case .ended, .cancelled, .failed:
