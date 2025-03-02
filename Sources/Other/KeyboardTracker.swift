@@ -103,6 +103,7 @@ import UIKit
 					let pointInScreen = gestureRecognizer.location(in: nil)
 					let newKeyboardInteractiveDismissalOffset = max(0, pointInScreen.y - storedKeyboardScreenFrame.minY)
 					if keyboardInteractiveDismissalOffset != newKeyboardInteractiveDismissalOffset {
+						keyboardInteractiveDismissalOffset = newKeyboardInteractiveDismissalOffset
 						notifyObservers()
 					}
 				}
