@@ -196,6 +196,7 @@ open class MultiCollapsableView: UIView {
 
 		for (index, view) in views.enumerated() {
 			let collapsableView = CollapsableView(animationOptions: animationOptions, edge: edge)
+			collapsableView.preservesSuperviewLayoutMargins = true
 			collapsableView.contentView.addSubview(view, filling: .superview)
 			collapsableViews.append(collapsableView)
 			stackView.addArrangedSubview(collapsableView)
@@ -252,6 +253,7 @@ open class MultiCollapsableView: UIView {
 	public override init(frame: CGRect) {
 		super.init(frame: frame)
 
+		stackView.preservesSuperviewLayoutMargins = true
 		addSubview(stackView, filling: .superview)
 	}
 
