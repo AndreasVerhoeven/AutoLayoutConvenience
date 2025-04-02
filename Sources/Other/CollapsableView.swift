@@ -201,6 +201,10 @@ open class CollapsableView: UIView {
 	public override init(frame: CGRect) {
 		super.init(frame: frame)
 
+		innerContainerView.preservesSuperviewLayoutMargins = true
+		contentView.preservesSuperviewLayoutMargins = true
+		containerView.preservesSuperviewLayoutMargins = true
+
 		innerContainerView.addSubview(contentView, filling: .superview)
 		addSubview(containerView, filling: .superview)
 
