@@ -164,21 +164,22 @@ open class MultiCollapsableView: UIView {
 		}
 
 		var indexOfCurrentExpandedView: Int?
+		var spacerIndicesToExpand = Set<Int>()
 		for (index, collapsableView) in collapsableViews.enumerated() {
 			if collapsableView.isExpanded == true {
 				if let indexOfCurrentExpandedView {
-					spacers[indexOfCurrentExpandedView].setIsExpanded(true, animated: animated)
+					spacerIndicesToExpand.insert(indexOfCurrentExpandedView)
 				}
 				indexOfCurrentExpandedView = index
-			} else {
-				if index < spacers.count {
-					spacers[index].setIsExpanded(false, animated: animated)
-				}
 			}
 		}
 
 		if hasSpacingAfterLastItem == true, let indexOfCurrentExpandedView {
-			spacers[indexOfCurrentExpandedView].setIsExpanded(true, animated: animated)
+			spacerIndicesToExpand.insert(indexOfCurrentExpandedView)
+		}
+
+		for (index, spacer) in spacers.enumerated() {
+			spacer.setIsExpanded(spacerIndicesToExpand.contains(index), animated: animated)
 		}
 	}
 
