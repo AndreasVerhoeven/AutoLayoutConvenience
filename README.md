@@ -805,3 +805,50 @@ Examples:
 		tableView.updateAutoSizingTableHeader()
 	}
 }
+
+### Helper Views for Common Auto Layouts
+
+#### NonAutoLayoutWrappingView
+This view is used to stop AutoLayout constraints from taking effect on it.
+Useful for example wrapping an UIImageView, which can mess up auto-layout because of it intrinsicSize.
+
+Example:
+
+```
+	// we don't want the image's size to determine the size of view, so wrap it in an 
+	// NonAutoLayoutWrappingView
+	view.addSubview(NonAutoLayoutWrappingView(view: imageView), filling: .superview)
+```
+
+#### ContentWithFooterView
+
+A view that has (scrollable) content and a footer on the bottom. Useful for making layout  where there is a button on the bottom and content that might need to be scrollable or not.
+
+#### AutoSizingTextView
+
+A UITextView which tries to be as tall as the text inside it. Set `maximumHeight` to limit how tall it can grow: if it reaches `maximumHeight`, the text view will become scrollable automatically.
+
+As a bonus, it has a placeholder.
+
+#### AutoSizingCollectionView
+
+A collection view where its `intrinsicSize` is the same as its `contentSize` 
+
+#### AutoSizingTableView
+
+A table view where its `intrinsicSize` is the same as its `contentSize`
+
+
+#### StickyBottomFooterTableView
+
+A tableview that can has an extra footer view that will stick to the bottom of the scrollable area: if the content is smaller, it sits below the content, if the content is scrollable it sticks itself to the bottom of the table view.
+
+#### CollapsableView
+
+This view can be collapsed to 0 height/width, while its contents isn't resized, but clipped. This can be useful if you have a list of views and want to collapse something for a short while, while not deforming/resizing the other view.
+
+Use the `isExpanded` property to control wether the content is visible (expanded) or hidden (collapsed).
+
+### MultiCollapsableView
+
+A view that hosts multiple other views which can be indidually collapsed or expanded.  
