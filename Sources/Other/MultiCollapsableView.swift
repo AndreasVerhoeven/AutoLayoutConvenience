@@ -142,9 +142,10 @@ open class MultiCollapsableView: UIView {
 		}
 	}
 
-	///
+	/// collapses expands a single view. Use `setIsExpanded(list:animated)` to change multiple views in one
+	/// go
 	open func setIsExpanded(_ isExpanded: Bool, view: UIView, animated: Bool) {
-
+		setIsExpanded([view: isExpanded], animated: animated)
 	}
 
 	/// Updates a list of views to be expanded or not: provide an associative list of views with the keys
