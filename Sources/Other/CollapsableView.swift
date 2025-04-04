@@ -57,6 +57,10 @@ open class CollapsableView: UIView {
 
 		_isExpanded = isExpanded
 
+		if isExpanded == true {
+			containerView.layoutIfNeeded()
+		}
+
 		if animated == true {
 			UIView.animate(withDuration: 0.25, delay: 0, options: [.beginFromCurrentState, .allowUserInteraction, .allowAnimatedContent], animations: {
 				self.update()
