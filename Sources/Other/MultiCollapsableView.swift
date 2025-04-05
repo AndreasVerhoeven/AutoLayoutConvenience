@@ -54,20 +54,46 @@ open class MultiCollapsableView: UIView {
 		}
 	}
 
-	/// If you want to have spacing after the last item (e.g. as a separator), set this
-	/// to `true`
-	open var hasSpacingAfterLastItem = false {
+	/// The amount of spacing before the first item - will only show if there are expanded items
+	open var spacingBeforeFirstItem: CGFloat = 0 {
 		didSet {
-			guard hasSpacingAfterLastItem != oldValue else { return }
+			guard spacingBeforeFirstItem != oldValue else { return }
 
-			if hasSpacingAfterLastItem == true {
-				let spacer = CollapsableView(animationOptions: animationOptions, edge: edge)
-				updateSpacerSize(spacer)
-				spacers.append(spacer)
-				stackView.addArrangedSubview(spacer)
-			} else if let lastSpacer = spacers.last {
-				stackView.removeArrangedSubview(lastSpacer)
-				spacers.removeLast()
+			if spacingBeforeFirstItem > 0 {
+				if beforeFirstItemSpacer == nil {
+					let spacer = CollapsableView()
+					beforeFirstItemSpacer = spacer
+					spacer.isExpanded = hasAnExpandedView
+					stackView.insertArrangedSubview(spacer, at: 0)
+				}
+				updateBeforeAndAfterSpacers()
+			} else {
+				if let beforeFirstItemSpacer {
+					stackView.removeArrangedSubview(beforeFirstItemSpacer)
+					self.beforeFirstItemSpacer = nil
+				}
+			}
+		}
+	}
+
+	/// The amount of spacing after the last item - will only show if there are expanded items
+	open var spacingAfterLastItem: CGFloat = 0 {
+		didSet {
+			guard spacingAfterLastItem != oldValue else { return }
+
+			if spacingAfterLastItem > 0 {
+				if afterLastItemSpacer == nil {
+					let spacer = CollapsableView()
+					afterLastItemSpacer = spacer
+					spacer.isExpanded = hasAnExpandedView
+					stackView.addArrangedSubview(spacer)
+				}
+				updateBeforeAndAfterSpacers()
+			} else {
+				if let afterLastItemSpacer {
+					stackView.removeArrangedSubview(afterLastItemSpacer)
+					self.afterLastItemSpacer = nil
+				}
 			}
 		}
 	}
@@ -91,7 +117,7 @@ open class MultiCollapsableView: UIView {
 			updateProperties(of: collapsableViews)
 			updateProperties(of: spacers)
 			updateSpacersSize()
-
+			updateBeforeAndAfterSpacers()
 		}
 	}
 
@@ -110,8 +136,13 @@ open class MultiCollapsableView: UIView {
 	}
 
 	/// `true` if all views are expanded
-	open var areAllExpanded: Bool {
+	open var areAllViewsExpanded: Bool {
 		return collapsableViews.allSatisfy { $0.isExpanded }
+	}
+
+	/// `true` if there is at least one expanded view
+	open var hasAnExpandedView: Bool {
+		return collapsableViews.contains { $0.isExpanded }
 	}
 
 	/// Returns `true` if the given view is expanded.
@@ -166,8 +197,10 @@ open class MultiCollapsableView: UIView {
 
 		var indexOfCurrentExpandedView: Int?
 		var spacerIndicesToExpand = Set<Int>()
+		var hasAtLeastASingleExpandedView = false
 		for (index, collapsableView) in collapsableViews.enumerated() {
 			if collapsableView.isExpanded == true {
+				hasAtLeastASingleExpandedView = true
 				if let indexOfCurrentExpandedView {
 					spacerIndicesToExpand.insert(indexOfCurrentExpandedView)
 				}
@@ -175,9 +208,8 @@ open class MultiCollapsableView: UIView {
 			}
 		}
 
-		if hasSpacingAfterLastItem == true, let indexOfCurrentExpandedView {
-			spacerIndicesToExpand.insert(indexOfCurrentExpandedView)
-		}
+		beforeFirstItemSpacer?.setIsExpanded(hasAtLeastASingleExpandedView, animated: animated)
+		afterLastItemSpacer?.setIsExpanded(hasAtLeastASingleExpandedView, animated: animated)
 
 		for (index, spacer) in spacers.enumerated() {
 			spacer.setIsExpanded(spacerIndicesToExpand.contains(index), animated: animated)
@@ -188,6 +220,8 @@ open class MultiCollapsableView: UIView {
 
 	private var collapsableViews = [CollapsableView]()
 	private var spacers = [CollapsableView]()
+	private var beforeFirstItemSpacer: CollapsableView?
+	private var afterLastItemSpacer: CollapsableView?
 	private var viewToIndexLookup = [UIView: Int]()
 
 	private func recreateCollapsableViewsAndSpacers() {
@@ -196,6 +230,10 @@ open class MultiCollapsableView: UIView {
 		spacers.removeAll()
 		viewToIndexLookup.removeAll()
 
+		if let beforeFirstItemSpacer {
+			stackView.addArrangedSubview(beforeFirstItemSpacer)
+		}
+
 		for (index, view) in views.enumerated() {
 			let collapsableView = CollapsableView(animationOptions: animationOptions, edge: edge)
 			collapsableView.preservesSuperviewLayoutMargins = true
@@ -203,7 +241,7 @@ open class MultiCollapsableView: UIView {
 			collapsableViews.append(collapsableView)
 			stackView.addArrangedSubview(collapsableView)
 
-			if hasSpacingAfterLastItem == true || index < views.count {
+			if index < views.count {
 				let spacer = CollapsableView(animationOptions: animationOptions, edge: edge)
 				spacers.append(spacer)
 				stackView.addArrangedSubview(spacer)
@@ -212,7 +250,12 @@ open class MultiCollapsableView: UIView {
 			viewToIndexLookup[view] = index
 		}
 
+		if let afterLastItemSpacer {
+			stackView.addArrangedSubviews(afterLastItemSpacer)
+		}
+
 		updateSpacersSize()
+		updateBeforeAndAfterSpacers()
 	}
 
 	private func updateStackView() {
@@ -227,26 +270,42 @@ open class MultiCollapsableView: UIView {
 
 	private func updateProperties(of collapsableViewOrSpacers: [CollapsableView]) {
 		for collapsableViewOrSpacer in collapsableViewOrSpacers {
-			collapsableViewOrSpacer.animationOptions = animationOptions
-			collapsableViewOrSpacer.edge = edge
+			updateProperties(of: collapsableViewOrSpacer)
 		}
+	}
+
+	private func updateProperties(of collapsableViewOrSpacer: CollapsableView) {
+		collapsableViewOrSpacer.animationOptions = animationOptions
+		collapsableViewOrSpacer.edge = edge
 	}
 
 	private func updateSpacersSize() {
 		for spacer in spacers {
-			updateSpacerSize(spacer)
+			updateSpacerSize(spacer, spacing: spacing)
 		}
 	}
 
-	private func updateSpacerSize(_ spacer: CollapsableView) {
+	private func updateSpacerSize(_ spacer: CollapsableView, spacing spacingAmount: CGFloat) {
 		switch edge {
 			case .top, .bottom:
 				spacer.contentView.constrainedFixedWidth = nil
-				spacer.contentView.constrainedFixedHeight = spacing
+				spacer.contentView.constrainedFixedHeight = spacingAmount
 
 			case .leading, .trailing:
-				spacer.contentView.constrainedFixedWidth = spacing
+				spacer.contentView.constrainedFixedWidth = spacingAmount
 				spacer.contentView.constrainedFixedHeight = nil
+		}
+	}
+
+	private func updateBeforeAndAfterSpacers() {
+		if let beforeFirstItemSpacer {
+			updateProperties(of: beforeFirstItemSpacer)
+			updateSpacerSize(beforeFirstItemSpacer, spacing: spacingBeforeFirstItem)
+		}
+
+		if let afterLastItemSpacer {
+			updateProperties(of: afterLastItemSpacer)
+			updateSpacerSize(afterLastItemSpacer, spacing: spacingAfterLastItem)
 		}
 	}
 
