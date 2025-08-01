@@ -34,6 +34,7 @@ open class CollapsableView: UIView {
 		self.edge = edge
 		updatePinnedToEdge()
 		updateExpandedState()
+		update()
 	}
 
 	/// Convenience init for adding a view to the content view directly.
@@ -42,6 +43,7 @@ open class CollapsableView: UIView {
 		self.edge = edge
 		updatePinnedToEdge()
 		updateExpandedState()
+		update()
 	}
 
 	/// If true, this view is expanded to its actual height. If false, it will have a height of 0.
@@ -128,6 +130,9 @@ open class CollapsableView: UIView {
 		/// a stack view that is animated already.
 		public static let dontRelayout = Self(rawValue: 1 << 2)
 
+		/// the content isn't clipped
+		public static let dontClip = Self(rawValue: 1 << 3)
+
 		/// The default animation options
 		public static let `default`: Self = [.fade]
 	}
@@ -153,6 +158,7 @@ open class CollapsableView: UIView {
 	private let innerContainerView = UIView()
 
 	private func update() {
+		containerView.clipsToBounds = (animationOptions.contains(.dontClip) == false)
 		innerContainerView.alpha = (animationOptions.contains(.fade) == true && isExpanded == false ? 0 : 1)
 		innerContainerView.transform = (animationOptions.contains(.scale) == true && isExpanded == false ? CGAffineTransform(scaleX: 0.9, y: 0.9) : .identity)
 
