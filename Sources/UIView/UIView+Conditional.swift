@@ -109,6 +109,7 @@ extension UIView {
 	/// See the discussion in `#ConditionalResult.withoutCoalescing()`
 	@discardableResult public func useDirectConditionalUpdates() -> Self {
 		ensureConstraintsListCollection().stopCoalescingUpdates()
+		(self as? AutoAdjustingStackView)?.conditionHandler?.stopCoalescingUpdates()
 		return self
 	}
 	
@@ -116,22 +117,26 @@ extension UIView {
 	/// See the discussion in `ConditionalResult.animateChanges()`
 	@discardableResult public func enableAnimationsForConditionalUpdates() -> Self {
 		ensureConstraintsListCollection().animateUpdates()
+		(self as? AutoAdjustingStackView)?.conditionHandler?.animateUpdates()
 		return self
 	}
 	
 	/// Update any pending conditional constraints for this view.
 	public func updateConditionalConstraintsIfNeeded() {
 		constraintsListCollection?.updateIfNeeded()
+		(self as? AutoAdjustingStackView)?.conditionHandler?.updateIfNeeded()
 	}
 	
 	/// Mark our conditional constraints as needing an update.
 	public func setConditionalConstraintsNeedsUpdate() {
 		constraintsListCollection?.setNeedsUpdate()
+		(self as? AutoAdjustingStackView)?.conditionHandler?.setNeedsUpdate()
 	}
 	
 	/// Force a conditional constraint update for this view.
 	public func forceUpdateConditionalConstraints() {
 		constraintsListCollection?.update()
+		(self as? AutoAdjustingStackView)?.conditionHandler?.update()
 	}
 	
 	/// If using named conditions, this is the name of active configuration. Defaults to `main`
@@ -196,7 +201,7 @@ extension UIView {
 			return collection
 		}
 	}
-	
+
 	/// Used so we can stack  recursively nest multiple `internalIf()` calls and have the right constraints be build.
 	/// E.g. `UIView.if(.verticallyCompact) { UIView.if(.phone) {  addSubview(...) } }` needs to result in the addSubview()-constraints
 	/// requring both `.verticallyCompact` and `.phone`. We do this by keeping track of the  "active conditions."

@@ -389,4 +389,319 @@ extension UIView {
 	public static func autoAdjustingHorizontallyStacked(_ views: [UIView], alignment: UIStackView.Alignment = .fill, distribution: UIStackView.Distribution = .fill, spacing: CGFloat = 0, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
 		return AutoAdjustingHorizontalStackView(with: views, alignment: alignment, distribution: distribution, spacing: spacing, insets: insets)
 	}
+
+	/// Wraps views in a AutoAdjustingStackView
+	///
+	/// - Parameters:
+	///		- views: The list of views to add to the stack view
+	///		- insets: **optional** the inset to apply to the stack view
+	///		- handler: the configuration handler to use to configure the stackview
+	///
+	/// - Returns: the created `AutoAdjustingStackView` with the given views
+	public static func stacked(
+		_ views: UIView...,
+		insets: NSDirectionalEdgeInsets? = nil,
+		handler: AutoAdjustingStackView.ConfigurationUpdateHandler
+	) -> AutoAdjustingStackView {
+		return stacked(views, insets: insets, handler: handler)
+	}
+
+	/// Wraps views in a AutoAdjustingStackView
+	///
+	/// - Parameters:
+	///		- views: The list of views to add to the stack view
+	///		- insets: **optional** the inset to apply to the stack view
+	///		- handler: the configuration callback to use to configure the stackview
+	///
+	/// - Returns: the created `AutoAdjustingStackView` with the given views
+	public static func stacked(
+		_ views: UIView...,
+		insets: NSDirectionalEdgeInsets? = nil,
+		handler: @escaping AutoAdjustingStackView.ConfigurationUpdateHandler.Callback
+	) -> AutoAdjustingStackView {
+		return stacked(views, insets: insets, handler: handler)
+	}
+
+	/// Wraps views in a AutoAdjustingStackView
+	///
+	/// - Parameters:
+	///		- views: The list of views to add to the stack view
+	///		- insets: **optional** the inset to apply to the stack view
+	///		- handler: the configuration handler to use to configure the stackview
+	///
+	/// - Returns: the created `AutoAdjustingStackView` with the given views
+	public static func stacked(
+		_ views: [UIView],
+		insets: NSDirectionalEdgeInsets? = nil,
+		handler: AutoAdjustingStackView.ConfigurationUpdateHandler
+	) -> AutoAdjustingStackView {
+		return AutoAdjustingStackView(with: views, insets: insets, handler: handler)
+	}
+
+	/// Wraps views in a AutoAdjustingStackView
+	///
+	/// - Parameters:
+	///		- views: The list of views to add to the stack view
+	///		- insets: **optional** the inset to apply to the stack view
+	///		- handler: the configuration callback to use to configure the stackview
+	///
+	/// - Returns: the created `AutoAdjustingStackView` with the given views
+	public static func stacked(
+		_ views: [UIView],
+		insets: NSDirectionalEdgeInsets? = nil,
+		handler: @escaping AutoAdjustingStackView.ConfigurationUpdateHandler.Callback
+	) -> AutoAdjustingStackView {
+		return AutoAdjustingStackView(with: views, insets: insets, handler: .custom(handler))
+	}
+
+	/// Wraps views in a AutoAdjustingStackView with a regular and alternative configuration, determined
+	///  by the isAlternative callback
+	///
+	/// - Parameters:
+	///		- views: The list of views to add to the stack view
+	///		- axis: the axis to align along in regular mode
+	///		- alignment: **optional** alignment in regular mode defaults to `.fill`
+	///		- distribution: **optional** distribution of the items in regular mode, defaults to `.fill`
+	///		- spacing: **optional** the spacing between the views in regular mode
+	///		- alternativeAxis: the axis to align along in alternative mode
+	///		- alternativeAlignment: **optional** alignment in alternative mode defaults to  `alignment`
+	///		- alternativeDistribution: **optional** distribution of the items in alternative mode, defaults to `distribution`
+	///		- alternativeSpacing: **optional** the spacing between the views in alternative mode, defaults to `spacing`
+	///		- insets: **optional** the inset to apply to the stack view
+	///		- isAlternative: the callback that decides if we are in regular or alternative mode. Return true to be in alternative mode
+	///
+	/// - Returns: the created `AutoAdjustingStackView` with the given views
+	public static func stacked(
+		_ views: UIView...,
+		axis: NSLayoutConstraint.Axis,
+		alignment: UIStackView.Alignment = .fill,
+		distribution: UIStackView.Distribution = .fill,
+		spacing: CGFloat = 0,
+		alternativeAxis: NSLayoutConstraint.Axis? = nil,
+		alternativeAlignment: UIStackView.Alignment? = nil,
+		alternativeDistribution: UIStackView.Distribution? = nil,
+		alternativeSpacing: CGFloat? = nil,
+		insets: NSDirectionalEdgeInsets? = nil,
+		isAlternative: @escaping (AutoAdjustingStackView) -> Bool
+	) -> AutoAdjustingStackView {
+		return stacked(
+			views,
+			axis: axis,
+			alignment: alignment,
+			distribution: distribution,
+			spacing: spacing,
+			alternativeAxis: alternativeAxis,
+			alternativeAlignment: alternativeAlignment,
+			alternativeDistribution: alternativeDistribution,
+			alternativeSpacing: alternativeSpacing,
+			insets: insets,
+			isAlternative: isAlternative
+		)
+	}
+
+	/// Wraps views in a AutoAdjustingStackView with a regular and alternative configuration, determined
+	///  by the isAlternative callback
+	///
+	/// - Parameters:
+	///		- views: The list of views to add to the stack view
+	///		- axis: the axis to align along in regular mode
+	///		- alignment: **optional** alignment in regular mode defaults to `.fill`
+	///		- distribution: **optional** distribution of the items in regular mode, defaults to `.fill`
+	///		- spacing: **optional** the spacing between the views in regular mode
+	///		- alternativeAxis: the axis to align along in alternative mode
+	///		- alternativeAlignment: **optional** alignment in alternative mode defaults to  `alignment`
+	///		- alternativeDistribution: **optional** distribution of the items in alternative mode, defaults to `distribution`
+	///		- alternativeSpacing: **optional** the spacing between the views in alternative mode, defaults to `spacing`
+	///		- insets: **optional** the inset to apply to the stack view
+	///		- isAlternative: the callback that decides if we are in regular or alternative mode. Return true to be in alternative mode
+	///
+	/// - Returns: the created `AutoAdjustingStackView` with the given views
+	public static func stacked(
+		_ views: [UIView],
+		axis: NSLayoutConstraint.Axis,
+		alignment: UIStackView.Alignment = .fill,
+		distribution: UIStackView.Distribution = .fill,
+		spacing: CGFloat = 0,
+		alternativeAxis: NSLayoutConstraint.Axis? = nil,
+		alternativeAlignment: UIStackView.Alignment? = nil,
+		alternativeDistribution: UIStackView.Distribution? = nil,
+		alternativeSpacing: CGFloat? = nil,
+		insets: NSDirectionalEdgeInsets? = nil,
+		isAlternative: @escaping (AutoAdjustingStackView) -> Bool
+	) -> AutoAdjustingStackView {
+		let handler = AutoAdjustingStackView.ConfigurationUpdateHandler.regularWithAlternative(
+			axis: axis,
+			alignment: alignment,
+			distribution: distribution,
+			spacing: spacing,
+			alternativeAxis: alternativeAxis,
+			alternativeAlignment: alternativeAlignment,
+			alternativeDistribution: alternativeDistribution,
+			alternativeSpacing: alternativeSpacing,
+			isAlternative: isAlternative
+		)
+
+		return stacked(views, insets: insets, handler: handler)
+	}
+
+	/// Wraps views in a AutoAdjustingStackView with a regular and alternative configuration, determined
+	///  by the isAlternative callback
+	///
+	/// - Parameters:
+	///		- views: The list of views to add to the stack view
+	///		- axis: the axis to align along in regular mode
+	///		- alignment: **optional** alignment in regular mode defaults to `.fill`
+	///		- distribution: **optional** distribution of the items in regular mode, defaults to `.fill`
+	///		- spacing: **optional** the spacing between the views in regular mode
+	///		- alternativeAxis: the axis to align along in alternative mode
+	///		- alternativeAlignment: **optional** alignment in alternative mode defaults to  `alignment`
+	///		- alternativeDistribution: **optional** distribution of the items in alternative mode, defaults to `distribution`
+	///		- alternativeSpacing: **optional** the spacing between the views in alternative mode, defaults to `spacing`
+	///		- insets: **optional** the inset to apply to the stack view
+	///		- isAlternative: the condition that decides if we are in regular or alternative mode. If it evaluates to true, we are in alternative mode
+	///
+	/// - Returns: the created `AutoAdjustingStackView` with the given views
+	public static func stacked(
+		_ views: UIView...,
+		axis: NSLayoutConstraint.Axis,
+		alignment: UIStackView.Alignment = .fill,
+		distribution: UIStackView.Distribution = .fill,
+		spacing: CGFloat = 0,
+		alternativeAxis: NSLayoutConstraint.Axis? = nil,
+		alternativeAlignment: UIStackView.Alignment? = nil,
+		alternativeDistribution: UIStackView.Distribution? = nil,
+		alternativeSpacing: CGFloat? = nil,
+		insets: NSDirectionalEdgeInsets? = nil,
+		isAlternative condition: UIView.Condition
+	) -> AutoAdjustingStackView {
+		return stacked(
+			views,
+			axis: axis,
+			alignment: alignment,
+			distribution: distribution,
+			spacing: spacing,
+			alternativeAxis: alternativeAxis,
+			alternativeAlignment: alternativeAlignment,
+			alternativeDistribution: alternativeDistribution,
+			alternativeSpacing: alternativeSpacing,
+			insets: insets,
+			isAlternative: condition
+		)
+	}
+
+	/// Wraps views in a AutoAdjustingStackView with a regular and alternative configuration, determined
+	///  by the isAlternative callback
+	///
+	/// - Parameters:
+	///		- views: The list of views to add to the stack view
+	///		- axis: the axis to align along in regular mode
+	///		- alignment: **optional** alignment in regular mode defaults to `.fill`
+	///		- distribution: **optional** distribution of the items in regular mode, defaults to `.fill`
+	///		- spacing: **optional** the spacing between the views in regular mode
+	///		- alternativeAxis: the axis to align along in alternative mode
+	///		- alternativeAlignment: **optional** alignment in alternative mode defaults to  `alignment`
+	///		- alternativeDistribution: **optional** distribution of the items in alternative mode, defaults to `distribution`
+	///		- alternativeSpacing: **optional** the spacing between the views in alternative mode, defaults to `spacing`
+	///		- insets: **optional** the inset to apply to the stack view
+	///		- isAlternative: the condition that decides if we are in regular or alternative mode. If it evaluates to true, we are in alternative mode
+	///
+	/// - Returns: the created `AutoAdjustingStackView` with the given views
+	public static func stacked(
+		_ views: [UIView],
+		axis: NSLayoutConstraint.Axis,
+		alignment: UIStackView.Alignment = .fill,
+		distribution: UIStackView.Distribution = .fill,
+		spacing: CGFloat = 0,
+		alternativeAxis: NSLayoutConstraint.Axis? = nil,
+		alternativeAlignment: UIStackView.Alignment? = nil,
+		alternativeDistribution: UIStackView.Distribution? = nil,
+		alternativeSpacing: CGFloat? = nil,
+		insets: NSDirectionalEdgeInsets? = nil,
+		isAlternative condition: UIView.Condition
+	) -> AutoAdjustingStackView {
+		let handler = AutoAdjustingStackView.ConfigurationUpdateHandler.regularWithAlternative(
+			axis: axis,
+			alignment: alignment,
+			distribution: distribution,
+			spacing: spacing,
+			alternativeAxis: alternativeAxis,
+			alternativeAlignment: alternativeAlignment,
+			alternativeDistribution: alternativeDistribution,
+			alternativeSpacing: alternativeSpacing,
+			isAlternative: condition
+		)
+
+		return stacked(views, insets: insets, handler: handler)
+	}
+
+	/// Wraps views in a AutoAdjustingStackView that is horizontally in regular mode and vertically in
+	/// accessibility mode
+	///
+	/// - Parameters:
+	///		- views: The list of views to add to the stack view
+	///		- alignment: **optional** alignment in regular mode defaults to `.fill`
+	///		- distribution: **optional** distribution of the items in regular mode, defaults to `.fill`
+	///		- spacing: **optional** the spacing between the views in regular mode
+	///		- accessibilityAlignment: **optional** alignment in accessibility mode defaults to  `alignment`
+	///		- accessibilityDistribution: **optional** distribution of the items in accessibility mode, defaults to `distribution`
+	///		- accessibilitySpacing: **optional** the spacing between the views in accessibility mode, defaults to `spacing`
+	///		- insets: **optional** the inset to apply to the stack view
+	///
+	/// - Returns: the created `AutoAdjustingStackView` with the given views
+	public static func accessibilityAdjustingHorizontallyStacked(
+		_ views: [UIView],
+		alignment: UIStackView.Alignment = .fill,
+		distribution: UIStackView.Distribution = .fill,
+		spacing: CGFloat = 0,
+		accessibilityAlignment: UIStackView.Alignment? = nil,
+		accessibilityDistribution: UIStackView.Distribution? = nil,
+		accessibilitySpacing: CGFloat? = nil,
+		insets: NSDirectionalEdgeInsets? = nil,
+	) -> AutoAdjustingStackView {
+		let handler = AutoAdjustingStackView.ConfigurationUpdateHandler.horizontallyRegularVerticallyAccessibility(
+			alignment: alignment,
+			distribution: distribution,
+			spacing: spacing,
+			accessibilityAlignment: accessibilityAlignment,
+			accessibilityDistribution: accessibilityDistribution,
+			accessibilitySpacing: accessibilitySpacing
+		)
+		return stacked(views, insets: insets, handler: handler)
+	}
+
+	/// Wraps views in a AutoAdjustingStackView that is horizontally in regular mode and vertically in
+	/// accessibility mode
+	///
+	/// - Parameters:
+	///		- views: The list of views to add to the stack view
+	///		- alignment: **optional** alignment in regular mode defaults to `.fill`
+	///		- distribution: **optional** distribution of the items in regular mode, defaults to `.fill`
+	///		- spacing: **optional** the spacing between the views in regular mode
+	///		- accessibilityAlignment: **optional** alignment in accessibility mode defaults to  `alignment`
+	///		- accessibilityDistribution: **optional** distribution of the items in accessibility mode, defaults to `distribution`
+	///		- accessibilitySpacing: **optional** the spacing between the views in accessibility mode, defaults to `spacing`
+	///		- insets: **optional** the inset to apply to the stack view
+	///
+	/// - Returns: the created `AutoAdjustingStackView` with the given views
+	public static func accessibilityAdjustingHorizontallyStacked(
+		_ views: UIView...,
+		alignment: UIStackView.Alignment = .fill,
+		distribution: UIStackView.Distribution = .fill,
+		spacing: CGFloat = 0,
+		accessibilityAlignment: UIStackView.Alignment? = nil,
+		accessibilityDistribution: UIStackView.Distribution? = nil,
+		accessibilitySpacing: CGFloat? = nil,
+		insets: NSDirectionalEdgeInsets? = nil,
+	) -> AutoAdjustingStackView {
+		return accessibilityAdjustingHorizontallyStacked(
+			views,
+			alignment: alignment,
+			distribution: distribution,
+			spacing: spacing,
+			accessibilityAlignment: accessibilityAlignment,
+			accessibilityDistribution: accessibilityDistribution,
+			accessibilitySpacing: accessibilitySpacing,
+			insets: insets
+		)
+	}
 }

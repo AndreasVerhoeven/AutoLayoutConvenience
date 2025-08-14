@@ -726,15 +726,29 @@ All these functions also have **static** variants, for easy composing.
 
 This function also has a **static** variant, for easy composing.
 
-#### Auto Adjusting
+#### Auto Adjusting using `AutoAdjustingStackView`
 
-There are two `UIStackView` subclasses that automatically switches their axis based on the compactness of the opposing axis:
+`AutoAdjustingStackView` is a `UIStackView` subclass that calls a configuration handler to configure the stackview when created and when its environment (e.g. traits) change. There are a few default configuration handlers:
+	- `.custom({ stackView in ... })`  a callback that allows you to configure the stackview as you wish
+	- `horizontallyRegularVerticallyAccessibility(...)` horizontally in regular mode, but vertically in accessibility size mode. Alignment, distribution and spacing can be set and can be overriden for accessibility mode.
+	- `regularWithAlternative(...)` the axis, alignment, distribution and spacing can be set for regular mode and overriden properties can be set for alternative mode. Alternative mode is defined using a callback.
+
+##### Helper factories:
+	- `stacked()` stacks the view and configures the stackview using the handler, callback or condition (see Conditional Constraints).
+	- `accessibilityAdjustingHorizontallyStacked()` stacks the view horizontally in regular mode, or vertically in accessibility mode.
+	- 
+ 
+
+
+#### Legacy Auto Adjusting
+
+There are two legacy `UIStackView` subclasses that automatically switches their axis based on the compactness of the opposing axis, those are soft-deprecated in favor of `AutoAdjustingStackView`.
 - `AutoAdjustingHorizontalStackView`
 - `AutoAdjustingVerticalStackView`
 
 ##### Helper factories:
- - `autoAdjustingVerticallyStacked()` vertically stacks the given views, adjusting to horizontal if needed
- - `autoAdjustingHorizontallyStacked()` horizontally stacks the given views, adjusting to vertical if needed
+ - `autoAdjustingVerticallyStacked()` vertically stacks the given views, adjusting to horizontal if needed, soft-deprecated in favor of `stacked()`
+ - `autoAdjustingHorizontallyStacked()` horizontally stacks the given views, adjusting to vertical if needed, soft-deprecated in favor of `stacked()`
 
 ### ScrollView
 

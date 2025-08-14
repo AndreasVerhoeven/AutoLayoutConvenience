@@ -62,6 +62,8 @@
 		49CD6B7426397B340024C330 /* PlatterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CD6B7326397B340024C330 /* PlatterButton.swift */; };
 		49CD6C1D263A0C990024C330 /* MinimumHeightTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CD6C1B263A0C980024C330 /* MinimumHeightTableViewCell.swift */; };
 		49CD6C1E263A0C990024C330 /* NonAutoLayoutWrappingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CD6C1C263A0C990024C330 /* NonAutoLayoutWrappingView.swift */; };
+		49DEAA7E2E4E7570001169CB /* AutoAdjustingStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49DEAA7D2E4E756B001169CB /* AutoAdjustingStackView.swift */; };
+		49DEAA822E4E87BF001169CB /* ConditionList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49DEAA812E4E87B4001169CB /* ConditionList.swift */; };
 		49E70490282AC37B00A1EA1F /* AutoSizingCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E7048F282AC37B00A1EA1F /* AutoSizingCollectionView.swift */; };
 		49E70492282AC3B100A1EA1F /* AutoSizingTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E70491282AC3B100A1EA1F /* AutoSizingTableView.swift */; };
 		49EC263C2822CC59000F8C4B /* UIView+AutoLayoutBridging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49EC263B2822CC59000F8C4B /* UIView+AutoLayoutBridging.swift */; };
@@ -127,6 +129,8 @@
 		49CD6B7326397B340024C330 /* PlatterButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatterButton.swift; sourceTree = "<group>"; };
 		49CD6C1B263A0C980024C330 /* MinimumHeightTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MinimumHeightTableViewCell.swift; sourceTree = "<group>"; };
 		49CD6C1C263A0C990024C330 /* NonAutoLayoutWrappingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NonAutoLayoutWrappingView.swift; sourceTree = "<group>"; };
+		49DEAA7D2E4E756B001169CB /* AutoAdjustingStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoAdjustingStackView.swift; sourceTree = "<group>"; };
+		49DEAA812E4E87B4001169CB /* ConditionList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionList.swift; sourceTree = "<group>"; };
 		49E7048F282AC37B00A1EA1F /* AutoSizingCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoSizingCollectionView.swift; sourceTree = "<group>"; };
 		49E70491282AC3B100A1EA1F /* AutoSizingTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoSizingTableView.swift; sourceTree = "<group>"; };
 		49EC263B2822CC59000F8C4B /* UIView+AutoLayoutBridging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+AutoLayoutBridging.swift"; sourceTree = "<group>"; };
@@ -255,6 +259,7 @@
 				49CD6B45263972520024C330 /* AutoAdjustingHorizontalStackView.swift */,
 				49CD6B46263972520024C330 /* UIView+StackViewHelpers.swift */,
 				49CD6B47263972520024C330 /* AutoAdjustingVerticalStackView.swift */,
+				49DEAA7D2E4E756B001169CB /* AutoAdjustingStackView.swift */,
 				4933F50126F0F1EE008EEA01 /* AutoHidingStackView.swift */,
 			);
 			path = UIStackView;
@@ -278,6 +283,7 @@
 				49CD6B4F263972520024C330 /* LayoutBasis.swift */,
 				49CD6B50263972520024C330 /* ConstraintsList.swift */,
 				496E7E3C28378A13004615B1 /* ConstraintsListCollection.swift */,
+				49DEAA812E4E87B4001169CB /* ConditionList.swift */,
 				4932513D29F93446003CB4EE /* Cancellable.swift */,
 			);
 			path = Base;
@@ -408,6 +414,7 @@
 				496ADB4E26B346EE0016A582 /* FillingViewController.swift in Sources */,
 				49CD6B54263972520024C330 /* UIView+AutoLayout.swift in Sources */,
 				4969E367263EE626000F8BDA /* ContentWithFooterView.swift in Sources */,
+				49DEAA7E2E4E7570001169CB /* AutoAdjustingStackView.swift in Sources */,
 				4960C7822CEF758100FBB7F2 /* CollapsableView.swift in Sources */,
 				49CD6B7426397B340024C330 /* PlatterButton.swift in Sources */,
 				49746F47278885240028E523 /* FixedFrameLayoutGuide.swift in Sources */,
@@ -423,6 +430,7 @@
 				49CD6B57263972520024C330 /* UIView+Filling.swift in Sources */,
 				4933F50226F0F1EE008EEA01 /* AutoHidingStackView.swift in Sources */,
 				496E7E41283809D9004615B1 /* UIView+Conditional.swift in Sources */,
+				49DEAA822E4E87BF001169CB /* ConditionList.swift in Sources */,
 				49CD6B6D263976160024C330 /* VerticalOverflowScrollView.swift in Sources */,
 				49F870822CF50520007A0710 /* UIView+NamedConstraintLists.swift in Sources */,
 				496E7E3D28378A13004615B1 /* ConstraintsListCollection.swift in Sources */,

@@ -445,7 +445,7 @@ extension UIView.Condition {
 internal extension UIView.Condition {
 	/// internal helpers
 	func matches(for view: UIView) -> Bool { kind.matches(for: view) }
-	func neededObservers(for view: UIView) -> [UIView?: ConstraintsListCollection.ObserverKind] { kind.neededObservers(for: view) }
+	func neededObservers(for view: UIView) -> [UIView?: ObserverKind] { kind.neededObservers(for: view) }
 	
 	// bind this condition to a view if there is no view assigned bound yet.
 	func bind(to view: UIView?) -> Self { Self(kind.bound(to: view)) }
@@ -459,7 +459,8 @@ fileprivate extension UIView.Condition.Kind {
 				
 			case .named(let name): return view.activeConditionalConstraintsConfigurationName == name
 				
-			case .traits(in: let traitCollection): return view.traitCollection.containsTraits(in: traitCollection)
+			case .traits(in: let traitCollection):
+				return view.traitCollection.containsTraits(in: traitCollection)
 			case .specificTrait(let evaluator): return evaluator(view)
 			
 			case .callbackView(let evaluator): return evaluator(view)
@@ -477,7 +478,7 @@ fileprivate extension UIView.Condition.Kind {
 		}
 	}
 	
-	func neededObservers(for view: UIView?) -> [UIView?: ConstraintsListCollection.ObserverKind] {
+	func neededObservers(for view: UIView?) -> [UIView?: UIView.Condition.ObserverKind] {
 		switch self {
 			case .width, .height: return [view: .bounds]
 			case .traits, .specificTrait: return [view: .traits]
@@ -485,9 +486,9 @@ fileprivate extension UIView.Condition.Kind {
 			case .callbackView, .callbackNoView: return [view: .all]
 			case .hidden: return [view: .hidden]
 			case .alwaysTrue, .alwaysFalse: return [:]
-			case .bound(let bounded): return bounded.kind.neededObservers(for: view)
+			case .bound(let bounded): return bounded.kind.neededObservers(for: bounded.view ?? view)
 			case .and(let others), .or(let others), .not(let others):
-				var observers = [UIView?: ConstraintsListCollection.ObserverKind]()
+				var observers = [UIView?: UIView.Condition.ObserverKind]()
 				for other in others {
 					other.neededObservers(for: view).forEach { observers[$0.key, default: .none].formUnion($0.value)  }
 				}
