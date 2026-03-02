@@ -19,17 +19,17 @@ public class StickyBottomFooterTableView: UITableView {
 	/// the background color of the sticky footer, including safeArea, when sticked to the bottom of the table view.
 	public var stickyFooterBackgroundColor: UIColor? {
 		didSet {
-			reallyUpdatestickyFooterViewLayout(canAnimate: false)
+			reallyUpdateStickyFooterViewLayout(canAnimate: false)
 		}
 	}
 	
 	/// the blur effect to apply when the sticky footer has sticked to the bottom of the table view.
 	public var stickyFooterBlurEffect: UIBlurEffect? = UIBlurEffect(style: .systemChromeWithFallback) {
 		didSet {
-			reallyUpdatestickyFooterViewLayout(canAnimate: false)
+			reallyUpdateStickyFooterViewLayout(canAnimate: false)
 		}
 	}
-	
+
 	/// true iff the footer view is sticking to the bottom
 	public private(set) var isFooterViewStickingToBottom = false {
 		didSet {
@@ -49,7 +49,7 @@ public class StickyBottomFooterTableView: UITableView {
 	public var stickyFooterMode: StickyFooterMode = .automatic {
 		didSet {
 			guard stickyFooterMode != oldValue else { return }
-			reallyUpdatestickyFooterViewLayout(canAnimate: false)
+			reallyUpdateStickyFooterViewLayout(canAnimate: false)
 		}
 	}
 	
@@ -58,27 +58,29 @@ public class StickyBottomFooterTableView: UITableView {
 	
 	// MARK: - Private
 	private var animationCount = 0
-	private var updatestickyFooterViewLayoutCount = 0
+	private var updateStickyFooterViewLayoutCount = 0
 	private var stickyFooterViewConstraintsList: ConstraintsList!
 	
 	private let stickyFooterWrapperView = UIView()
 	private let stickyFooterBlurView = UIVisualEffectView()
-	
-	private func updatestickyFooterViewLayout() {
+
+	private var stickyFooterScrollEdgeElementContainerInteractionInternal: Any?
+
+	private func updateStickyFooterViewLayout() {
 		if animationCount > 0 {
 			UIView.animate(withDuration: 0.33, delay: 0, options: [.allowUserInteraction, .beginFromCurrentState]) {
-				self.reallyUpdatestickyFooterViewLayout()
+				self.reallyUpdateStickyFooterViewLayout()
 				self.stickyFooterWrapperView.layoutIfNeeded()
 			}
 		} else {
-			reallyUpdatestickyFooterViewLayout()
+			reallyUpdateStickyFooterViewLayout()
 		}
 	}
 	
-	private func reallyUpdatestickyFooterViewLayout(canAnimate: Bool = true) {
-		guard updatestickyFooterViewLayoutCount == 0 else { return }
+	private func reallyUpdateStickyFooterViewLayout(canAnimate: Bool = true) {
+		guard updateStickyFooterViewLayoutCount == 0 else { return }
 		
-		updatestickyFooterViewLayoutCount += 1
+		updateStickyFooterViewLayoutCount += 1
 		
 		stickyFooterViewConstraintsList.insets.bottom = safeAreaInsets.bottom
 		
@@ -128,9 +130,19 @@ public class StickyBottomFooterTableView: UITableView {
 		
 		isFooterViewStickingToBottom = isSticking
 		
-		updatestickyFooterViewLayoutCount -= 1
+		updateStickyFooterViewLayoutCount -= 1
 	}
-	
+
+	private func ensureStickyFooterViewIsAtFront(callback: () -> Void) {
+		let hasStickyFooterView = (stickyFooterWrapperView.superview != nil)
+
+		callback()
+
+		if hasStickyFooterView == true && subviews.last != stickyFooterWrapperView {
+			super.bringSubviewToFront(stickyFooterWrapperView)
+		}
+	}
+
 	// MARK: - UITableView
 	public override func performBatchUpdates(_ updates: (() -> Void)?, completion: ((Bool) -> Void)? = nil) {
 		super.performBatchUpdates({
@@ -151,14 +163,14 @@ public class StickyBottomFooterTableView: UITableView {
 		
 		stickyFooterWrapperView.addSubview(stickyFooterBlurView, filling: .superview)
 		stickyFooterViewConstraintsList = stickyFooterWrapperView.addSubview(stickyFooterView, filling: .superview)
-		addSubview(stickyFooterWrapperView, pinning: .bottom, to: .bottom, of: .scrollFrame, horizontally: .filling(.scrollFrame))
+		super.addSubview(stickyFooterWrapperView, pinning: .bottom, to: .bottom, of: .scrollFrame, horizontally: .filling(.scrollFrame))
 	}
 	
 	// MARK: - UIScrollView
 	open override var contentSize: CGSize {
 		didSet {
 			guard contentSize != oldValue else { return }
-			updatestickyFooterViewLayout()
+			updateStickyFooterViewLayout()
 		}
 	}
 	
@@ -166,26 +178,56 @@ public class StickyBottomFooterTableView: UITableView {
 	open override var bounds: CGRect {
 		didSet {
 			guard bounds != oldValue else { return }
-			updatestickyFooterViewLayout()
+			updateStickyFooterViewLayout()
 		}
 	}
 	
 	open override func adjustedContentInsetDidChange() {
 		super.adjustedContentInsetDidChange()
-		updatestickyFooterViewLayout()
+		updateStickyFooterViewLayout()
 	}
 	
 	open override func safeAreaInsetsDidChange() {
 		super.safeAreaInsetsDidChange()
-		updatestickyFooterViewLayout()
+		updateStickyFooterViewLayout()
 	}
 	
 	open override func layoutSubviews() {
 		super.layoutSubviews()
 		
-		reallyUpdatestickyFooterViewLayout()
+		reallyUpdateStickyFooterViewLayout()
 	}
-	
+
+	public override func addSubview(_ view: UIView) {
+		ensureStickyFooterViewIsAtFront {
+			super.addSubview(view)
+		}
+	}
+
+	public override func insertSubview(_ view: UIView, at index: Int) {
+		ensureStickyFooterViewIsAtFront {
+			super.insertSubview(view, at: index)
+		}
+	}
+
+	public override func insertSubview(_ view: UIView, aboveSubview siblingSubview: UIView) {
+		ensureStickyFooterViewIsAtFront {
+			super.insertSubview(view, aboveSubview: siblingSubview)
+		}
+	}
+
+	public override func exchangeSubview(at index1: Int, withSubviewAt index2: Int) {
+		ensureStickyFooterViewIsAtFront {
+			super.exchangeSubview(at: index1, withSubviewAt: index2)
+		}
+	}
+
+	public override func bringSubviewToFront(_ view: UIView) {
+		ensureStickyFooterViewIsAtFront {
+			super.bringSubviewToFront(view)
+		}
+	}
+
 	@available(*, unavailable)
 	required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
