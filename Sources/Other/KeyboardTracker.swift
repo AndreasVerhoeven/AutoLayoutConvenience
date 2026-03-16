@@ -33,6 +33,44 @@ import UIKit
 		scrollView.panGestureRecognizer.removeTarget(self, action: #selector(handlePan(_:)))
 	}
 
+	func boundsInScreenCoordinates(view: UIView, ignoreHierarchyTransforms: Bool, ignoreViewScrollOffset: Bool) -> CGRect {
+		var bounds = view.bounds
+
+		if ignoreViewScrollOffset == true {
+			bounds.origin = .zero
+		}
+
+		if ignoreHierarchyTransforms == true {
+			var iteratingView: UIView? = view
+			while let currentView = iteratingView {
+				// this is cut up into smaller expressions, because the Swift compiler could't handle it
+				let viewOffCenterWidth = currentView.bounds.width * currentView.layer.anchorPoint.x
+				let viewOffCenterHeight = currentView.bounds.height * currentView.layer.anchorPoint.y
+				bounds.origin.x += currentView.center.x - viewOffCenterWidth
+				bounds.origin.y += currentView.center.y - viewOffCenterHeight
+
+				iteratingView = currentView.superview
+			}
+
+			return bounds
+
+		} else {
+			return view.convert(bounds, to: nil)
+		}
+	}
+
+	func effectiveContentInset(view: UIView, ignoreHierarchyTransforms: Bool, ignoreViewScrollOffset: Bool) -> UIEdgeInsets {
+		// we're only interested in vertical insets
+		let boundsInScreenCoordinates = boundsInScreenCoordinates(view: view, ignoreHierarchyTransforms: ignoreHierarchyTransforms, ignoreViewScrollOffset: ignoreViewScrollOffset)
+		var keyboardScreenFrame = self.keyboardScreenFrame
+		keyboardScreenFrame.origin.x = boundsInScreenCoordinates.minX
+		keyboardScreenFrame.size.width = boundsInScreenCoordinates.width
+
+		guard keyboardScreenFrame.isEmpty == false && keyboardScreenFrame.intersects(boundsInScreenCoordinates) == true else { return .zero }
+		let keyboardHeightInView = max(boundsInScreenCoordinates.maxY - keyboardScreenFrame.minY, 0)
+		return UIEdgeInsets(top: 0, left: 0, bottom: keyboardHeightInView, right: 0)
+	}
+
 	var animationCurveAnimationOptions: UIView.AnimationOptions {
 		return UIView.AnimationOptions(rawValue: UInt(animationCurve.rawValue) << 16)
 	}

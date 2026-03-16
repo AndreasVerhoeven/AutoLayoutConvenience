@@ -27,9 +27,4 @@ class ViewController: UIViewController {
 		view.addSubview(UIView(backgroundColor: .red), filling: .keyboardFrame)
 		view.addSubview(demoView, filling: .keyboardSafeArea)
 	}
-	
-	override func viewDidAppear(_ animated: Bool) {
-		super.viewDidAppear(animated)
-		view.firstScrollableView?.flashScrollIndicators()
-	}
 }

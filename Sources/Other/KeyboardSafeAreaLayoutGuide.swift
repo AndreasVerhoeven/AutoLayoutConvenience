@@ -68,39 +68,19 @@ public class KeyboardSafeAreaLayoutGuide: UILayoutGuide {
 	private var owningBoundsInScreenCoordinates: CGRect {
 		guard let owningView = owningView else { return .zero }
 
-		if ignoreHierarchyTransforms == true {
-			var bounds = owningView.bounds
-
-			var view: UIView? = owningView
-			while let currentView = view {
-				// this is cut up into smaller expressions, because the Swift compiler could't handle it
-				let viewOffCenterWidth = currentView.bounds.width * currentView.layer.anchorPoint.x
-				let viewOffCenterHeight = currentView.bounds.height * currentView.layer.anchorPoint.y
-				bounds.origin.x += currentView.center.x - viewOffCenterWidth
-				bounds.origin.y += currentView.center.y - viewOffCenterHeight
-
-				view = currentView.superview
-			}
-
-			return bounds
-
-		} else {
-			return owningView.convert(owningView.bounds, to: nil)
-		}
+		return keyboardTracker.boundsInScreenCoordinates(
+			view: owningView,
+			ignoreHierarchyTransforms: ignoreHierarchyTransforms,
+			ignoreViewScrollOffset: false)
 	}
 
 	private var effectiveContentInsets: UIEdgeInsets {
-		guard owningView != nil else { return .zero }
+		guard let owningView else { return .zero }
 
-		// we're only interested in vertical insets
-		let boundsInScreenCoordinates = owningBoundsInScreenCoordinates
-		var keyboardScreenFrame = keyboardTracker.keyboardScreenFrame
-		keyboardScreenFrame.origin.x = boundsInScreenCoordinates.minX
-		keyboardScreenFrame.size.width = boundsInScreenCoordinates.width
-
-		guard keyboardScreenFrame.isEmpty == false && keyboardScreenFrame.intersects(boundsInScreenCoordinates) == true else { return .zero }
-		let keyboardHeightInView = max(boundsInScreenCoordinates.maxY - keyboardScreenFrame.minY, 0)
-		return UIEdgeInsets(top: 0, left: 0, bottom: keyboardHeightInView, right: 0)
+		return keyboardTracker.effectiveContentInset(
+			view: owningView,
+			ignoreHierarchyTransforms: ignoreHierarchyTransforms,
+			ignoreViewScrollOffset: false)
 	}
 
 	// MARK: - UILayoutGuide
