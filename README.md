@@ -855,7 +855,46 @@ A table view where its `intrinsicSize` is the same as its `contentSize`
 
 #### StickyBottomFooterTableView
 
-A tableview that can has an extra footer view that will stick to the bottom of the scrollable area: if the content is smaller, it sits below the content, if the content is scrollable it sticks itself to the bottom of the table view.
+A tableview that can has an extra footer view that will stick to the bottom of the scrollable area: if the content is smaller, it sits below the content, if the content is scrollable it sticks itself to the bottom of the table view. Highly configurable.
+
+The `stickyFooterView` can be configured to dynamically "stick" to the bottom of the `safeArea` or follow just below the contents of the tableview using the `mode` property.
+
+##### Footer Contents
+
+- `stickyFooterView` the view that is the sticky footer, add your views to this view using AutoLayout
+
+##### Mode
+
+- `stickyFooterMode` determines where the `stickyFooterView` is showing and if it's sticking, see Mode Options.
+- `stickyFooterAvoidsKeyboard` if true, we avoid the keyboard and we see the top of the keyboard as where to stick the footer view to.
+- `stickyFooterSpacingToKeyboard` the spacing we keep on top of the keyboard to the contents (the sticky footer or the contents of the table view)
+-  `stickyFooterRequiredAvailableContentHeight` the required height for the content. If sticking a button to the bottom of the safe area or keyboard  would result into less height available for the actual table view content than this value, we won't stick the button. 
+
+###### Mode Options
+
+- `automatic` let the view determine, currently always `.onBottomWhenScrolledOutOfView`
+- `alwaysOnBottom` always stick to the bottom if there is enough space for the content
+- `alwaysBelowContent`  always below the content, not sticking
+- `onBottomWhenScrolledOutOfView` sticks to the bottom when scrolled out of view and there is enough space, otherwise below the content (you can see this as the footer being attached to the content, but it will never scroll out of view normally)
+- `onBottomWhenNotOverlappingContent` sticks to the bottom if there is enough space but avoids the content ((you can see this as the footer being attached to the bottom, but getting pushed out by the content))
+
+##### State
+
+- `stickingState` the current sticking state of the `stickyFooterView`, either `followingContent` (not sticking), sticking to `bottomOfSafeArea` or sticking to `bottomOfKeyboard`.
+- `footerStickinessChangedCallback` callback called when `stickingState` changes.
+
+##### Table Content Alignment
+
+- `stickyFooterTableContentAlignment` determines how we align the table content, either `.top` (default), `.center` or `.bottom` 
+
+##### Backgrounds
+
+These backgrounds are only applied when the `stickyFooterView` is actually sticking to the bottom of the safeArea or keyboard - if not sticking, they are hidden.
+Note that when the footer view is sticking to the bottom of the safeArea, the effects go all the way down to the screen edge, extending past the actual footer view. When sticking to the top of the keyboard, the effects stop at the top of the keyboard.
+
+- `stickyFooterBackgroundColor`: background color to show behind the footer when sticking
+- `stickyFooterBlurEffect` blur effect to show behind the footer when sticking
+- `stickyFooterUsesScrollEdgeElement` scroll edge to apply behind the footer when sticking 
 
 #### CollapsableView
 

@@ -130,7 +130,6 @@ public class StickyBottomFooterTableView: UITableView {
 	/// determines how the table content is aligned when it's not scrollable,
 	/// alignment is done by modifying `contentInset.top`
 	public enum TableContentAlignment: CaseIterable {
-		case `default` /// default table view alignment, same as `.top`
 		case top /// content is aligned to top
 		case center /// content is aligned in the middle
 		case bottom /// content is aligned to the bottom
@@ -138,7 +137,7 @@ public class StickyBottomFooterTableView: UITableView {
 
 	/// determines how the table content (the rows and headers etc) are aligned. Alignment is done by
 	/// modifying `contentInset.top`
-	public var stickyFooterTableContentAlignment = TableContentAlignment.default {
+	public var stickyFooterTableContentAlignment = TableContentAlignment.top {
 		didSet {
 			guard stickyFooterTableContentAlignment != oldValue else { return }
 			reallyUpdateStickyFooterViewLayout(canAnimate: false)
@@ -288,7 +287,6 @@ public class StickyBottomFooterTableView: UITableView {
 			let availableContentHeight = bounds.height - safeAreaInsets.top - safeAreaInsets.bottom - layout.bottomInset
 			let leftOverSpace = max(0, availableContentHeight - contentSize.height)
 			switch stickyFooterTableContentAlignment {
-				case .default: layout.topInset = 0
 				case .top: layout.topInset = 0
 				case .center: layout.topInset = roundToPoints(leftOverSpace * 0.5)
 				case .bottom: layout.topInset = roundToPoints(leftOverSpace)
@@ -515,7 +513,7 @@ public class StickyBottomFooterTableView: UITableView {
 
 	public override init(frame: CGRect, style: UITableView.Style) {
 		stickyFooterView = StickyFooterView()
-		
+
 		if #available(iOS 26, *) {
 			stickyFooterUsesScrollEdgeElement = true
 		} else {
