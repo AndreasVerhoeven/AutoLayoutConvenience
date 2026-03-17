@@ -355,9 +355,10 @@ public class StickyBottomFooterTableView: UITableView {
 		// if we're not sticking to the bottom, we want to be behind the first scroll pocket or scroll indicator
 		if stickingState.isSticking == false,
 		   let index = subviews.firstIndex(where: { NSStringFromClass($0.classForCoder).contains(Self.uiScrollSubview) }) {
-			let subview = index > 0 ? subviews[index - 1] : subviews[0]
+			let subviewToInsertBelow = subviews[index]
+			let subview = index > 0 ? subviews[index] : subviews[0]
 			if subview !== stickyFooterWrapperView {
-				super.insertSubview(stickyFooterWrapperView, belowSubview: subview)
+				super.insertSubview(stickyFooterWrapperView, belowSubview: subviewToInsertBelow)
 			}
 		} else {
 			if subviews.last != stickyFooterWrapperView {
