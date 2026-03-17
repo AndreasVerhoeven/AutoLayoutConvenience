@@ -103,7 +103,7 @@ class StickyTableViewController: UIViewController {
 				)
 
 				let modeMenuItems = StickyBottomFooterTableView.StickyFooterMode.allCases.map { mode in
-					return UIAction(title: mode.title, attributes: .keepsMenuPresented, state: (mode == self.tableView.stickyFooterMode ? .on : .off), handler: { _ in
+					return UIAction(title: mode.title, state: (mode == self.tableView.stickyFooterMode ? .on : .off), handler: { _ in
 						UIView.animate(withDuration: 0.25) {
 							self.tableView.stickyFooterMode = mode
 						}
