@@ -14,8 +14,8 @@ import UIKit
 /// Note: overrides `contentInset` when needed.
 public class StickyBottomFooterTableView: UITableView {
 	/// the sticky footer view to add content to using AutoLayout
-	public let stickyFooterView = UIView()
-	
+	public let stickyFooterView: UIView
+
 	/// the background color of the sticky footer, including safeArea, when sticked to the bottom of the table view.
 	public var stickyFooterBackgroundColor: UIColor? {
 		didSet {
@@ -145,7 +145,13 @@ public class StickyBottomFooterTableView: UITableView {
 		}
 	}
 
-	// MARK: - Private
+	// MARK: - Privates
+
+	/// subclasses to be able to properly debug the view hierarchy by giving views an
+	/// easy to recognize name
+	private final class StickyFooterView: UIView {}
+	private final class StickyFooterWrapperView: UIView {}
+
 	private var animationCount = 0
 	private var updateStickyFooterViewLayoutCount = 0
 	private var isUpdatingRowsCount = 0
@@ -153,7 +159,7 @@ public class StickyBottomFooterTableView: UITableView {
 	private var wrapperViewConstraintsList: ConstraintsList!
 	private var keyboardTrackerCancellable: KeyboardTracker.Cancellable?
 
-	private let stickyFooterWrapperView = UIView()
+	private let stickyFooterWrapperView = StickyFooterWrapperView()
 	private let stickyFooterBlurView = UIVisualEffectView()
 
 	private var stickyFooterScrollEdgeElementContainerInteractionInternal: Any?
@@ -172,17 +178,18 @@ public class StickyBottomFooterTableView: UITableView {
 	}
 	
 	private func reallyUpdateStickyFooterViewLayout(canAnimate: Bool = true) {
+		// this method is not re-entrant to avoid layout loops, so check for that.
 		guard updateStickyFooterViewLayoutCount == 0 else { return }
-		
 		updateStickyFooterViewLayoutCount += 1
+		defer { updateStickyFooterViewLayoutCount -= 1 }
 
+		// helper methods to scale and apply layout
 		let scale = (window?.screen.scale ?? UIScreen.main.scale)
-		func scaleToPixels(_ value: CGFloat) -> CGFloat {
-			return round(value * scale)
-		}
-
-		func roundToPoints(_ value: CGFloat) -> CGFloat {
-			return scaleToPixels(value) / scale
+		func scaleToPixels(_ value: CGFloat) -> CGFloat { round(value * scale) }
+		func roundToPoints(_ value: CGFloat) -> CGFloat { scaleToPixels(value) / scale }
+		func set<T: AnyObject>(_ object: T, _ keyPath: ReferenceWritableKeyPath<T, CGFloat>, to value: CGFloat) {
+			guard scaleToPixels(object[keyPath: keyPath]) != scaleToPixels(value) else { return }
+			object[keyPath: keyPath] = value
 		}
 
 		// first, determine what we see as a bottom boundary, either the keyboard or the safe area
@@ -208,141 +215,159 @@ public class StickyBottomFooterTableView: UITableView {
 			isUsingKeyboardAsBottomBoundary = false
 		}
 
-		// determine if we should stick or not by checking if the contents is past the "bottom"
-		// (of either the keyboard or safe area)
-		let contentBottomY = roundToPoints(contentSize.height - contentOffset.y - contentInset.top)
-		let visibleScrollFrameY = roundToPoints(bounds.height - bottomInset - stickyFooterView.bounds.height)
-
-		// calculate how much translation we need to follow the contents and check if we actually
-		// fit if we would stick
-		let neededTranslationToFollowContents = roundToPoints(visibleScrollFrameY - contentBottomY + (isUsingKeyboardAsBottomBoundary == true ? 0 : bottomInset))
-		let hasEnoughSpaceForContent = scaleToPixels(visibleScrollFrameY - safeAreaInsets.top) >= scaleToPixels(stickyFooterRequiredAvailableContentHeight)
-		let hasContentsPastBottom = (scaleToPixels(contentBottomY) >= scaleToPixels(visibleScrollFrameY))
-
-		let translation: CGFloat
-		let isSticking: Bool
-		switch stickyFooterMode {
-			case .automatic,
-					.onBottomWhenScrolledOutOfView:
-				// stick if there's content past the bottom and we fit,
-				// otherwise follow the contents.
-				let shouldStick = (hasContentsPastBottom == true && hasEnoughSpaceForContent == true)
-				translation = (shouldStick == true ? 0 : neededTranslationToFollowContents)
-				isSticking = (translation == 0)
-
-			case .alwaysOnBottom:
-				// always stick if we can fit, otherwise follow the content
-				translation = (hasEnoughSpaceForContent == true ? 0 : neededTranslationToFollowContents)
-				isSticking = (translation == 0)
-
-			case .alwaysBelowContent:
-				// never stick, always follow the contents
-				translation = neededTranslationToFollowContents
-				isSticking = false
-
-			case .onBottomWhenNotOverlappingContent:
-				// stick if there's no content past the bottom and we fit,
-				// otherwise follow the contents.
-				let shouldStick = (hasContentsPastBottom == false && hasEnoughSpaceForContent == true)
-				translation = (shouldStick == true ? 0 : neededTranslationToFollowContents)
-				isSticking = (translation == 0)
-
+		/// structure that holds all the values we need for layout
+		struct Layout {
+			var isSticking = false
+			var translation = CGFloat(0)
+			var bottomInset = CGFloat(0)
+			var topInset = CGFloat(0)
+			var scrollIndicatorBottomInset = CGFloat(0)
+			var wrapperViewBottomInset = CGFloat(0)
+			var footerViewBottomInset = CGFloat(0)
 		}
 
-		// if we use the keyboard as a boundary, we move up our wrapper view so it's
-		// above the keyboard
-		if isUsingKeyboardAsBottomBoundary == true {
-			wrapperViewConstraintsList.insets.bottom = keyboardAdjustmentBottomInset
-		} else {
-			wrapperViewConstraintsList.insets.bottom = 0
+		/// helper method to determine layout - this is a helper method, because we do a 2 pass-layout in some instances
+		func determineLayout(topInsetToUse: CGFloat = 0) -> Layout {
+			// determine if we should stick or not by checking if the contents is past the "bottom"
+			// (of either the keyboard or safe area)
+			let contentBottomY = roundToPoints(contentSize.height - contentOffset.y - contentInset.top + topInsetToUse)
+			let visibleScrollFrameY = roundToPoints(bounds.height - bottomInset - stickyFooterView.bounds.height)
+
+			// calculate how much translation we need to follow the contents and check if we actually
+			// fit if we would stick
+			let neededTranslationToFollowContents = roundToPoints(visibleScrollFrameY - contentBottomY + (isUsingKeyboardAsBottomBoundary == true ? 0 : bottomInset))
+			let hasEnoughSpaceForContent = scaleToPixels(visibleScrollFrameY - safeAreaInsets.top) >= scaleToPixels(stickyFooterRequiredAvailableContentHeight)
+			let hasContentsPastBottom = (scaleToPixels(contentBottomY) >= scaleToPixels(visibleScrollFrameY))
+
+			var layout = Layout()
+			switch stickyFooterMode {
+				case .automatic,
+						.onBottomWhenScrolledOutOfView:
+					// stick if there's content past the bottom and we fit,
+					// otherwise follow the contents.
+					let shouldStick = (hasContentsPastBottom == true && hasEnoughSpaceForContent == true)
+					layout.translation = (shouldStick == true ? 0 : neededTranslationToFollowContents)
+					layout.isSticking = (layout.translation == 0)
+
+				case .alwaysOnBottom:
+					// always stick if we can fit, otherwise follow the content
+					layout.translation = (hasEnoughSpaceForContent == true ? 0 : neededTranslationToFollowContents)
+					layout.isSticking = (layout.translation == 0)
+
+				case .alwaysBelowContent:
+					// never stick, always follow the contents
+					layout.translation = neededTranslationToFollowContents
+					layout.isSticking = false
+
+				case .onBottomWhenNotOverlappingContent:
+					// stick if there's no content past the bottom and we fit,
+					// otherwise follow the contents.
+					let shouldStick = (hasContentsPastBottom == false && hasEnoughSpaceForContent == true)
+					layout.translation = (shouldStick == true ? 0 : neededTranslationToFollowContents)
+					layout.isSticking = (layout.translation == 0)
+			}
+
+			// calculate bottom inset
+			layout.bottomInset = stickyFooterView.bounds.height
+			var baseBottomContentInset = CGFloat(0)
+			if isUsingKeyboardAsBottomBoundary == true {
+				// if we are using the keyboard as bottom boundary, adjust the content
+				// inset accordingly
+				baseBottomContentInset = keyboardAdjustmentBottomInset - safeAreaInsets.bottom
+				layout.bottomInset += baseBottomContentInset
+			}
+
+			// calculate scroll indicator bottom inset
+			if layout.isSticking == true {
+				layout.scrollIndicatorBottomInset = layout.bottomInset
+			} else {
+				layout.scrollIndicatorBottomInset = baseBottomContentInset
+			}
+
+			// calculate top inset
+			let availableContentHeight = bounds.height - safeAreaInsets.top - safeAreaInsets.bottom - layout.bottomInset
+			let leftOverSpace = max(0, availableContentHeight - contentSize.height)
+			switch stickyFooterTableContentAlignment {
+				case .default: layout.topInset = 0
+				case .top: layout.topInset = 0
+				case .center: layout.topInset = roundToPoints(leftOverSpace * 0.5)
+				case .bottom: layout.topInset = roundToPoints(leftOverSpace)
+			}
+
+			// ensure translation makes sense
+			if layout.isSticking == false {
+				layout.translation -= layout.topInset
+			} else {
+				layout.translation = 0
+			}
+
+			// if we use the keyboard as a boundary, we move up our wrapper view so it's
+			// above the keyboard, otherwise we move up the footer view to adjust for
+			// bottom inset when we are not sticky.
+			if isUsingKeyboardAsBottomBoundary == true {
+				layout.wrapperViewBottomInset = keyboardAdjustmentBottomInset
+			} else if layout.isSticking == true {
+				layout.footerViewBottomInset = bottomInset
+			}
+
+			return layout
 		}
 
-		// if we are sticking to the safe area, adjust the `stickyFooterView`
-		// so that it's bottom is aligned to the safe area - our wrapper view
-		// goes all the way to the superview bottom.
-		if isSticking == true && isUsingKeyboardAsBottomBoundary == false {
-			stickyFooterViewConstraintsList.insets.bottom = bottomInset
-		} else {
-			stickyFooterViewConstraintsList.insets.bottom = 0
+		// determine our layout - if we have top inset, do a second pass, because
+		// some of the layout depends on that.
+		var layout = determineLayout()
+		if layout.topInset != 0 && layout.isSticking == false {
+			// if we have a top inset and are not sticking, we might actually need to stick,
+			// because we calculate the layout without top inset first. So,
+			// check if we would stick by taking the topInset into account and if so,
+			// use the new sticking layout.
+			let newLayout = determineLayout(topInsetToUse: layout.topInset)
+			if newLayout.isSticking == true {
+				layout = newLayout
+			}
 		}
 
-		let newStickingState: StickingState
-		if isSticking == true {
-			newStickingState = (isUsingKeyboardAsBottomBoundary == true ? .bottomOfKeyboard : .bottomOfSafeArea)
-		} else {
-			newStickingState = .followingContent
-		}
+		// set all layout by using a helper function that first checks for actual differences.
+		set(wrapperViewConstraintsList, \.insets.bottom, to: layout.wrapperViewBottomInset)
+		set(stickyFooterViewConstraintsList, \.insets.bottom, to: layout.footerViewBottomInset)
+		set(self, \.contentInset.bottom, to: layout.bottomInset)
+		set(self, \.verticalScrollIndicatorInsets.bottom, to: layout.scrollIndicatorBottomInset)
 
-		// animate the background accordingly
+		// WORKAROUND (iOS 14+, *): UIKit doesn't always update `frameLayoutGuide`
+		// correctly when changing topInset: resulting in the sticky footer view not
+		// showing at the correct position. We need to force a change by wiggling it
+		// the topInset with 1 point - while ignoring `setNeedsLayout()` to avoid
+		// an endless layout loop.
+		set(self, \.contentInset.top, to: layout.topInset)
+
+		stickyFooterWrapperView.transform = CGAffineTransform(translationX: 0, y: -layout.translation)
+
+		// update our background: if we are sticky we show the background (effect, color, scroll edge),
+		// if not, we remove the backgrounds.
 		let updates = { [self] in
-			stickyFooterBlurView.effect = isSticking ? stickyFooterBlurEffect : nil
-			stickyFooterWrapperView.backgroundColor = isSticking ? stickyFooterBackgroundColor : nil
-			updateScrollEdgeElementContainerInteraction(shouldShow: isSticking)
+			stickyFooterBlurView.effect = layout.isSticking ? stickyFooterBlurEffect : nil
+			stickyFooterWrapperView.backgroundColor = layout.isSticking ? stickyFooterBackgroundColor : nil
+			updateScrollEdgeElementContainerInteraction(shouldShow: layout.isSticking)
 		}
 		
-		if canAnimate == true && stickingState.isSticking != newStickingState.isSticking && window != nil {
+		if canAnimate == true && stickingState.isSticking != layout.isSticking && window != nil {
 			UIView.animate(withDuration: 0.25, delay: 0, options: [.beginFromCurrentState, .allowUserInteraction], animations: updates)
 		} else {
 			updates()
 		}
 
-		// update the insets, make room for out sticky footer view
-		var bottomContentInset = stickyFooterView.bounds.height
-
-		var baseBottomContentInset = CGFloat(0)
-		if isUsingKeyboardAsBottomBoundary == true {
-			// if we are using the keyboard as bottom boundary, adjust the content
-			// inset accordingly
-			baseBottomContentInset = keyboardAdjustmentBottomInset - safeAreaInsets.bottom
-			bottomContentInset += baseBottomContentInset
-		}
-
-		// update the inset and scroll indicators only when needed
-		if scaleToPixels(bottomContentInset) != scaleToPixels(contentInset.bottom) {
-			contentInset.bottom = bottomContentInset
-
-			if isSticking == true {
-				verticalScrollIndicatorInsets.bottom = bottomContentInset
-			} else {
-				verticalScrollIndicatorInsets.bottom = baseBottomContentInset
-			}
-		}
-
-		let availableContentHeight = bounds.height - safeAreaInsets.top - adjustedContentInset.bottom
-		let leftOverSpace = max(0, availableContentHeight - contentSize.height)
-
-		let newTopInset: CGFloat
-		switch stickyFooterTableContentAlignment {
-			case .default: newTopInset = 0
-			case .top: newTopInset = 0
-			case .center: newTopInset = roundToPoints(leftOverSpace * 0.5)
-			case .bottom: newTopInset = roundToPoints(leftOverSpace)
-		}
-
-		if scaleToPixels(contentInset.top) != scaleToPixels(newTopInset) {
-			contentInset.top = newTopInset
-		}
-
-		// if we are not sticking, we want to follow the content, so we need
-		// to apply a translation from our original position (pinned to bottom)
-		// to where we need to end up.
-		if isSticking == false {
-			// because we did our translation calculation __before__ we knew how much
-			// the content would be pushed down by alignment, we need to push it down
-			// here by how much we inset the content from top
-			let translationToUse = -translation + newTopInset
-			stickyFooterWrapperView.transform = CGAffineTransform(translationX: 0, y: translationToUse)
+		// update our local state
+		if layout.isSticking == true {
+			stickingState = (isUsingKeyboardAsBottomBoundary == true ? .bottomOfKeyboard : .bottomOfSafeArea)
 		} else {
-			stickyFooterWrapperView.transform = .identity
+			stickingState = .followingContent
 		}
 
-		stickingState = newStickingState
-
+		// if we are in an animation block, do an actual layout pass,
+		// so our layout is updated with animation
 		if UIView.inheritedAnimationDuration > 0 {
 			layoutIfNeeded()
 		}
-
-		updateStickyFooterViewLayoutCount -= 1
 	}
 
 	private func ensureStickyFooterViewIsAtFront(callback: () -> Void) {
@@ -408,7 +433,11 @@ public class StickyBottomFooterTableView: UITableView {
 
 	private func didEndRowDataChange() {
 		isUpdatingRowsCount -= 1
+
 		if isUpdatingRowsCount == 0 {
+			if animationCount > 0 {
+				updateStickyFooterViewLayout()
+			}
 			animationCount = 0
 		}
 	}
@@ -485,6 +514,8 @@ public class StickyBottomFooterTableView: UITableView {
 	}
 
 	public override init(frame: CGRect, style: UITableView.Style) {
+		stickyFooterView = StickyFooterView()
+		
 		if #available(iOS 26, *) {
 			stickyFooterUsesScrollEdgeElement = true
 		} else {
@@ -509,7 +540,14 @@ public class StickyBottomFooterTableView: UITableView {
 	open override var contentSize: CGSize {
 		didSet {
 			guard contentSize != oldValue else { return }
-			updateStickyFooterViewLayout()
+
+			// if we are in an animated update, we'll wait until the
+			// end of the update block, which will fire off an update anyways -
+			// this ensure that the table view updates its `frameLayoutGuide`
+			// correctly.
+			if animationCount == 0 {
+				updateStickyFooterViewLayout()
+			}
 		}
 	}
 	
@@ -530,7 +568,7 @@ public class StickyBottomFooterTableView: UITableView {
 		super.safeAreaInsetsDidChange()
 		updateStickyFooterViewLayout()
 	}
-	
+
 	open override func layoutSubviews() {
 		super.layoutSubviews()
 		
