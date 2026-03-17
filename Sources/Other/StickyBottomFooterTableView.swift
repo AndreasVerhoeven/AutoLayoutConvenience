@@ -325,12 +325,20 @@ public class StickyBottomFooterTableView: UITableView {
 		// some of the layout depends on that.
 		var layout = determineLayout()
 		if layout.topInset != 0 {
+			let defaultIsStickingAndCanChangeSticking = switch stickyFooterMode {
+				case .automatic: false
+				case .alwaysOnBottom: false
+				case .alwaysBelowContent: false
+				case .onBottomWhenScrolledOutOfView: false
+				case .onBottomWhenNotOverlappingContent: true
+			}
+
 			// if we have a top we might actually need to change our sticking,
 			// because we calculate the layout without top inset first. So,
 			// check if our sticking changes when using a top inset and if so,
 			// use the new layout.
 			let newLayout = determineLayout(topInsetToUse: layout.topInset)
-			if newLayout.isSticking != layout.isSticking {
+			if newLayout.isSticking != defaultIsStickingAndCanChangeSticking {
 				layout = newLayout
 			}
 		}
