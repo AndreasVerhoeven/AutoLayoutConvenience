@@ -292,9 +292,19 @@ public class StickyBottomFooterTableView: UITableView {
 				case .bottom: layout.topInset = roundToPoints(leftOverSpace)
 			}
 
-			// ensure translation makes sense
 			if layout.isSticking == false {
-				layout.translation -= layout.topInset
+				// ensure translation makes sense by adjusting for the top inset
+				switch stickyFooterMode {
+					case .automatic,
+							.alwaysOnBottom,
+							.alwaysBelowContent,
+							.onBottomWhenScrolledOutOfView:
+						layout.translation -= layout.topInset
+
+					case .onBottomWhenNotOverlappingContent:
+						// don't adjust, not sticking is the odd-one
+						break
+				}
 			} else {
 				layout.translation = 0
 			}
@@ -314,13 +324,13 @@ public class StickyBottomFooterTableView: UITableView {
 		// determine our layout - if we have top inset, do a second pass, because
 		// some of the layout depends on that.
 		var layout = determineLayout()
-		if layout.topInset != 0 && layout.isSticking == false {
-			// if we have a top inset and are not sticking, we might actually need to stick,
+		if layout.topInset != 0 {
+			// if we have a top we might actually need to change our sticking,
 			// because we calculate the layout without top inset first. So,
-			// check if we would stick by taking the topInset into account and if so,
-			// use the new sticking layout.
+			// check if our sticking changes when using a top inset and if so,
+			// use the new layout.
 			let newLayout = determineLayout(topInsetToUse: layout.topInset)
-			if newLayout.isSticking == true {
+			if newLayout.isSticking != layout.isSticking {
 				layout = newLayout
 			}
 		}

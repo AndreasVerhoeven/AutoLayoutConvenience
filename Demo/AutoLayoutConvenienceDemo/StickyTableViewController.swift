@@ -103,7 +103,7 @@ class StickyTableViewController: UIViewController {
 				)
 
 				let modeMenuItems = StickyBottomFooterTableView.StickyFooterMode.allCases.map { mode in
-					return UIAction(title: String(describing: mode), state: (mode == self.tableView.stickyFooterMode ? .on : .off), handler: { _ in
+					return UIAction(title: mode.title, attributes: .keepsMenuPresented, state: (mode == self.tableView.stickyFooterMode ? .on : .off), handler: { _ in
 						UIView.animate(withDuration: 0.25) {
 							self.tableView.stickyFooterMode = mode
 						}
@@ -144,7 +144,7 @@ class StickyTableViewController: UIViewController {
 					countsMenu,
 					alignmentMenu,
 					avoidKeyboardMenuItem,
-					UIMenu(title: "Footer Position", options: .displayInline, children: modeMenuItems),
+					UIMenu(title: "Footer Position", options: [.displayInline, .singleSelection], children: modeMenuItems),
 				])
 			}
 
@@ -168,6 +168,17 @@ extension StickyTableViewController: UITableViewDataSource {
 
 extension StickyTableViewController: UITableViewDelegate {
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	}
+}
 
+extension StickyBottomFooterTableView.StickyFooterMode {
+	var title: String {
+		switch self {
+			case .automatic: return "Automatic"
+			case .alwaysOnBottom: return "Always on Bottom"
+			case .alwaysBelowContent: return "Always Below Content"
+			case .onBottomWhenScrolledOutOfView: return "Stick when Scrolling Out of View"
+			case .onBottomWhenNotOverlappingContent: return "Unstick when Scrolling Out of View"
+		}
 	}
 }
