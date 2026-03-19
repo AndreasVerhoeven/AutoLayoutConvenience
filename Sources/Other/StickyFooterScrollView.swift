@@ -7,6 +7,7 @@
 
 import UIKit
 
+/// A scroll view that has a sticky footer.
 public class StickyFooterScrollView: UIScrollView, StickyFooterView.Provider {
 	// MARK: StickyFooterView.Provider
 

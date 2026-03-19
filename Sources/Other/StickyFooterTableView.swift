@@ -7,6 +7,7 @@
 
 import UIKit
 
+/// A table view that has a sticky footer.
 public class StickyFooterTableView: UITableView, StickyFooterView.Provider {
 	// MARK: StickyFooterView.Provider
 

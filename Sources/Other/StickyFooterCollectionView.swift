@@ -7,6 +7,7 @@
 
 import UIKit
 
+/// A collection view that has a sticky footer.
 public class StickyFooterCollectionView: UICollectionView, StickyFooterView.Provider {
 	// MARK: StickyFooterView.Provider
 
