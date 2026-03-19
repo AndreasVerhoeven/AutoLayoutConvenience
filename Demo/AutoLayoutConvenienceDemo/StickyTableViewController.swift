@@ -10,12 +10,27 @@ import UIKit
 class StickyTableViewController: UIViewController {
 	var itemsToShow = 20
 
-	var tableView: StickyBottomFooterTableView! {
-		return view as? StickyBottomFooterTableView
+	var tableView: StickyFooterTableView! {
+		return view as? StickyFooterTableView
 	}
 
 	@objc private func hideKeyboard(_ sender: Any) {
 		view.window?.endEditing(true)
+	}
+
+	@objc private func buttonTapped(_ sender: UIButton) {
+		let alert = UIAlertController(title: "Test Alert", message: "test", preferredStyle: .actionSheet)
+		alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+		alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+		alert.preferredAction = alert.actions.last
+		alert.popoverPresentationController?.sourceView = sender
+
+		if #available(iOS 26, *) {
+			alert.preferredTransition = .zoom(sourceViewProvider: { context in
+				return sender
+			})
+		}
+		present(alert, animated: true, completion: nil)
 	}
 
 	func setItemsToShow(_ value: Int) {
@@ -35,7 +50,7 @@ class StickyTableViewController: UIViewController {
 	}
 
 	override func loadView() {
-		view = StickyBottomFooterTableView(frame: .zero, style: .insetGrouped)
+		view = StickyFooterTableView(frame: .zero, style: .insetGrouped)
 	}
 
 	override func viewDidLoad() {
@@ -51,14 +66,16 @@ class StickyTableViewController: UIViewController {
 
 		button.configuration?.title = "Test"
 		button.configuration?.buttonSize = .large
+		button.addTarget(self, action: #selector(buttonTapped(_:)), for: .primaryActionTriggered)
 
 		// configure table view
 		tableView.dataSource = self
-		tableView.stickyFooterMode = .automatic
-		tableView.stickyFooterSpacingToKeyboard = 8
-		tableView.stickyFooterRequiredAvailableContentHeight = 0
+		tableView.delegate = self
+		tableView.stickyFooterView.mode = .automatic
+		tableView.stickyFooterView.spacingToKeyboard = 8
+		tableView.stickyFooterView.requiredAvailableScrollableContentHeight = 0
 		tableView.keyboardDismissMode = .interactive
-		tableView.stickyFooterView.addSubview(button, filling: .superview, insets: .horizontal(80).with(bottom: 16))
+		tableView.stickyFooterView.addSubview(button, filling: .horizontally(.layoutMargins, vertically: .superview), insets: .horizontal(60).with(bottom: 16))
 
 		// some ui to manipulate the table state
 		let hideKeyboardButton = UIButton()
@@ -102,17 +119,17 @@ class StickyTableViewController: UIViewController {
 					]
 				)
 
-				let modeMenuItems = StickyBottomFooterTableView.StickyFooterMode.allCases.map { mode in
-					return UIAction(title: mode.title, state: (mode == self.tableView.stickyFooterMode ? .on : .off), handler: { _ in
+				let modeMenuItems = StickyFooterView.Mode.allCases.map { mode in
+					return UIAction(title: mode.title, state: (mode == self.tableView.stickyFooterView.mode ? .on : .off), handler: { _ in
 						UIView.animate(withDuration: 0.25) {
-							self.tableView.stickyFooterMode = mode
+							self.tableView.stickyFooterView.mode = mode
 						}
 					})
 				}
 
-				let avoidKeyboardMenuItem = UIAction(title: "Avoids Keyboard", image: UIImage(systemName: "keyboard"), state: (self.tableView.stickyFooterAvoidsKeyboard ? .on : .off), handler: { _ in
+				let avoidKeyboardMenuItem = UIAction(title: "Avoids Keyboard", image: UIImage(systemName: "keyboard"), state: (self.tableView.stickyFooterView.avoidsKeyboard ? .on : .off), handler: { _ in
 					UIView.animate(withDuration: 0.25) {
-						self.tableView.stickyFooterAvoidsKeyboard.toggle()
+						self.tableView.stickyFooterView.avoidsKeyboard.toggle()
 					}
 				})
 
@@ -123,17 +140,17 @@ class StickyTableViewController: UIViewController {
 					children: [
 						UIAction(title: "Top", image: UIImage(systemName: "align.vertical.top"), attributes: .keepsMenuPresented, handler: { _ in
 							UIView.animate(withDuration: 0.25) {
-								self.tableView.stickyFooterTableContentAlignment = .top
+								self.tableView.stickyFooterView.fittingScrollableContentVerticalAlignment = .top
 							}
 						}),
 						UIAction(title: "Centre", image: UIImage(systemName: "align.vertical.center"), attributes: .keepsMenuPresented, handler: { _ in
 							UIView.animate(withDuration: 0.25) {
-								self.tableView.stickyFooterTableContentAlignment = .center
+								self.tableView.stickyFooterView.fittingScrollableContentVerticalAlignment = .center
 							}
 						}),
 						UIAction(title: "Bottom", image: UIImage(systemName: "align.vertical.bottom"), attributes: .keepsMenuPresented, handler: { _ in
 							UIView.animate(withDuration: 0.25) {
-								self.tableView.stickyFooterTableContentAlignment = .bottom
+								self.tableView.stickyFooterView.fittingScrollableContentVerticalAlignment = .bottom
 							}
 						}),
 					]
@@ -168,10 +185,11 @@ extension StickyTableViewController: UITableViewDataSource {
 
 extension StickyTableViewController: UITableViewDelegate {
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		tableView.deselectRow(at: indexPath, animated: true)
 	}
 }
 
-extension StickyBottomFooterTableView.StickyFooterMode {
+extension StickyFooterView.Mode {
 	var title: String {
 		switch self {
 			case .automatic: return "Automatic"
