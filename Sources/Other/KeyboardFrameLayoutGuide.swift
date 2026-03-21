@@ -87,7 +87,7 @@ public class KeyboardFrameLayoutGuide: UILayoutGuide {
 	public override var owningView: UIView? {
 		didSet {
 			install()
-			update()
+			update(forceLayout: false)
 		}
 	}
 
