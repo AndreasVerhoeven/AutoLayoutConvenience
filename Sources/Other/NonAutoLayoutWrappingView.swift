@@ -10,7 +10,7 @@ import UIKit
 /// This view is used to stop AutoLayout constraints from taking effect on it.
 /// Useful for example wrapping an UIImageView, which can mess up auto-layout
 /// because of it intrinsicSize.
-public class NonAutoLayoutWrappingView: UIView {
+open class NonAutoLayoutWrappingView: UIView {
 
 	/// The view to wrap: will fill the current bounds completely
 	public var view: UIView? {

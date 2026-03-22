@@ -9,7 +9,7 @@ import UIKit
 
 /// A UIStackView that configurates itself dynamically using the `configurationUpdateHandler`
 /// when the environment changes (e.g traits).
-public class AutoAdjustingStackView: UIStackView {
+open class AutoAdjustingStackView: UIStackView {
 	/// The `ConfigurationUpdateHandler` struct  that holds the callback that will be called to configure
 	/// the stackview on environmental changes. Implements `callAsFunction()`
 	public struct ConfigurationUpdateHandler {

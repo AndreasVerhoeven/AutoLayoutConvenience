@@ -9,7 +9,7 @@ import UIKit
 
 // this scrollview has an intrinsic content size, so it participates in (StackView) AutoLayout
 // and it overflows content in the horizontal direction
-public class HorizontalOverflowScrollView: UIScrollView {
+open class HorizontalOverflowScrollView: UIScrollView {
 	private var heightConstraint: NSLayoutConstraint!
 	private var widthConstraint: NSLayoutConstraint!
 

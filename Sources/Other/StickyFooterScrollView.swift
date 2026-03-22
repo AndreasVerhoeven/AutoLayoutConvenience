@@ -8,7 +8,7 @@
 import UIKit
 
 /// A scroll view that has a sticky footer.
-public class StickyFooterScrollView: UIScrollView, StickyFooterView.Provider {
+open class StickyFooterScrollView: UIScrollView, StickyFooterView.Provider {
 	// MARK: StickyFooterView.Provider
 
 	/// the sticky footer view for this scroll view. Configure its properties to determine how it works
@@ -84,7 +84,7 @@ public class StickyFooterScrollView: UIScrollView, StickyFooterView.Provider {
 	}
 
 	@available(*, unavailable)
-	required init?(coder: NSCoder) {
+	required public init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 }

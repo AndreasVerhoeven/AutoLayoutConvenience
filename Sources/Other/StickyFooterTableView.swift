@@ -8,7 +8,7 @@
 import UIKit
 
 /// A table view that has a sticky footer.
-public class StickyFooterTableView: UITableView, StickyFooterView.Provider {
+open class StickyFooterTableView: UITableView, StickyFooterView.Provider {
 	// MARK: StickyFooterView.Provider
 
 	/// the sticky footer view for this table view. Configure its properties to determine how it works
@@ -144,7 +144,7 @@ public class StickyFooterTableView: UITableView, StickyFooterView.Provider {
 	}
 
 	@available(*, unavailable)
-	required init?(coder: NSCoder) {
+	required public init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 }

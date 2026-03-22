@@ -9,8 +9,7 @@ import UIKit
 
 /// A UITextView subclass that auto sizes itself with AutoLayout
 /// to fit the text.
-
-public class AutoSizingTextView: UITextView {
+open class AutoSizingTextView: UITextView {
 
 	/// limits the height of the textView
 	public var maximumHeight = CGFloat(0.0) {
@@ -96,7 +95,7 @@ public class AutoSizingTextView: UITextView {
 		setup()
 	}
 
-	required init?(coder aDecoder: NSCoder) {
+	required public init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
 		setup()
 	}

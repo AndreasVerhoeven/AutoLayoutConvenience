@@ -8,7 +8,7 @@
 import UIKit
 
 /// A collection view that has a sticky footer.
-public class StickyFooterCollectionView: UICollectionView, StickyFooterView.Provider {
+open class StickyFooterCollectionView: UICollectionView, StickyFooterView.Provider {
 	// MARK: StickyFooterView.Provider
 
 	/// the sticky footer view for this collection view. Configure its properties to determine how it works
@@ -136,7 +136,7 @@ public class StickyFooterCollectionView: UICollectionView, StickyFooterView.Prov
 	}
 
 	@available(*, unavailable)
-	required init?(coder: NSCoder) {
+	required public init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 }

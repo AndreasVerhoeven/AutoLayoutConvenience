@@ -9,7 +9,7 @@ import UIKit
 
 /// Vertical StackView that automatically switches to a horizontal
 /// stackview when in compact mode
-public class AutoAdjustingVerticalStackView: AutoHidingStackView {
+open class AutoAdjustingVerticalStackView: AutoHidingStackView {
 
 	// MARK: - Private
 	private func updateForContentCategory() {

@@ -11,7 +11,7 @@ import UIKit
 /// no visible, non hidden sub views and `isHidden = false` when there
 /// is at least one non hidden sub view, if
 /// `automaticallyHidesWhenNotHavingVisibleSubviews` is `true.`
-@objcMembers public class AutoHidingStackView: UIStackView {
+@objcMembers open class AutoHidingStackView: UIStackView {
 	/// default value for `automaticallyHidesWhenNotHavingVisibleSubviews`
 	public static var defaultAutomaticallyHidesWhenNotHavingVisibleSubviews = true
 

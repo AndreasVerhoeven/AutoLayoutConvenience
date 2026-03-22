@@ -9,7 +9,7 @@ import UIKit
 
 // this scrollview has an intrinsic content size, so it participates in (StackView) AutoLayout
 // and it overflows content in the vertical direction
-public class VerticalOverflowScrollView: UIScrollView {
+open class VerticalOverflowScrollView: UIScrollView {
 	private var heightConstraint: NSLayoutConstraint!
 	private var widthConstraint: NSLayoutConstraint!
 	private var keyboardTracker = KeyboardTracker()
