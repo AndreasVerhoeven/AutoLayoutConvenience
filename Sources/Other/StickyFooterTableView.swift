@@ -70,6 +70,7 @@ public class StickyFooterTableView: UITableView, StickyFooterView.Provider {
 		stickyFooterView.trackTableViewUpdate(animation: .automatic) { super.moveRow(at: indexPath, to: newIndexPath) }
 	}
 
+	@available(iOS 15, *)
 	open override func reconfigureRows(at indexPaths: [IndexPath]) {
 		stickyFooterView.trackTableViewUpdate(animation: .automatic) { super.reconfigureRows(at: indexPaths) }
 	}

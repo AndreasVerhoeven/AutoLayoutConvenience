@@ -62,6 +62,7 @@ public class StickyFooterCollectionView: UICollectionView, StickyFooterView.Prov
 		stickyFooterView.trackCollectionViewUpdate { super.moveItem(at: indexPath, to: newIndexPath) }
 	}
 
+	@available(iOS 15, *)
 	open override func reconfigureItems(at indexPaths: [IndexPath]) {
 		stickyFooterView.trackCollectionViewUpdate { super.reconfigureItems(at: indexPaths) }
 	}
