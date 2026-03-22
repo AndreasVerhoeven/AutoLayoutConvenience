@@ -123,7 +123,8 @@ public extension UIView {
 }
 
 
-internal extension UIView {
+public extension UIView {
+	/// forces layout in the whole view hierarchy, upwards.
 	func forceLayoutInViewHierarchy() {
 		var possibleView: UIView? = self
 		while let view = possibleView {

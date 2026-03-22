@@ -12,7 +12,7 @@ import UIKit
 open class AutoSizingTextView: UITextView {
 
 	/// limits the height of the textView
-	public var maximumHeight = CGFloat(0.0) {
+	open var maximumHeight = CGFloat(0.0) {
 		didSet {
 			guard maximumHeight != oldValue else { return }
 			updateScrollEnabledIfNeeded()
@@ -20,11 +20,11 @@ open class AutoSizingTextView: UITextView {
 	}
 
 	/// will be called when the content size is invalidated
-	public var contentSizeInvalidatedCallback: ContentSizeCallback?
+	open var contentSizeInvalidatedCallback: ContentSizeCallback?
 	public typealias ContentSizeCallback = (AutoSizingTextView) -> Void
 
 	/// place holder for this text view
-	public var placeholder: String? {
+	open var placeholder: String? {
 		get { placeholderTextView.text }
 		set { placeholderTextView.text = newValue }
 	}
@@ -95,52 +95,52 @@ open class AutoSizingTextView: UITextView {
 		setup()
 	}
 
-	required public init?(coder aDecoder: NSCoder) {
+	public required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
 		setup()
 	}
 
-	public override var text: String! {
+	open override var text: String! {
 		didSet {
 			invalidateIntrinsicContentSize()
 			placeholderTextView.isHidden = !text.isEmpty
 		}
 	}
 
-	public override var font: UIFont? {
+	open override var font: UIFont? {
 		didSet {
 			placeholderTextView.font = font
 			invalidateIntrinsicContentSize()
 		}
 	}
 
-	public override var contentInset: UIEdgeInsets {
+	open override var contentInset: UIEdgeInsets {
 		didSet {
 			placeholderTextView.contentInset = contentInset
 		}
 	}
 
-	public override var textContainerInset: UIEdgeInsets {
+	open override var textContainerInset: UIEdgeInsets {
 		didSet {
 			placeholderTextView.textContainerInset = textContainerInset
 			invalidateIntrinsicContentSize()
 		}
 	}
 
-	public override var adjustsFontForContentSizeCategory: Bool {
+	open override var adjustsFontForContentSizeCategory: Bool {
 		didSet {
 			placeholderTextView.adjustsFontForContentSizeCategory = adjustsFontForContentSizeCategory
 		}
 	}
 
-	public override var bounds: CGRect {
+	open override var bounds: CGRect {
 		didSet {
 			guard ignoreBoundsChanges == false else {return}
 			updateScrollEnabledIfNeeded()
 		}
 	}
 
-	public override var intrinsicContentSize: CGSize {
+	open override var intrinsicContentSize: CGSize {
 		var size = super.intrinsicContentSize
 
 		if size.height == UIView.noIntrinsicMetric {
@@ -162,7 +162,7 @@ open class AutoSizingTextView: UITextView {
 	}
 
 	// MARK: - NSObject
-	public override var accessibilityLabel: String? {
+	open override var accessibilityLabel: String? {
 		get {return text.isEmpty == true ? placeholder : super.accessibilityLabel}
 		set {super.accessibilityLabel = newValue}
 	}
