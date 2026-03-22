@@ -171,7 +171,12 @@ public final class StickyFooterView: UIView {
 			stickingUsesScrollEdgeElement = true
 		} else {
 			stickingUsesScrollEdgeElement = false
-			stickingBlurEffect = UIBlurEffect(style: .systemChromeMaterial)
+
+			if #available(iOS 13, *) {
+				stickingBlurEffect = UIBlurEffect(style: .systemChromeMaterial)
+			} else {
+				stickingBlurEffect = UIBlurEffect(style: .light)
+			}
 		}
 
 		super.init(frame: .zero)
