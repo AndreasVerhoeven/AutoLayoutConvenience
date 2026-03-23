@@ -7,8 +7,17 @@
 
 import UIKit
 
+/// `StickyFooterCollectionView` overrides `performBatchUpdates`, which has an `NS_NOESCAPE`
+/// parameter in Objective-C. Swift cannot express that, so overriding this method doesn't have it.
+/// Unfortunately, if this class then ends up in a bridging header, the swift->objective c conversion misses
+/// the mandatory `NS_NOESCAPE` annotation and the objective-C compiler complains.
+///
+/// Workaround is to make sure this class is not accessible from Objective-C by making it a generic class
+/// and typealiasing it here. All unfortunate, but that's swift for you.
+public typealias StickyFooterCollectionView = StickyFooterCollectionViewNonObjectiveC<Int>
+
 /// A collection view that has a sticky footer.
-open class StickyFooterCollectionView: UICollectionView, StickyFooterView.Provider {
+open class StickyFooterCollectionViewNonObjectiveC<FakeGenericUnusedParameter>: UICollectionView, StickyFooterView.Provider {
 	// MARK: StickyFooterView.Provider
 
 	/// the sticky footer view for this collection view. Configure its properties to determine how it works
