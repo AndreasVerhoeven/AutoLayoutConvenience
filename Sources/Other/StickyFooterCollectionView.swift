@@ -14,10 +14,10 @@ import UIKit
 ///
 /// Workaround is to make sure this class is not accessible from Objective-C by making it a generic class
 /// and typealiasing it here. All unfortunate, but that's swift for you.
-public typealias StickyFooterCollectionView = StickyFooterCollectionViewNonObjectiveC<Int>
+public typealias StickyFooterCollectionView = _NonObjectiveCWorkAroundStickyFooterCollectionView<Int>
 
 /// A collection view that has a sticky footer.
-open class StickyFooterCollectionViewNonObjectiveC<FakeGenericUnusedParameter>: UICollectionView, StickyFooterView.Provider {
+open class _NonObjectiveCWorkAroundStickyFooterCollectionView<FakeGenericUnusedParameter>: UICollectionView, StickyFooterView.Provider {
 	// MARK: StickyFooterView.Provider
 
 	/// the sticky footer view for this collection view. Configure its properties to determine how it works
