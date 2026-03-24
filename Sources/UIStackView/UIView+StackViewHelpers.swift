@@ -431,7 +431,7 @@ extension UIView {
 	///
 	/// - Returns: the created `AutoAdjustingStackView` with the given views
 	public static func stacked(
-		_ views: [UIView],
+		_ views: [UIView] = [],
 		insets: NSDirectionalEdgeInsets? = nil,
 		handler: AutoAdjustingStackView.ConfigurationUpdateHandler
 	) -> AutoAdjustingStackView {
@@ -447,7 +447,7 @@ extension UIView {
 	///
 	/// - Returns: the created `AutoAdjustingStackView` with the given views
 	public static func stacked(
-		_ views: [UIView],
+		_ views: [UIView] = [],
 		insets: NSDirectionalEdgeInsets? = nil,
 		handler: @escaping AutoAdjustingStackView.ConfigurationUpdateHandler.Callback
 	) -> AutoAdjustingStackView {
@@ -517,7 +517,7 @@ extension UIView {
 	///
 	/// - Returns: the created `AutoAdjustingStackView` with the given views
 	public static func stacked(
-		_ views: [UIView],
+		_ views: [UIView] = [],
 		axis: NSLayoutConstraint.Axis,
 		alignment: UIStackView.Alignment = .fill,
 		distribution: UIStackView.Distribution = .fill,
@@ -607,7 +607,7 @@ extension UIView {
 	///
 	/// - Returns: the created `AutoAdjustingStackView` with the given views
 	public static func stacked(
-		_ views: [UIView],
+		_ views: [UIView] = [],
 		axis: NSLayoutConstraint.Axis,
 		alignment: UIStackView.Alignment = .fill,
 		distribution: UIStackView.Distribution = .fill,
@@ -649,7 +649,7 @@ extension UIView {
 	///
 	/// - Returns: the created `AutoAdjustingStackView` with the given views
 	public static func accessibilityAdjustingHorizontallyStacked(
-		_ views: [UIView],
+		_ views: [UIView] = [],
 		alignment: UIStackView.Alignment = .fill,
 		distribution: UIStackView.Distribution = .fill,
 		spacing: CGFloat = 0,
