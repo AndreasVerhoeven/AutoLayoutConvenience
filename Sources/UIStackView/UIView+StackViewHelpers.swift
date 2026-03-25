@@ -182,6 +182,31 @@ extension UIView {
 		return AutoHidingStackView(with: view, axis: .vertical, alignment: alignment, insets: insets)
 	}
 
+	/// Horizontally aligns a single view by wrapping it in a properly aligned UIStackView
+	///
+	/// - Parameters:
+	///		- view: The view to align
+	///		- alignment: the alignment to use
+	///		- accessibilityAlignment: the alignment to use when the preferred content size category is an accessibility category
+	///		- insets: **optional** the inset to apply to the stack view
+	///
+	/// - Returns: the created `UIStackView` with the given view
+	public static func horizontally(
+		_ view: UIView,
+		alignment: UIStackView.Alignment,
+		accessibilityAlignment: UIStackView.Alignment,
+		insets: NSDirectionalEdgeInsets? = nil
+	) -> UIStackView {
+		return UIView.stacked(
+			view,
+			axis: .vertical,
+			alignment: alignment,
+			alternativeAlignment: accessibilityAlignment,
+			insets: insets,
+			isAlternative: .contentSizeCategoryIsAccessibility
+		)
+	}
+
 	/// Horizontally aligns `self` by wrapping it in a properly aligned UIStackView
 	///
 	/// - Parameters:
@@ -192,6 +217,23 @@ extension UIView {
 	/// - Returns: the created `UIStackView`
 	public func horizontally(aligned: UIStackView.Alignment, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
 		return Self.horizontally(self, alignment: aligned, insets: insets)
+	}
+
+	/// Horizontally aligns `self` by wrapping it in a properly aligned UIStackView
+	///
+	/// - Parameters:
+	///		- view: The view to align
+	///		- alignment: the alignment to use
+	///		- accessibilityAlignment: the alignment to use when the preferred content size category is an accessibility category
+	///		- insets: **optional** the inset to apply to the stack view
+	///
+	/// - Returns: the created `UIStackView`
+	public func horizontally(
+		aligned: UIStackView.Alignment,
+		accessibilityAligned: UIStackView.Alignment,
+		insets: NSDirectionalEdgeInsets? = nil
+	) -> UIStackView {
+		return Self.horizontally(self, alignment: aligned, accessibilityAlignment: accessibilityAligned, insets: insets)
 	}
 
 	/// Horizontally centers a view by wrapping it in a properly aligned UIStackView
@@ -228,6 +270,31 @@ extension UIView {
 		return AutoHidingStackView(with: view, axis: .horizontal, alignment: alignment, insets: insets)
 	}
 
+	/// Vertically aligns a single view by wrapping it in a properly aligned UIStackView
+	///
+	/// - Parameters:
+	///		- view: The view to align
+	///		- alignment: the alignment to use
+	///		- accessibilityAlignment: the alignment to use when the preferred content size category is an accessibility category
+	///		- insets: **optional** the inset to apply to the stack view
+	///
+	/// - Returns: the created `UIStackView` with the given view
+	public static func vertically(
+		_ view: UIView,
+		alignment: UIStackView.Alignment,
+		accessibilityAlignment: UIStackView.Alignment,
+		insets: NSDirectionalEdgeInsets? = nil
+	) -> UIStackView {
+		return UIView.stacked(
+			view,
+			axis: .horizontal,
+			alignment: alignment,
+			alternativeAlignment: accessibilityAlignment,
+			insets: insets,
+			isAlternative: .contentSizeCategoryIsAccessibility
+		)
+	}
+
 	/// Vertically aligns `self` by wrapping it in a properly aligned UIStackView
 	///
 	/// - Parameters:
@@ -238,6 +305,23 @@ extension UIView {
 	/// - Returns: the created `UIStackView`
 	public func vertically(aligned: UIStackView.Alignment, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
 		Self.vertically(self, alignment: aligned, insets: insets)
+	}
+
+	/// Vertically aligns `self` by wrapping it in a properly aligned UIStackView
+	///
+	/// - Parameters:
+	///		- view: The view to align
+	///		- alignment: the alignment to use
+	///		- accessibilityAlignment: the alignment to use when the preferred content size category is an accessibility category
+	///		- insets: **optional** the inset to apply to the stack view
+	///
+	/// - Returns: the created `UIStackView`
+	public func vertically(
+		aligned: UIStackView.Alignment,
+		accessibilityAligned: UIStackView.Alignment,
+		insets: NSDirectionalEdgeInsets? = nil
+	) -> UIStackView {
+		Self.vertically(self, alignment: aligned, accessibilityAlignment: accessibilityAligned, insets: insets)
 	}
 
 	/// Vertically centers a view by wrapping it in a properly aligned UIStackView
@@ -272,8 +356,46 @@ extension UIView {
 	///		- insets: **optional** the inset to apply to the stack view
 	///
 	/// - Returns: the created `UIStackView` with the given view
-	public static func aligned(_ view: UIView,  horizontally: UIStackView.Alignment = .fill, vertically: UIStackView.Alignment = .fill, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
+	public static func aligned(_ view: UIView, horizontally: UIStackView.Alignment = .fill, vertically: UIStackView.Alignment = .fill, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
 		return self.vertically(self.horizontally(view, alignment: horizontally, insets: insets), alignment: vertically)
+	}
+
+	/// Aligns a single view by wrapping it in a  `UIStackView`
+	///
+	/// - Parameters:
+	///		- view: The view to align
+	///		- alignment: the regular alignment to use, expressed as an `AxisAndAlignment`
+	///		- insets: **optional** the inset to apply to the stack view
+	///
+	/// - Returns: the created `UIStackView` with the given view
+	public static func aligned(_ view: UIView, as alignment: UIStackView.AxisAndAlignment, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
+		return AutoHidingStackView(with: view, axis: alignment.stackViewAxisToApply, alignment: alignment.alignment, insets: insets)
+	}
+
+	/// Aligns a single view by wrapping it in a  `UIStackView`
+	///
+	/// - Parameters:
+	///		- view: The view to align
+	///		- aligned: the regular alignment to use, expressed as an `AxisAndAlignment`
+	///		- accessibilityAligned: the accessibility  alignment to use, expressed as an `AxisAndAlignment`
+	///		- insets: **optional** the inset to apply to the stack view
+	///
+	/// - Returns: the created `UIStackView` with the given view
+	public static func aligned(
+		_ view: UIView,
+		as regular: UIStackView.AxisAndAlignment,
+		accessibility: UIStackView.AxisAndAlignment,
+		insets: NSDirectionalEdgeInsets? = nil
+	) -> UIStackView {
+		return Self.stacked(
+			view,
+			axis: regular.stackViewAxisToApply,
+			alignment: regular.alignment,
+			alternativeAxis: accessibility.stackViewAxisToApply,
+			alternativeAlignment: accessibility.alignment,
+			insets: insets,
+			isAlternative: .contentSizeCategoryIsAccessibility
+		)
 	}
 
 	/// Aligns `self` by wrapping it in a two properly aligned `UIStackView`s
@@ -287,6 +409,35 @@ extension UIView {
 	/// - Returns: the created `UIStackView` with the given view
 	public func aligned(horizontally: UIStackView.Alignment = .fill, vertically: UIStackView.Alignment = .fill, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
 		return Self.aligned(self,  horizontally: horizontally, vertically: vertically, insets: insets)
+	}
+
+	/// Aligns `self` by wrapping it in a `UIStackView`
+	///
+	/// - Parameters:
+	///		- view: The view to align
+	///		- aligned: the regular alignment to use, expressed as an `AxisAndAlignment`
+	///		- insets: **optional** the inset to apply to the stack view
+	///
+	/// - Returns: the created `UIStackView` with the given view
+	public func aligned(as alignment: UIStackView.AxisAndAlignment, insets: NSDirectionalEdgeInsets? = nil) -> UIStackView {
+		return Self.aligned(self, as: alignment, insets: insets)
+	}
+
+	/// Aligns `self` by wrapping it in a `UIStackView`
+	///
+	/// - Parameters:
+	///		- view: The view to align
+	///		- aligned: the regular alignment to use, expressed as an `AxisAndAlignment`
+	///		- accessibilityAligned: the accessibility  alignment to use, expressed as an `AxisAndAlignment`
+	///		- insets: **optional** the inset to apply to the stack view
+	///
+	/// - Returns: the created `UIStackView` with the given view
+	public func aligned(
+		as regular: UIStackView.AxisAndAlignment,
+		accessibility: UIStackView.AxisAndAlignment,
+		insets: NSDirectionalEdgeInsets? = nil
+	) -> UIStackView {
+		return Self.aligned(self, as: regular, accessibility: accessibility, insets: insets)
 	}
 
 	/// Centers a single view by wrapping it in a two properly aligned `UIStackView`s
