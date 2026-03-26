@@ -24,27 +24,44 @@ open class _NonObjectiveCWorkAroundStickyFooterTableView<FakeGenericUnusedParame
 	/// and add views to it using AutoLayout.
 	public let stickyFooterView = StickyFooterView()
 
+	// MARK: - Privates
+
+	private var isInsidePerformBatchUpdates = false
+
 	// MARK: - UITableView
 	
 	open override func performBatchUpdates(_ updates: (() -> Void)?, completion: ((Bool) -> Void)? = nil) {
-
 		stickyFooterView.willBeginContentUpdate()
-		super.performBatchUpdates({
+
+		// track if we are __inside__ of performBatchUpdates,
+		// because that function called `beginUpdates()` without
+		// an unbalanced `endUpdates()`, so we want to ignore those calls.
+		isInsidePerformBatchUpdates = true
+		super.performBatchUpdates({ [weak self] in
+			self?.isInsidePerformBatchUpdates = false
 			updates?()
+			self?.isInsidePerformBatchUpdates = true
 		}, completion: { [weak self] finished in
 			completion?(finished)
-			self?.stickyFooterView.didEndContentUpdate()
 		})
+		// we need to do this outside of the completion, because the completion isn't always called
+		stickyFooterView.didEndContentUpdate()
+		isInsidePerformBatchUpdates = false
 	}
 
 	open override func beginUpdates() {
-		stickyFooterView.willBeginContentUpdate()
+		if isInsidePerformBatchUpdates == false {
+			stickyFooterView.willBeginContentUpdate()
+		}
 		super.beginUpdates()
 	}
 
 	open override func endUpdates() {
 		super.endUpdates()
-		stickyFooterView.didEndContentUpdate()
+
+		if isInsidePerformBatchUpdates == false {
+			stickyFooterView.didEndContentUpdate()
+		}
 	}
 
 	open override func insertSections(_ sections: IndexSet, with animation: UITableView.RowAnimation) {
