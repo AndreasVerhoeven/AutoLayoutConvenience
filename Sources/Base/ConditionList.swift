@@ -8,7 +8,7 @@
 import UIKit
 
 extension UIView.Condition {
-	protocol ConditionHandler {
+	public protocol ConditionHandler {
 		var coalesceUpdates: Bool { get }
 		var shouldAnimateUpdates: Bool { get }
 
