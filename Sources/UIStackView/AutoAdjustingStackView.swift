@@ -153,9 +153,8 @@ open class AutoAdjustingStackView: AutoHidingStackView {
 		insets: NSDirectionalEdgeInsets? = nil,
 		handler: ConfigurationUpdateHandler
 	) {
-		self.init()
+		self.init(with: views, insets: insets)
 		_ = { configurationUpdateHandler = handler }()
-		addArrangedSubviews(views)
 		updateConfiguration()
 	}
 

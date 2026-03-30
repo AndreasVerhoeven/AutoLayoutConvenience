@@ -41,7 +41,7 @@ open class _NonObjectiveCWorkAroundStickyFooterTableView<FakeGenericUnusedParame
 			self?.isInsidePerformBatchUpdates = false
 			updates?()
 			self?.isInsidePerformBatchUpdates = true
-		}, completion: { [weak self] finished in
+		}, completion: { finished in
 			completion?(finished)
 		})
 		// we need to do this outside of the completion, because the completion isn't always called

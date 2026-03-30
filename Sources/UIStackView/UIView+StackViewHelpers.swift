@@ -481,6 +481,38 @@ extension UIView {
 		return Self.insetted(self, by: insets)
 	}
 
+	/// Insets a view by wrapping it in a properly insetted `UIStackView`
+	///
+	/// - Parameters:
+	///		- insets: the inset to apply to the stack view
+	///		- accessibility: the insets to use when in accessibility content size mode
+	///
+	/// - Returns: the created `UIStackView` with the given view
+	public static func insetted(
+		_ view: UIView,
+		by insets: NSDirectionalEdgeInsets,
+		accessibility: NSDirectionalEdgeInsets
+	) -> UIStackView {
+		return AutoAdjustingStackView(with: [view], insets: insets, handler: .custom({ stackView in
+			if stackView.traitCollection.preferredContentSizeCategory.isAccessibilityCategory == true {
+				stackView.directionalLayoutMargins = accessibility
+			} else {
+				stackView.directionalLayoutMargins = insets
+			}
+		}))
+	}
+
+	/// Insets `self` by wrapping it in a properly insetted `UIStackView`
+	///
+	/// - Parameters:
+	///		- insets: the inset to apply to the stack view
+	///		- accessibility: the insets to use when in accessibility content size mode
+	///
+	/// - Returns: the created `UIStackView` with the given view
+	public func insetted(by insets: NSDirectionalEdgeInsets, accessibility: NSDirectionalEdgeInsets) -> UIStackView {
+		return Self.insetted(self, by: insets, accessibility: accessibility)
+	}
+
 	/// Wraps views in a vertically aligned UIStackView that auto adjust to a horizontal stackview if the
 	/// horizontal size class is compact.
 	///
