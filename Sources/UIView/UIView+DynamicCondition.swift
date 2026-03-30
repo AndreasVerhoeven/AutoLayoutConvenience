@@ -124,6 +124,11 @@ extension UIView: DynamicallyConfigurableView {
 		dynamicConditions = lists
 
 		conditionList.install()
+
+		if let view = self as? ViewType {
+			callback(conditionList.conditionIsActive, view)
+		}
+
 		return self
 	}
 
