@@ -389,13 +389,14 @@ public final class StickyFooterView: UIView {
 		var bottomInset: CGFloat
 		var keyboardAdjustmentBottomInset: CGFloat
 		let isUsingKeyboardAsBottomBoundary: Bool
+		let nonKeyboardAdjustedBottomInset = scrollView.safeAreaInsets.bottom
 		if keyboardAvoidanceMode != [] && KeyboardTracker.shared.isKeyboardVisible == true {
 			keyboardAdjustmentBottomInset = KeyboardTracker.shared.effectiveContentInset(
 				view: scrollView,
 				ignoreHierarchyTransforms: true,
 				ignoreViewScrollOffset: true
 			).bottom
-			bottomInset = max(keyboardAdjustmentBottomInset, scrollView.safeAreaInsets.bottom)
+			bottomInset = max(keyboardAdjustmentBottomInset, nonKeyboardAdjustedBottomInset)
 			isUsingKeyboardAsBottomBoundary = (keyboardAdjustmentBottomInset > scrollView.safeAreaInsets.bottom)
 
 			if isUsingKeyboardAsBottomBoundary == true {
@@ -403,7 +404,7 @@ public final class StickyFooterView: UIView {
 				bottomInset += spacingToKeyboard
 			}
 		} else {
-			bottomInset = scrollView.safeAreaInsets.bottom
+			bottomInset = nonKeyboardAdjustedBottomInset
 			keyboardAdjustmentBottomInset = 0
 			isUsingKeyboardAsBottomBoundary = false
 		}
@@ -428,9 +429,21 @@ public final class StickyFooterView: UIView {
 
 			// calculate how much translation we need to follow the contents and check if we actually
 			// fit if we would stick
-			let neededTranslationToFollowContents = roundToPoints(visibleScrollFrameY - contentBottomY + (isUsingKeyboardAsBottomBoundary == true ? 0 : bottomInset))
+			let sticksToKeyboard = (isUsingKeyboardAsBottomBoundary == true && keyboardAvoidanceMode.contains(.stickyFooter) == true)
+			let neededTranslationToFollowContents = roundToPoints(visibleScrollFrameY - contentBottomY + (sticksToKeyboard == true ? 0 : bottomInset))
 			let hasEnoughSpaceForContent = scaleToPixels(visibleScrollFrameY - scrollView.safeAreaInsets.top) >= scaleToPixels(requiredAvailableScrollableContentHeight)
-			let hasContentsPastBottom = (scaleToPixels(contentBottomY) >= scaleToPixels(visibleScrollFrameY))
+
+			let visibleScrollFrameYAdjustedForKeyboardMode: CGFloat
+			if isUsingKeyboardAsBottomBoundary == true && keyboardAvoidanceMode.contains(.stickyFooter) == false {
+				// the keyboard is up and we've made calculations with the keyboard as boundary, but the footer does
+				// not avoid the keyboard, so don't use the bottomInset that takes the keyboard into account, but
+				// the nonKeyboardAdjustedBottomInset
+				visibleScrollFrameYAdjustedForKeyboardMode = roundToPoints(scrollView.bounds.height - nonKeyboardAdjustedBottomInset - bounds.height)
+			} else {
+				// keyboard is not up or the footer avoids the keyboard, just use the value we already calculated
+				visibleScrollFrameYAdjustedForKeyboardMode = visibleScrollFrameY
+			}
+			let hasContentsPastBottom = (scaleToPixels(contentBottomY) >= scaleToPixels(visibleScrollFrameYAdjustedForKeyboardMode))
 
 			var layout = Layout()
 			switch mode {
@@ -466,8 +479,14 @@ public final class StickyFooterView: UIView {
 			if isUsingKeyboardAsBottomBoundary == true && keyboardAvoidanceMode.contains(.contents) == true {
 				// if we are using the keyboard as bottom boundary, adjust the content
 				// inset accordingly
-				baseBottomContentInset = keyboardAdjustmentBottomInset - scrollView.safeAreaInsets.bottom
+				baseBottomContentInset = keyboardAdjustmentBottomInset - nonKeyboardAdjustedBottomInset
 				layout.bottomInset += baseBottomContentInset
+
+				// if we are sticking, but we're not avoiding the keyboard, the bottom inset includes our height,
+				// but we shouldn't because we're hidden behind the keyboard, so adjust that.
+				if layout.isSticking == true && keyboardAvoidanceMode.contains(.stickyFooter) == false {
+					layout.bottomInset -= bounds.height
+				}
 			}
 
 			// calculate scroll indicator bottom inset
@@ -512,7 +531,7 @@ public final class StickyFooterView: UIView {
 				if keyboardAvoidanceMode.contains(.stickyFooter) == true {
 					layout.footerViewBottomInset = bottomInset
 				} else {
-					layout.footerViewBottomInset = scrollView.safeAreaInsets.bottom
+					layout.footerViewBottomInset = nonKeyboardAdjustedBottomInset
 				}
 			}
 
