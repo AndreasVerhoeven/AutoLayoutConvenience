@@ -125,13 +125,45 @@ public final class StickyFooterView: UIView {
 		}
 	}
 
-	/// if true, we avoid the keyboard and we see the top of the keyboard as where to stick the footer view to.
+	/// determines how we avoid the keyboard
+	public struct KeyboardAvoidanceMode: OptionSet {
+		public var rawValue: Int
+
+		public init(rawValue: Int) {
+			self.rawValue = rawValue
+		}
+
+		/// the contents avoids the keyboard by changing the bottomInset.
+		/// Note that this sometimes might conflict with UITableViewController also doing this.
+		public static let contents = KeyboardAvoidanceMode(rawValue: 1 << 1)
+
+		/// the footer view avoids the keyboard by using the top of the keyboard as the bottom-to-stick to.
+		public static let stickyFooter = KeyboardAvoidanceMode(rawValue: 1 << 2)
+
+		/// both contents and sticky footer avoid the keyboard.
+		public static let all: KeyboardAvoidanceMode = [.contents, .stickyFooter]
+	}
+
+	/// Determines if and how we avoid the keyboard.
 	/// Changes can be animated when wrapped in an animation block.
-	public var avoidsKeyboard = true {
+	public var keyboardAvoidanceMode = KeyboardAvoidanceMode.all {
 		didSet {
-			guard avoidsKeyboard != oldValue else { return }
+			guard keyboardAvoidanceMode != oldValue else { return }
 			updateKeyboardTracking()
 			reallyUpdateLayout(canAnimate: false)
+		}
+	}
+
+	/// if true, we avoid the keyboard and we see the top of the keyboard as where to stick the footer view to.
+	/// Changes can be animated when wrapped in an animation block.
+	@available(*, deprecated, message: "Use keyboardAvoidanceMode")
+	public var avoidsKeyboard: Bool {
+		get {
+			return (keyboardAvoidanceMode != [])
+		}
+
+		set {
+			keyboardAvoidanceMode = newValue ? .all : []
 		}
 	}
 
@@ -326,6 +358,7 @@ public final class StickyFooterView: UIView {
 	private func updateLayout() {
 		if animationCount > 0 {
 			UIView.animate(withDuration: 0.25, delay: 0, options: [.allowUserInteraction, .beginFromCurrentState]) {
+				self.scrollView?.layoutIfNeeded()
 				self.reallyUpdateLayout()
 				self.wrapperView.layoutIfNeeded()
 			}
@@ -356,7 +389,7 @@ public final class StickyFooterView: UIView {
 		var bottomInset: CGFloat
 		var keyboardAdjustmentBottomInset: CGFloat
 		let isUsingKeyboardAsBottomBoundary: Bool
-		if avoidsKeyboard == true && KeyboardTracker.shared.isKeyboardVisible == true {
+		if keyboardAvoidanceMode != [] && KeyboardTracker.shared.isKeyboardVisible == true {
 			keyboardAdjustmentBottomInset = KeyboardTracker.shared.effectiveContentInset(
 				view: scrollView,
 				ignoreHierarchyTransforms: true,
@@ -430,7 +463,7 @@ public final class StickyFooterView: UIView {
 			// calculate bottom inset
 			layout.bottomInset = bounds.height
 			var baseBottomContentInset = CGFloat(0)
-			if isUsingKeyboardAsBottomBoundary == true {
+			if isUsingKeyboardAsBottomBoundary == true && keyboardAvoidanceMode.contains(.contents) == true {
 				// if we are using the keyboard as bottom boundary, adjust the content
 				// inset accordingly
 				baseBottomContentInset = keyboardAdjustmentBottomInset - scrollView.safeAreaInsets.bottom
@@ -473,10 +506,14 @@ public final class StickyFooterView: UIView {
 			// if we use the keyboard as a boundary, we move up our wrapper view so it's
 			// above the keyboard, otherwise we move up the footer view to adjust for
 			// bottom inset when we are not sticky.
-			if isUsingKeyboardAsBottomBoundary == true {
+			if isUsingKeyboardAsBottomBoundary == true && keyboardAvoidanceMode.contains(.stickyFooter) == true {
 				layout.wrapperViewBottomInset = keyboardAdjustmentBottomInset
 			} else if layout.isSticking == true {
-				layout.footerViewBottomInset = bottomInset
+				if keyboardAvoidanceMode.contains(.stickyFooter) == true {
+					layout.footerViewBottomInset = bottomInset
+				} else {
+					layout.footerViewBottomInset = scrollView.safeAreaInsets.bottom
+				}
 			}
 
 			return layout
@@ -542,7 +579,11 @@ public final class StickyFooterView: UIView {
 
 		// update our local state
 		if layout.isSticking == true {
-			state = (isUsingKeyboardAsBottomBoundary == true ? .stickingToBottomOfKeyboard : .stickingToBottomOfSafeArea)
+			if isUsingKeyboardAsBottomBoundary == true && keyboardAvoidanceMode.contains(.stickyFooter) == true {
+				state = .stickingToBottomOfKeyboard
+			} else {
+				state = .stickingToBottomOfSafeArea
+			}
 		} else {
 			state = .followingContent
 		}
@@ -556,7 +597,7 @@ public final class StickyFooterView: UIView {
 
 	/// start tracking keyboard if we need or stops it.
 	private func updateKeyboardTracking() {
-		if avoidsKeyboard == true {
+		if keyboardAvoidanceMode != [] {
 			if keyboardTrackerCancellable == nil {
 				keyboardTrackerCancellable = KeyboardTracker.shared.addObserver { [weak self] _ in
 					guard let self else { return }

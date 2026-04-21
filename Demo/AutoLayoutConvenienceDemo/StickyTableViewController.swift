@@ -127,11 +127,28 @@ class StickyTableViewController: UIViewController {
 					})
 				}
 
-				let avoidKeyboardMenuItem = UIAction(title: "Avoids Keyboard", image: UIImage(systemName: "keyboard"), state: (self.tableView.stickyFooterView.avoidsKeyboard ? .on : .off), handler: { _ in
-					UIView.animate(withDuration: 0.25) {
-						self.tableView.stickyFooterView.avoidsKeyboard.toggle()
-					}
-				})
+				let avoidKeyboardMenuItem = UIMenu(title: "Avoids Keyboard", image: UIImage(systemName: "keyboard"), children: [
+					UIAction(title: "None", state: (self.tableView.stickyFooterView.keyboardAvoidanceMode == [] ? .on : .off), handler: { _ in
+						UIView.animate(withDuration: 0.25) {
+							self.tableView.stickyFooterView.keyboardAvoidanceMode = []
+						}
+					}),
+					UIAction(title: "Only Contents", state: (self.tableView.stickyFooterView.keyboardAvoidanceMode == .contents ? .on : .off), handler: { _ in
+						UIView.animate(withDuration: 0.25) {
+							self.tableView.stickyFooterView.keyboardAvoidanceMode = .contents
+						}
+					}),
+					UIAction(title: "Only Footer", state: (self.tableView.stickyFooterView.keyboardAvoidanceMode == .stickyFooter ? .on : .off), handler: { _ in
+						UIView.animate(withDuration: 0.25) {
+							self.tableView.stickyFooterView.keyboardAvoidanceMode = .stickyFooter
+						}
+					}),
+					UIAction(title: "Both Contents & Footer", state: (self.tableView.stickyFooterView.keyboardAvoidanceMode == .all ? .on : .off), handler: { _ in
+						UIView.animate(withDuration: 0.25) {
+							self.tableView.stickyFooterView.keyboardAvoidanceMode = .all
+						}
+					})
+				])
 
 				let alignmentMenu = UIMenu(
 					title: "Alignment",
@@ -175,6 +192,13 @@ extension StickyTableViewController: UITableViewDataSource {
 		return itemsToShow
 	}
 
+	func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+		let view = UITableViewHeaderFooterView(reuseIdentifier: nil)
+		view.textLabel?.text = "A very long header text that splits over multiple lines so we can see that self sizing header texts work fine also. This is quite buggy in UITableView, but we try to make it work. Let's see how it goes!"
+		view.textLabel?.numberOfLines = 0
+		return view
+	}
+
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") ?? UITableViewCell(style: .default, reuseIdentifier: "Cell")
 		cell.textLabel?.text = "Row \(indexPath.row + 1)"
@@ -186,6 +210,8 @@ extension StickyTableViewController: UITableViewDataSource {
 extension StickyTableViewController: UITableViewDelegate {
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		tableView.deselectRow(at: indexPath, animated: true)
+
+		tableView.performBatchUpdates({})
 	}
 }
 
