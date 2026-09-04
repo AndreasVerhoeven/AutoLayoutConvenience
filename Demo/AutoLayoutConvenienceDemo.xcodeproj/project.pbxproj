@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		490486E3304A9B1C0023B81C /* UIView+ResizeNotifyWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490486E2304A9B160023B81C /* UIView+ResizeNotifyWrapper.swift */; };
 		490DB00D2A02789A00DA4ABE /* UIView+NegativeLayoutGuides.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490DB00C2A02789A00DA4ABE /* UIView+NegativeLayoutGuides.swift */; };
 		4932513E29F93446003CB4EE /* Cancellable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4932513D29F93446003CB4EE /* Cancellable.swift */; };
 		49337D2F27D298D0006BDB1A /* AutoSizingTableHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49337D2E27D298D0006BDB1A /* AutoSizingTableHeaderFooterView.swift */; };
@@ -79,6 +80,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		490486E2304A9B160023B81C /* UIView+ResizeNotifyWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+ResizeNotifyWrapper.swift"; sourceTree = "<group>"; };
 		490DB00C2A02789A00DA4ABE /* UIView+NegativeLayoutGuides.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+NegativeLayoutGuides.swift"; sourceTree = "<group>"; };
 		4932513D29F93446003CB4EE /* Cancellable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cancellable.swift; sourceTree = "<group>"; };
 		49337D2E27D298D0006BDB1A /* AutoSizingTableHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoSizingTableHeaderFooterView.swift; sourceTree = "<group>"; };
@@ -237,6 +239,7 @@
 		49CD6B3A263972520024C330 /* UIView */ = {
 			isa = PBXGroup;
 			children = (
+				490486E2304A9B160023B81C /* UIView+ResizeNotifyWrapper.swift */,
 				49CD6B3B263972520024C330 /* UIView+Defaults.swift */,
 				49CD6B3C263972520024C330 /* UIView+Centering.swift */,
 				49CD6B3D263972520024C330 /* UIView+AutoLayout.swift */,
@@ -447,6 +450,7 @@
 				49CD6B63263972520024C330 /* ConstraintsList.swift in Sources */,
 				49CD6B6A263975CE0024C330 /* UIView+Scrollable.swift in Sources */,
 				49CD6B5E263972520024C330 /* NSDirectionalEdgeInsets+Convenience.swift in Sources */,
+				490486E3304A9B1C0023B81C /* UIView+ResizeNotifyWrapper.swift in Sources */,
 				496ADB5026B3495E0016A582 /* BaseTableViewController.swift in Sources */,
 				49CD6B56263972520024C330 /* UIView+PinningHorizontalEdge.swift in Sources */,
 				49CD6B22263971900024C330 /* AppDelegate.swift in Sources */,
