@@ -24,7 +24,7 @@ open class CollapsableView: UIView {
 	public convenience init(view: UIView, edge: Edge = .top) {
 		self.init(frame: .zero)
 		contentView.addSubview(view, filling: .superview)
-		updatePinnedToEdge()
+		updatePinnedToEdge(animated: false)
 	}
 
 	/// Convenience init for initializing some properties directly
@@ -32,18 +32,18 @@ open class CollapsableView: UIView {
 		self.init(frame: .zero)
 		self.animationOptions = animationOptions
 		self.edge = edge
-		updatePinnedToEdge()
+		updatePinnedToEdge(animated: false)
 		updateExpandedState()
-		update()
+		update(animated: false)
 	}
 
 	/// Convenience init for adding a view to the content view directly.
 	public convenience init(edge: Edge) {
 		self.init(frame: .zero)
 		self.edge = edge
-		updatePinnedToEdge()
+		updatePinnedToEdge(animated: false)
 		updateExpandedState()
-		update()
+		update(animated: false)
 	}
 
 	/// If true, this view is expanded to its actual height. If false, it will have a height of 0.
@@ -64,15 +64,41 @@ open class CollapsableView: UIView {
 		}
 
 		if animated == true {
-			UIView.animate(withDuration: 0.25, delay: 0, options: [.beginFromCurrentState, .allowUserInteraction, .allowAnimatedContent], animations: {
-				self.update()
+			let animations = { [self] in
+				update(animated: true)
 
-				if self.animationOptions.contains(.dontRelayout) == false {
-					self.forceLayoutInViewHierarchy()
+				if animationOptions.contains(.dontRelayout) == false {
+					forceLayoutInViewHierarchy()
 				}
-			})
+			}
+
+			let completion: (Bool) -> Void = { [weak self] _ in
+				guard let self else { return }
+
+				if animationOptions.contains(.hide) == true && _isExpanded == false {
+					innerContainerView.isHidden = true
+				}
+			}
+
+			if animationOptions.contains(.bouncyAnimation) == true {
+				let animator = UIViewPropertyAnimator(duration: 0.5, dampingRatio: 0.8, animations: animations)
+				animator.addCompletion { position in
+					completion(position == .end)
+				}
+				animator.isUserInteractionEnabled = true
+				animator.startAnimation()
+			} else if animationOptions.contains(.strongBouncyAnimation) == true {
+				let animator = UIViewPropertyAnimator(duration: 0.7, dampingRatio: 0.5, animations: animations)
+				animator.addCompletion { position in
+					completion(position == .end)
+				}
+				animator.isUserInteractionEnabled = true
+				animator.startAnimation()
+			} else {
+				UIView.animate(withDuration: 0.25, delay: 0, options: [.beginFromCurrentState, .allowUserInteraction, .allowAnimatedContent], animations: animations, completion: completion)
+			}
 		} else {
-			update()
+			update(animated: false)
 		}
 	}
 
@@ -100,13 +126,26 @@ open class CollapsableView: UIView {
 				case .trailing: return .trailing
 			}
 		}
+
+		fileprivate var oppositeEdgeConditionalName: UIView.Condition.ConfigurationName {
+			switch self {
+				case .top: return .bottom
+				case .bottom: return .top
+				case .leading: return .trailing
+				case .trailing: return .leading
+			}
+		}
+
+		fileprivate func edgeConditionalName(isSlidOut: Bool) -> UIView.Condition.ConfigurationName {
+			return (isSlidOut == true ? oppositeEdgeConditionalName : edgeConditionalName)
+		}
 	}
 
 	/// The edge we try to stick too
 	var edge = Edge.top {
 		didSet {
 			guard edge != oldValue else { return }
-			updatePinnedToEdge()
+			updatePinnedToEdge(animated: false)
 			updateExpandedState()
 		}
 	}
@@ -125,6 +164,18 @@ open class CollapsableView: UIView {
 		/// The content scales when collapsed
 		public static let scale = Self(rawValue: 1 << 1)
 
+		/// The content scales when collapsed
+		public static let strongScale = Self(rawValue: 1 << 4)
+
+		/// the content is hidden when not expanded
+		public static let hide = Self(rawValue: 1 << 5)
+
+		/// the content is moved out of view when not expanded, opposite to the `edge`
+		public static let slide = Self(rawValue: 1 << 6)
+
+		/// the content is offsetted in the opposite edge also when not expanded
+		public static let offset = Self(rawValue: 1 << 7)
+
 		/// The layout is animated automatically when collapsed/expanded. Set this
 		/// option if you want to control the layout animations yourselves, e.g. if you are in
 		/// a stack view that is animated already.
@@ -132,6 +183,12 @@ open class CollapsableView: UIView {
 
 		/// the content isn't clipped
 		public static let dontClip = Self(rawValue: 1 << 3)
+
+		/// use a bouncy animation
+		public static let bouncyAnimation = Self(rawValue: 1 << 16)
+
+		/// use a bouncy animation
+		public static let strongBouncyAnimation = Self(rawValue: 1 << 17)
 
 		/// The default animation options
 		public static let `default`: Self = [.fade]
@@ -141,7 +198,7 @@ open class CollapsableView: UIView {
 	open var animationOptions = AnimationOptions.default {
 		didSet {
 			guard animationOptions != oldValue else { return }
-			update()
+			update(animated: false)
 		}
 	}
 
@@ -157,23 +214,63 @@ open class CollapsableView: UIView {
 	private let containerView = UIView()
 	private let innerContainerView = UIView()
 
-	private func update() {
+	private func update(animated: Bool) {
 		containerView.clipsToBounds = (animationOptions.contains(.dontClip) == false)
 		innerContainerView.alpha = (animationOptions.contains(.fade) == true && isExpanded == false ? 0 : 1)
-		innerContainerView.transform = (animationOptions.contains(.scale) == true && isExpanded == false ? CGAffineTransform(scaleX: 0.9, y: 0.9) : .identity)
+
+		updateTransform(animated: animated)
+		updatePinnedToEdge(animated: animated)
+
+		if animationOptions.contains(.hide) == true {
+			if animated == false || isExpanded == true {
+				innerContainerView.isHidden = (isExpanded == false)
+			}
+		}
 
 		UIView.performWithoutAnimation {
 			updateExpandedState()
 		}
 	}
 
+	private func updateTransform(animated: Bool) {
+		var transform = CGAffineTransform.identity
+		if isExpanded == false {
+			if animationOptions.contains(.offset) == true {
+				let maxTranslation = CGFloat(24)
+				let translation = CGPoint(
+					x: min(ceil(innerContainerView.bounds.width * 0.2), maxTranslation),
+					y: min(ceil(innerContainerView.bounds.height * 0.2), maxTranslation),
+				)
+				switch edge {
+					case .top: transform = transform.translatedBy(x: 0, y: translation.y)
+					case .bottom: transform = transform.translatedBy(x: 0, y: -translation.y)
+					case .leading: transform = transform.translatedBy(x: translation.x, y: 0)
+					case .trailing: transform = transform.translatedBy(x: -translation.x, y: 0)
+				}
+			}
+
+			if animationOptions.contains(.strongScale) == true {
+				transform = transform.scaledBy(x: 0.1, y: 0.1)
+			} else if animationOptions.contains(.scale) == true {
+				transform = transform.scaledBy(x: 0.9, y: 0.9)
+			}
+		}
+		innerContainerView.transform = transform
+	}
+
 	private func updateExpandedState() {
 		containerView.activeConditionalConstraintsConfigurationName = stateConditionalName(isExpanded: isExpanded, isVertical: edge.isVertical)
 	}
 
-	private func updatePinnedToEdge() {
-		UIView.performWithoutAnimation {
-			innerContainerView.activeConditionalConstraintsConfigurationName = edge.edgeConditionalName
+	private func updatePinnedToEdge(animated: Bool) {
+		let actions = { [self] in
+			innerContainerView.activeConditionalConstraintsConfigurationName = edge.edgeConditionalName(isSlidOut: isExpanded == false && animationOptions.contains(.slide) == true)
+		}
+
+		if animated == false {
+			UIView.performWithoutAnimation(actions)
+		} else {
+			actions()
 		}
 	}
 
@@ -206,6 +303,8 @@ open class CollapsableView: UIView {
 			case .trailing:
 				break
 		}
+
+		updateTransform(animated: false)
 	}
 
 	public override init(frame: CGRect) {
@@ -254,7 +353,7 @@ open class CollapsableView: UIView {
 			containerView.constrain(height: .exactly(sameAs: innerContainerView))
 		}
 
-		updatePinnedToEdge()
+		updatePinnedToEdge(animated: false)
 		updateExpandedState()
 	}
 
