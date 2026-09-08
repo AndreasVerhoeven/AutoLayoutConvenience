@@ -15,7 +15,7 @@ extension UIView {
 	/// The inner workings are that the wrapper view monitors changes in its bounds in `layoutSubviews()`, and if it changes it calls the callback.
 	/// Because we wrap `self` filling the wrapper completely, the wrapper will have the same size as `self`
 	public func wrappedInResizeNotifier(_ callback: @escaping (_ size: CGSize) -> Void) -> UIView {
-		final class WrapperView: UIView {
+		final class ResizeNotifierWrapperView: UIView {
 			var callback: ((CGSize) -> Void)?
 			var lastKnownSize = CGSize.zero
 
@@ -31,9 +31,19 @@ extension UIView {
 				super.layoutSubviews()
 				invokeCallbackIfNeeded()
 			}
+
+			override init(frame: CGRect) {
+				super.init(frame: frame)
+				preservesSuperviewLayoutMargins = true
+			}
+
+			@available(*, unavailable)
+			required init?(coder: NSCoder) {
+				fatalError("not implemented")
+			}
 		}
 
-		let wrapperView = WrapperView()
+		let wrapperView = ResizeNotifierWrapperView()
 		wrapperView.callback = callback
 		wrapperView.addSubview(self, filling: .superview)
 		return wrapperView
