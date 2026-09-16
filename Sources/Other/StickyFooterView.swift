@@ -199,7 +199,8 @@ public final class StickyFooterView: UIView {
 	// MARK: - Internals
 
 	internal init() {
-		if #available(iOS 26, *) {
+		if #available(iOS 26, *),
+		   Self.doesSupportScrollEdgeInteractionSetScrollView == true {
 			stickingUsesScrollEdgeElement = true
 		} else {
 			stickingUsesScrollEdgeElement = false
@@ -353,6 +354,16 @@ public final class StickyFooterView: UIView {
 	private var scrollEdgeElementContainerInteractionInternal: Any?
 
 	private static let uiScrollSubview = "U*I*S*c*r*o*l*l".replacingOccurrences(of: "*", with: "")
+
+	/// check if we can use `UIScrollEdgeElementContainerInteraction` properly, some
+	/// iOS 26 betas had a missing method which crashes.
+	static let doesSupportScrollEdgeInteractionSetScrollView: Bool = {
+		guard #available(iOS 26, *) else { return false }
+
+		// some iOS 26 beta's do not support setScrollView:
+		let selector = NSSelectorFromString("setScrollView:")
+		return UIScrollEdgeElementContainerInteraction.instancesRespond(to: selector)
+	}()
 
 	/// Updates layout with animation if `animationCount > 0`
 	private func updateLayout() {
@@ -637,6 +648,7 @@ public final class StickyFooterView: UIView {
 	private func updateScrollEdgeElementContainerInteraction(shouldShow: Bool) {
 		guard
 			#available(iOS 26, *),
+			Self.doesSupportScrollEdgeInteractionSetScrollView == true,
 			let scrollView
 		else {
 			return
