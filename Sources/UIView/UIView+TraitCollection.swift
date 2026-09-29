@@ -30,12 +30,22 @@ extension UIView {
 	
 	/// Monitors changes to trait collection of this view. You need to hold onto the return value; releasing it will stop the observation.
 	public func monitorTraitCollectionChanges(_ callback: @escaping () -> Void) -> Cancellable {
-		Self.swizzleTraitCollectionDidChangeIfNeeded()
-		
-		let observer = NotificationCenter.default.addObserver(forName: Self.traitCollectionDidChange, object: self, queue: .main) { _ in
-			callback()
+		if #available(iOS 17, *) {
+			let registration = registerForTraitChanges(Self.allKnownTraits, handler: { (view: UIView, previous) in
+				callback()
+			})
+			return Cancellable(cancelsOnDeInit: false) { [weak self] in
+				guard let self else { return }
+				unregisterForTraitChanges(registration)
+			}
+		} else {
+			Self.swizzleTraitCollectionDidChangeIfNeeded()
+			
+			let observer = NotificationCenter.default.addObserver(forName: Self.traitCollectionDidChange, object: self, queue: .main) { _ in
+				callback()
+			}
+			return Cancellable(notificationCenterObserver: observer)
 		}
-		return Cancellable(notificationCenterObserver: observer)
 	}
 	
 	private static func swizzleTraitCollectionDidChange(for viewClass: AnyClass) {
@@ -57,4 +67,78 @@ extension UIView {
 		}
 		originalFunction = unsafeBitCast(originalImplementation, to: OriginalFunction.self)
 	}
+
+	@available(iOS 17, *)
+	private static let allKnownTraits: [UITrait] = {
+		var allKnownSystemTraits: [UITrait] = [
+			// Available since iOS 17
+			UITraitUserInterfaceStyle.self,
+			UITraitUserInterfaceIdiom.self,
+			UITraitUserInterfaceLevel.self,
+			UITraitHorizontalSizeClass.self,
+			UITraitVerticalSizeClass.self,
+			UITraitDisplayScale.self,
+			UITraitDisplayGamut.self,
+			UITraitLayoutDirection.self,
+			UITraitPreferredContentSizeCategory.self,
+			UITraitAccessibilityContrast.self,
+			UITraitLegibilityWeight.self,
+			UITraitActiveAppearance.self,
+			UITraitSceneCaptureState.self,
+			UITraitToolbarItemPresentationSize.self,
+			UITraitImageDynamicRange.self,
+			UITraitTypesettingLanguage.self,
+			UITraitForceTouchCapability.self,
+		]
+
+		if #available(iOS 18, *) {
+			allKnownSystemTraits += [
+				UITraitListEnvironment.self,
+			]
+		}
+
+		if #available(iOS 26, *) {
+			allKnownSystemTraits += [
+				UITraitTabAccessoryEnvironment.self,
+				UITraitSplitViewControllerLayoutEnvironment.self,
+				UITraitHDRHeadroomUsageLimit.self,
+			]
+		}
+
+	#if compiler(>=6.4) // iOS 27 SDK
+			if #available(iOS 27, *) {
+				allKnownSystemTraits += [
+					UITraitSystemPrefersReducedResourceUsage.self,
+				]
+			}
+
+//			if #available(iOS 27.1, *) {
+//				allKnownSystemTraits += [
+//					UITraitVerticalBarEdge.self,
+//				]
+//			}
+//
+//			if #available(iOS 27.2, *) {
+//				allKnownSystemTraits += [
+//					UITraitNavigationTitleAlignment.self,
+//				]
+//			}
+	#endif
+
+		var objectIdentifiers = Set<ObjectIdentifier>(allKnownSystemTraits.compactMap({ ObjectIdentifier($0) }))
+
+		func appendListOfTraits(_ traits: [UITrait]) {
+			for trait in traits {
+				let objectIdentifier = ObjectIdentifier(trait)
+				if objectIdentifiers.contains(objectIdentifier) == false {
+					allKnownSystemTraits.append(trait)
+					objectIdentifiers.insert(objectIdentifier)
+				}
+			}
+		}
+		appendListOfTraits(UITraitCollection.systemTraitsAffectingColorAppearance)
+		appendListOfTraits(UITraitCollection.systemTraitsAffectingImageLookup)
+		return allKnownSystemTraits
+
+	}()
 }
