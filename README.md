@@ -280,6 +280,8 @@ Pinning edges is done by specifying the edge (`YAxisLayout` or `XAxisLayout`) an
 - `centered(in: Other)` makes the view center in another layout, e.g. `filling(.layoutMargins)`
 - `centered(in: Other, between: Other)` makes the view center in in another layout, while being constrained to another layout, .e.g `centered(in: .superview, between: .safeArea)`
 - `overflow(Other)` makes the view unconstrained: it can overflow its superview if it doesn't fit, .e.g. `.overflow(.center)`
+- `Other.overflowing` makes the view unconstrained, it can overflow its superview if it doesn't fit, to the non-constrained edges.
+- `Other.overflowing(edges:)` makes the view unconstrained at the given edges, so it can overflow its superview over that edge.
 - `attach` makes the view constrained to the view we are pinned to, instead of to its superview
 - `attached(Other)` makes the view constrained to another layout in the view we are pinned to, instead of to its superview
 
@@ -338,6 +340,8 @@ When aligning, you specify how both the **vertical** and **horizontal** edges ar
 - `centered(in: Other)` makes the view center in another layout, e.g. `filling(.layoutMargins)`
 - `centered(in: Other, between: Other)` makes the view center in in another layout, while being constrained to another layout, .e.g `centered(in: .superview, between: .safeArea)`
 - `overflow(Other)` makes the view unconstrained: it can overflow its superview if it doesn't fit, .e.g. `.overflow(.center)`
+- `Other.overflowing` makes the view unconstrained, it can overflow its superview if it doesn't fit, to the non-constrained edges.
+- `Other.overflowing(edges:)` makes the view unconstrained at the given edges, so it can overflow its superview over that edge. You cannot overflow to the edfe you are aligned to, e.g. If `.leading` you can only overflow to `.trailing`, but `.center(ed)` can overflow on both edges or a single one. 
 - `.leading` makes the view align to the leading edge horizontally and taking as much space as needed, but not past the trailing edge
 - `.leading` makes the view align to the trailing edge horizontally and taking as much space as needed, but not past the leading edge
 
@@ -349,6 +353,7 @@ When aligning, you specify how both the **vertical** and **horizontal** edges ar
 - `centered(in: Other)` makes the view center in another layout, e.g. `filling(.layoutMargins)`
 - `centered(in: Other, between: Other)` makes the view center in in another layout, while being constrained to another layout, .e.g `centered(in: .superview, between: .safeArea)`
 - `overflow(Other)` makes the view unconstrained: it can overflow its superview if it doesn't fit, .e.g. `.overflow(.center)`
+- `Other.overflowing(edges:)` makes the view unconstrained at the given edges, so it can overflow its superview over that edge. You cannot overflow to the edfe you are aligned to, e.g. If `.top` you can only overflow to `.bottom`, but `.center(ed)` can overflow on both edges or a single one. 
 - `.top` makes the view align to the top edge vertically and taking as much space as needed, but not past the bottom edge
 - `.bottom` makes the view align to the bottom edge vertically and taking as much space as needed, but not past the top edge
 

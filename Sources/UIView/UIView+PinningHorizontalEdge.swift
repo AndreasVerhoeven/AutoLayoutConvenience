@@ -342,27 +342,42 @@ extension UIView {
 
 			case .center(let layout):
 				let centerLayout = ConstrainedVerticalLayout.usableCenterLayout(for: layout?.center, others: others, view: view)
-				constraints.append(centerLayout.axis.layoutAnchorsProvider(in: view)?.centerYAnchor.constraint(equalTo: centerYAnchor))
+				let centerConstraint = centerLayout.axis.layoutAnchorsProvider(in: view)?.centerYAnchor.constraint(equalTo: centerYAnchor)
+				constraints.append(centerConstraint)
 
-				if vertically.isConstrained == true {
+				let isTopConstrained = vertically.isEdgeConstrained(.top)
+				let isBottomConstrained = vertically.isEdgeConstrained(.bottom)
+				if isTopConstrained != isBottomConstrained {
+					// when we can overflow to only one edge, we can no longer always center,
+					// so we make the priority of the center constraint slightly lower
+					centerConstraint?.priority = .defaultHigh.lower
+				}
+
+				if isTopConstrained == true || isBottomConstrained == true {
 					let usableLayout = ConstrainedVerticalLayout.usableFillLayout(for: layout?.fill, others: others, view: view)
-					constraints += [
-						usableLayout.top.layoutAnchorsProvider(in: view)?.topAnchor.constraint(lessThanOrEqualTo: topAnchor, constant: -insets.top),
-						usableLayout.bottom.layoutAnchorsProvider(in: view)?.bottomAnchor.constraint(greaterThanOrEqualTo: bottomAnchor, constant: insets.bottom),
-					]
+
+					if isTopConstrained == true {
+						constraints.append(usableLayout.top.layoutAnchorsProvider(in: view)?.topAnchor.constraint(lessThanOrEqualTo: topAnchor, constant: -insets.top))
+					}
+
+					if isBottomConstrained == true {
+						constraints.append(usableLayout.bottom.layoutAnchorsProvider(in: view)?.bottomAnchor.constraint(greaterThanOrEqualTo: bottomAnchor, constant: insets.bottom))
+					}
 				}
 
 			case .start(let layout):
 				let usableLayout = ConstrainedVerticalLayout.usableFillLayout(for: layout, others: others, view: view)
 				constraints.append(usableLayout.top.layoutAnchorsProvider(in: view)?.topAnchor.constraint(equalTo: topAnchor, constant: -insets.top))
-				if vertically.isConstrained == true {
+
+				if vertically.isEdgeConstrained(.bottom) == true {
 					constraints.append(usableLayout.bottom.layoutAnchorsProvider(in: view)?.bottomAnchor.constraint(greaterThanOrEqualTo: bottomAnchor, constant: insets.bottom))
 				}
 
 			case .end(let layout):
 				let usableLayout = ConstrainedVerticalLayout.usableFillLayout(for: layout, others: others, view: view)
 				constraints.append(usableLayout.bottom.layoutAnchorsProvider(in: view)?.bottomAnchor.constraint(equalTo: bottomAnchor, constant: insets.bottom))
-				if vertically.isConstrained == true {
+
+				if vertically.isEdgeConstrained(.top) == true {
 					constraints.append(usableLayout.top.layoutAnchorsProvider(in: view)?.topAnchor.constraint(lessThanOrEqualTo: topAnchor, constant: -insets.top))
 				}
 		}

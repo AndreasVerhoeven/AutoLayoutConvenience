@@ -224,7 +224,60 @@ public struct ConstrainedLayout<FillLayout: BaseLayout & Equatable, MainAxisLayo
 		case end(FillLayout?)
 	}
 	public var operation: Operation
-	public var isConstrained: Bool = true
+
+	/// these are the edges we __can__ overflow on,  depending on the operation.
+	/// E.g. if we are pinned to the `top`, we can only ever overflow to the `bottom`, even if
+	/// `possibleOverflowEdges` includes `top`.
+	///
+	/// Overflow edges are only effective for `.center`, `.start` and `.end`.
+	public var possibleOverflowEdges = OverflowEdges.none
+
+	public struct OverflowEdges: RawRepresentable, OptionSet {
+		public var rawValue: Int
+
+		public init(rawValue: Int) {
+			self.rawValue = rawValue
+		}
+
+		/// the start edge is either leading or top, depending on the axis
+		public static var start: Self { Self(rawValue: 1 << 1) }
+
+		/// the end edge is either trailing or bottom, depending on the axis
+		public static var end: Self { Self(rawValue: 1 << 2) }
+
+		public static var none: Self { [] }
+		public static var all: Self { [.start, .end] }
+	}
+
+	/// This returns the effective overflow edges based on the given operation.
+	public var effectiveOverflowEdges: OverflowEdges {
+		var resolvedDefaults: Self? {
+			return (UIView.Default.Resolved.constrainedHorizontalLayout as? Self) ?? (UIView.Default.Resolved.constrainedVerticalLayout as? Self)
+		}
+
+		switch operation {
+			case .none: return []
+			case .default: return resolvedDefaults?.effectiveOverflowEdges ?? []
+			case .attached(let constrainedLayout): return constrainedLayout?.effectiveOverflowEdges ?? []
+			case .fill: return []
+			case .center: return possibleOverflowEdges
+			case .start: return possibleOverflowEdges.subtracting(.start)
+			case .end: return possibleOverflowEdges.subtracting(.end)
+		}
+	}
+
+	// MARK: Deprecated
+
+	@available(*, deprecated, renamed: "possibleOverflowEdges", message: "Use possibleOverflowEdges or the helper methods .overflow()")
+	public var isConstrained: Bool {
+		get {
+			return (possibleOverflowEdges.isEmpty == true)
+		}
+
+		set {
+			possibleOverflowEdges = (newValue == true ? [] : .all)
+		}
+	}
 }
 
 public typealias ConstrainedHorizontalLayout = ConstrainedLayout<HorizontalAxisLayout, XAxisLayout>

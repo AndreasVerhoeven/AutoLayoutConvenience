@@ -465,7 +465,18 @@ public extension ConstrainedLayout {
 
 	/// don't constrain the layout, let it overflow if needed
 	static func overflow(_ value: Self) -> Self {
-		return Self(operation: value.operation, isConstrained: false)
+		return Self(operation: value.operation, possibleOverflowEdges: .all)
+	}
+
+	/// don't constrain the layout, let it overflow if needed
+	var overflowing: Self {
+		return Self.overflow(self)
+	}
+
+	/// don't constrain the layout, but let it overflow in some edges __if__ possible.
+	/// (E.g. if you are pinning to the top, we can never overflow the top, only the bottom)
+	func overflowing(edges: OverflowEdges) -> Self {
+		return Self(operation: operation, possibleOverflowEdges: edges)
 	}
 }
 
@@ -496,7 +507,7 @@ extension ConstrainedLayout where FillLayout == HorizontalAxisLayout, MainAxisLa
 		guard isDefault == true else { return self }
 		return UIView.Default.Resolved.constrainedHorizontalLayout
 	}
-	
+
 	internal func resolve(_ vertically: VerticalAxisLayout) -> Self {
 		let value = resolved
 		guard value.isSpecific == false else { return self }
@@ -528,6 +539,18 @@ public extension ConstrainedLayout where FillLayout == VerticalAxisLayout {
 	static func bottom(in other: FillLayout) -> Self {
 		return Self(.end(other))
 	}
+}
+
+// MARK: - OverflowEdges helpers
+
+public extension ConstrainedHorizontalLayout.OverflowEdges {
+	static var leading: Self { .start }
+	static var trailing: Self { .end }
+}
+
+public extension ConstrainedVerticalLayout.OverflowEdges {
+	static var top: Self { .start }
+	static var bottom: Self { .end }
 }
 
 // MARK: - ConstrainedLayout Helpers
@@ -583,6 +606,14 @@ extension ConstrainedLayout {
 		} else {
 			return .default
 		}
+	}
+
+	internal func isEdgeConstrained(_ edge: OverflowEdges) -> Bool {
+		return possibleOverflowEdges.isDisjoint(with: edge)
+	}
+
+	internal var hasConstrainedEdges: Bool {
+		return (possibleOverflowEdges.isEmpty == false)
 	}
 }
 

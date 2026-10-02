@@ -344,27 +344,43 @@ extension UIView {
 
 			case .center(let layout):
 				let centerLayout = ConstrainedHorizontalLayout.usableCenterLayout(for: layout?.center, others: others, view: view)
-				constraints.append(centerLayout.axis.layoutAnchorsProvider(in: view)?.centerXAnchor.constraint(equalTo: centerXAnchor))
 
-				if horizontally.isConstrained == true {
+				let centerConstraint = centerLayout.axis.layoutAnchorsProvider(in: view)?.centerXAnchor.constraint(equalTo: centerXAnchor)
+				constraints.append(centerConstraint)
+
+				let isLeadingConstrained = horizontally.isEdgeConstrained(.leading)
+				let isTrailingConstrained = horizontally.isEdgeConstrained(.trailing)
+				if isLeadingConstrained != isTrailingConstrained {
+					// when we can overflow to only one edge, we can no longer always center,
+					// so we make the priority of the center constraint slightly lower
+					centerConstraint?.priority = .defaultHigh.lower
+				}
+
+				if isLeadingConstrained == true || isTrailingConstrained == true {
 					let usableLayout = ConstrainedHorizontalLayout.usableFillLayout(for: layout?.fill, others: others, view: view)
-					constraints += [
-						usableLayout.leading.layoutAnchorsProvider(in: view)?.leadingAnchor.constraint(lessThanOrEqualTo: leadingAnchor, constant: -insets.leading),
-						usableLayout.trailing.layoutAnchorsProvider(in: view)?.trailingAnchor.constraint(greaterThanOrEqualTo: trailingAnchor, constant: insets.trailing),
-					]
+
+					if isLeadingConstrained == true {
+						constraints.append(usableLayout.leading.layoutAnchorsProvider(in: view)?.leadingAnchor.constraint(lessThanOrEqualTo: leadingAnchor, constant: -insets.leading))
+					}
+
+					if isTrailingConstrained {
+						constraints.append(usableLayout.trailing.layoutAnchorsProvider(in: view)?.trailingAnchor.constraint(greaterThanOrEqualTo: trailingAnchor, constant: insets.trailing))
+					}
 				}
 
 			case .start(let layout):
 				let usableLayout = ConstrainedHorizontalLayout.usableFillLayout(for: layout, others: others, view: view)
 				constraints.append(usableLayout.leading.layoutAnchorsProvider(in: view)?.leadingAnchor.constraint(equalTo: leadingAnchor, constant: -insets.leading))
-				if horizontally.isConstrained == true {
+
+				if horizontally.isEdgeConstrained(.trailing) == true {
 					constraints.append(usableLayout.trailing.layoutAnchorsProvider(in: view)?.trailingAnchor.constraint(greaterThanOrEqualTo: trailingAnchor, constant: insets.trailing))
 				}
 
 			case .end(let layout):
 				let usableLayout = ConstrainedHorizontalLayout.usableFillLayout(for: layout, others: others, view: view)
 				constraints.append(usableLayout.trailing.layoutAnchorsProvider(in: view)?.trailingAnchor.constraint(equalTo: trailingAnchor, constant: insets.trailing))
-				if horizontally.isConstrained == true {
+
+				if horizontally.isEdgeConstrained(.leading) == true {
 					constraints.append(usableLayout.leading.layoutAnchorsProvider(in: view)?.leadingAnchor.constraint(lessThanOrEqualTo: leadingAnchor, constant: -insets.leading))
 				}
 		}

@@ -97,12 +97,12 @@ extension UIView.Default.Resolved {
 			layoutAnchorableStack.append(layoutAnchorable)
 		}
 
-		if horizontally.isDefault != false || horizontally.isConstrained != false {
+		if horizontally.isDefault != false || horizontally.hasConstrainedEdges != false {
 			constrainedHorizontalLayoutStack.append(horizontally)
 		}
 
 
-		if vertically.isDefault != false || vertically.isConstrained != false {
+		if vertically.isDefault != false || vertically.hasConstrainedEdges != false {
 			constrainedVerticalLayoutStack.append(vertically)
 		}
 
@@ -125,11 +125,11 @@ extension UIView.Default.Resolved {
 			insetsStack.removeLast()
 		}
 
-		if vertically.isDefault != false || vertically.isConstrained != false {
+		if vertically.isDefault != false || vertically.hasConstrainedEdges != false {
 			constrainedVerticalLayoutStack.removeLast()
 		}
 
-		if horizontally.isDefault != false || horizontally.isConstrained != false {
+		if horizontally.isDefault != false || horizontally.hasConstrainedEdges != false {
 			constrainedHorizontalLayoutStack.removeLast()
 		}
 
