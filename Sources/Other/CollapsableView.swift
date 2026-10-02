@@ -102,6 +102,40 @@ open class CollapsableView: UIView {
 		}
 	}
 
+	/// This is a helper method that sets setIsExpanded and applies changes to the `contents` only
+	/// if we stay visible. `contents` is crossfaded if needed.
+	///
+	/// The idea behind is thew following:
+	/// - if we are currently collapsed:  update the contents without animation, to avoid concurrent animations during the possible expansion animation
+	/// - if we stay expanded: update the contents with a cross fade animation to avoid jank
+	/// - if we will collapse: don't update the contents at all, since the contents is disappearing already, so making it change is jarring.
+	///
+	/// If you use this method, always call this method to update the `isExpanded` and make the `changes` closure always
+	/// update to the current state. This method will take care of when to call it. E.g. when collapsing we don't update, but then when you expand
+	/// again we ensure the contents is updated without animation, so it looks like it was updated earlier already.
+	///
+	/// The changes block is called in a`performWithoutAnimation()` wrapper, so any possible crossfade looks clean.
+	open func setIsExpanded(_ isExpanded: Bool, animated: Bool, updateContentsWhenNeeded changes: @escaping () -> Void) {
+		switch (self.isExpanded, isExpanded) {
+			case (false, _):
+				UIView.performWithoutAnimation(changes)
+
+			case (true, false):
+				break // the contents keep their current state while they collapse
+
+			case (true, true):
+				if animated == true {
+					UIView.transition(with: contentView, duration: 0.25, options: [.transitionCrossDissolve, .beginFromCurrentState], animations: {
+						UIView.performWithoutAnimation(changes)
+					})
+				} else {
+					UIView.performWithoutAnimation(changes)
+				}
+		}
+
+		setIsExpanded(isExpanded, animated: animated)
+	}
+
 	/// defines which edge we are pinned to
 	public enum Edge {
 		case top
