@@ -268,11 +268,6 @@ public final class StickyFooterView: UIView {
 			if index == 0 || scrollView.subviews[index - 1] !== wrapperView {
 				scrollView.insertSubview(wrapperView, belowSubview:  scrollView.subviews[index])
 			}
-			let subviewToInsertBelow = scrollView.subviews[index]
-			let subview = index > 0 ? scrollView : scrollView.subviews[0]
-			if subview !== wrapperView {
-				scrollView.insertSubview(wrapperView, belowSubview: subviewToInsertBelow)
-			}
 		} else {
 			// sticking, or there's no scroll pocket or scroll indicator: we want to be on top
 			if scrollView.subviews.last != wrapperView {
