@@ -106,7 +106,9 @@ extension UIView {
 		}
 
 	#if compiler(>=6.4) // iOS 27 SDK
-			if #available(iOS 27, *) {
+			// iOS 27 betas report their OS version as 27.0 but don't actually have this trait yet,
+			// so we also verify the backing class exists at runtime before using it.
+			if #available(iOS 27, *), NSClassFromString("UITraitSystemPrefersReducedResourceUsage") != nil {
 				allKnownSystemTraits += [
 					UITraitSystemPrefersReducedResourceUsage.self,
 				]
