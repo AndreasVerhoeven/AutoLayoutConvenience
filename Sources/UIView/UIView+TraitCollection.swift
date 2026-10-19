@@ -28,7 +28,8 @@ extension UIView {
 		swizzleTraitCollectionDidChange(for: UILabel.self)
 	}
 	
-	/// Monitors changes to trait collection of this view. You need to hold onto the return value; releasing it will stop the observation.
+	/// Monitors changes to trait collection of this view. You don't need to hold onto the return value if you want to monitor forever, otherwise call `.cancel()`
+	/// on the returned Cancellable.
 	public func monitorTraitCollectionChanges(_ callback: @escaping () -> Void) -> Cancellable {
 		if #available(iOS 17, *) {
 			let registration = registerForTraitChanges(Self.allKnownTraits, handler: { (view: UIView, previous) in

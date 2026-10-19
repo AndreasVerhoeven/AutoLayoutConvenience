@@ -237,7 +237,7 @@ final public class ConstraintsList: NSObject {
 	private var _isActive = false
 
 	private func allMatching(_ a: NSLayoutConstraint.Attribute, or  b: NSLayoutConstraint.Attribute) -> [NSLayoutConstraint] {
-		return all.filter { $0.firstAttribute == a || $0.secondAttribute == b }
+		return all.filter { $0.firstAttribute == a || $0.firstAttribute == b }
 	}
 }
 

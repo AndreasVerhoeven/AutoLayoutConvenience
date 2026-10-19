@@ -125,11 +125,11 @@ extension UIView.Default.Resolved {
 			insetsStack.removeLast()
 		}
 
-		if vertically.isDefault != false || vertically.hasConstrainedEdges != false {
+		if vertically.isDefault != false || vertically.hasConstrainedEdges == false {
 			constrainedVerticalLayoutStack.removeLast()
 		}
 
-		if horizontally.isDefault != false || horizontally.hasConstrainedEdges != false {
+		if horizontally.isDefault != false || horizontally.hasConstrainedEdges == false {
 			constrainedHorizontalLayoutStack.removeLast()
 		}
 

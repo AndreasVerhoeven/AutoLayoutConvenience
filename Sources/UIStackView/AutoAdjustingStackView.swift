@@ -182,7 +182,7 @@ open class AutoAdjustingStackView: AutoHidingStackView {
 	// MARK: - UIView
 	
 	override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-		super.traitCollectionDidChange(traitCollection)
+		super.traitCollectionDidChange(previousTraitCollection)
 		updateConfiguration()
 	}
 

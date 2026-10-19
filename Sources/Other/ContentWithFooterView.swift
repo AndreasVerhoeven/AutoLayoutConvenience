@@ -87,7 +87,9 @@ public class ContentWithFooterView: UIView {
 		if footerWrapperView.isHidden == false {
 			height += stackView.spacing
 			height += footerWrapperView.systemLayoutSizeFitting(CGSize(width: width, height: UIView.layoutFittingCompressedSize.height), withHorizontalFittingPriority: .required, verticalFittingPriority: .defaultLow).height
-			height += bottomSpacing * 2
+			if traitCollection.verticalSizeClass != .compact {
+				height += bottomSpacing
+			}
 		}
 
 		return CGSize(width: width, height: height)

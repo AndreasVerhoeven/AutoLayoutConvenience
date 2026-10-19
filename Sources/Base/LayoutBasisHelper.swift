@@ -729,7 +729,7 @@ extension VerticalLayoutEdge {
 	internal func effectiveInset(for insets: NSDirectionalEdgeInsets) -> CGFloat {
 		switch self {
 			case .top: return -insets.top
-			case .centerY: return -(insets.top - insets.bottom)
+			case .centerY: return insets.top - insets.bottom
 			case .bottom: return insets.bottom
 		}
 	}

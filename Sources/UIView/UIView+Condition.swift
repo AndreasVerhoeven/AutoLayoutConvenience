@@ -276,7 +276,7 @@ public extension UIView.Condition {
 
 	/// Matches when the preferredContentSizeCategory is smaller than a given size
 	static func contentSizeCategory(isSmallerThan size: UIContentSizeCategory) -> Self {
-		return .init(.specificTrait({ $0.traitCollection.preferredContentSizeCategory > size }))
+		return .init(.specificTrait({ $0.traitCollection.preferredContentSizeCategory < size }))
 	}
 
 	/// Matches when the preferredContentSizeCategory is an accessibility size

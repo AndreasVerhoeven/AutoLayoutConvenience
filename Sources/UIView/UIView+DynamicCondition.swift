@@ -68,7 +68,7 @@ extension DynamicallyConfigurableView where Self: UIView {
 	/// Return:
 	/// 	- `self` is returned, for easy chaining.
 	@discardableResult public func configure<T>(keyPath: ReferenceWritableKeyPath<Self, T>, if condition: UIView.Condition, to: T, else: T) -> Self {
-		return configureDynamically(as: UIView.self, condition: .contentSizeCategoryIsNotAccessibility) { [weak self] matches, view in
+		return configureDynamically(as: UIView.self, condition: condition) { [weak self] matches, view in
 			guard let self else { return }
 			self[keyPath: keyPath] = matches ? to : `else`
 		}

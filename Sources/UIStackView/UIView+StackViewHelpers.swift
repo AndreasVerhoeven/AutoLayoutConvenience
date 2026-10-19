@@ -163,7 +163,7 @@ extension UIView {
 		return AutoHidingStackView(
 			with: views,
 			axis: axis,
-			alignment: .fill,
+			alignment: alignment,
 			distribution: distribution,
 			spacing: spacing,
 			insets: insets

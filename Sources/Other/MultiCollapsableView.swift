@@ -26,6 +26,7 @@ open class MultiCollapsableView: UIView {
 		self.init(frame: .zero)
 		_ = {
 			self.edge = edge
+			self.animationOptions = animationOptions
 			self.views = views
 		}()
 	}
@@ -105,6 +106,7 @@ open class MultiCollapsableView: UIView {
 
 			updateProperties(of: collapsableViews)
 			updateProperties(of: spacers)
+			updateBeforeAndAfterSpacers()
 		}
 	}
 
@@ -241,7 +243,7 @@ open class MultiCollapsableView: UIView {
 			collapsableViews.append(collapsableView)
 			stackView.addArrangedSubview(collapsableView)
 
-			if index < views.count {
+			if index < views.count - 1 {
 				let spacer = CollapsableView(animationOptions: animationOptions, edge: edge)
 				spacers.append(spacer)
 				stackView.addArrangedSubview(spacer)
