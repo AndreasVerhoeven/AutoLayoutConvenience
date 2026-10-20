@@ -212,6 +212,37 @@ public final class StickyFooterView: UIView, UIScrollView.AdditionalContentsInse
 		}
 	}
 
+	/// the view that hosts us: this is the view that's actually added to the scroll view and
+	/// pinned to the bottom of its __frame__. Use this if you need to e.g. temporarily add a
+	/// snapshot or other view on top of or alongside our contents.
+	public var hostingView: UIView {
+		wrapperView
+	}
+
+	/// true if we're currently adjusting for alternative contents - see `beginAdjustingAlternativeContents()`.
+	public var isAdjustingForAlternativeContents: Bool {
+		adjustingForAlternativeContentsCount > 0
+	}
+
+	/// Call this when you're temporarily showing alternative contents in or on top of `hostingView`
+	/// (e.g. a snapshot used during a transition) for which we always want to be pinned to the bottom,
+	/// regardless of `mode`. Keeps an internal counter, so calls can be nested - balance each call
+	/// with a matching `endAdjustingForAlternativeContents()`.
+	public func beginAdjustingAlternativeContents() {
+		adjustingForAlternativeContentsCount += 1
+		if adjustingForAlternativeContentsCount == 1 {
+			reallyUpdateLayout(canAnimate: false)
+		}
+	}
+
+	/// Balances a call to `beginAdjustingAlternativeContents()`.
+	public func endAdjustingForAlternativeContents() {
+		adjustingForAlternativeContentsCount -= 1
+		if adjustingForAlternativeContentsCount == 0 {
+			reallyUpdateLayout(canAnimate: false)
+		}
+	}
+
 	// MARK: - Internals
 
 	internal init() {
@@ -394,6 +425,7 @@ public final class StickyFooterView: UIView, UIScrollView.AdditionalContentsInse
 	private var updateLayoutCount = 0
 	private var isUpdatingScrollableContentCount = 0
 	private var ensureAtFrontCount = 0
+	private var adjustingForAlternativeContentsCount = 0
 
 	/// the portion of `contentInset` (`top`/`bottom` only) that we need for ourselves
 	/// (the footer height and related insets).
@@ -579,6 +611,12 @@ public final class StickyFooterView: UIView, UIScrollView.AdditionalContentsInse
 					let shouldStick = (hasContentsPastBottom == false && hasEnoughSpaceForContent == true)
 					layout.translation = (shouldStick == true ? 0 : neededTranslationToFollowContents)
 					layout.isSticking = (layout.translation == 0)
+			}
+
+			// while adjusting for alternative contents, always pin to the bottom, regardless of `mode`
+			if isAdjustingForAlternativeContents == true {
+				layout.translation = 0
+				layout.isSticking = true
 			}
 
 			// calculate bottom inset
