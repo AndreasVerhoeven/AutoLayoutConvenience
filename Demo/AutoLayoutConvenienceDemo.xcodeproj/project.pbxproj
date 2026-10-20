@@ -28,6 +28,7 @@
 		4980797026C12EF20007C155 /* KeyboardFrameLayoutGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4980796F26C12EF20007C155 /* KeyboardFrameLayoutGuide.swift */; };
 		4980798826C18F470007C155 /* AutoSizingTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4980798726C18F470007C155 /* AutoSizingTextView.swift */; };
 		4994C3E82D52B7E400100028 /* UIScrollView+InteractiveKeyboardDismissal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4994C3E72D52B7E400100028 /* UIScrollView+InteractiveKeyboardDismissal.swift */; };
+		C4805D660ACD1B12C8E1F186 /* UIScrollView+AdditionalContentInsets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DB2C5BB1D71E5032954F33 /* UIScrollView+AdditionalContentInsets.swift */; };
 		49AC95F12D9D73DD005DED55 /* MultiCollapsableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49AC95F02D9D73DD005DED55 /* MultiCollapsableView.swift */; };
 		49B12A962F6C6B8E00217CD3 /* StickyFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B12A952F6C6B8D00217CD3 /* StickyFooterView.swift */; };
 		49B12A992F6C725500217CD3 /* StickyFooterTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B12A982F6C724C00217CD3 /* StickyFooterTableView.swift */; };
@@ -101,6 +102,7 @@
 		4980796F26C12EF20007C155 /* KeyboardFrameLayoutGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardFrameLayoutGuide.swift; sourceTree = "<group>"; };
 		4980798726C18F470007C155 /* AutoSizingTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoSizingTextView.swift; sourceTree = "<group>"; };
 		4994C3E72D52B7E400100028 /* UIScrollView+InteractiveKeyboardDismissal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScrollView+InteractiveKeyboardDismissal.swift"; sourceTree = "<group>"; };
+		33DB2C5BB1D71E5032954F33 /* UIScrollView+AdditionalContentInsets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScrollView+AdditionalContentInsets.swift"; sourceTree = "<group>"; };
 		49AC95F02D9D73DD005DED55 /* MultiCollapsableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiCollapsableView.swift; sourceTree = "<group>"; };
 		49B12A952F6C6B8D00217CD3 /* StickyFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickyFooterView.swift; sourceTree = "<group>"; };
 		49B12A982F6C724C00217CD3 /* StickyFooterTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickyFooterTableView.swift; sourceTree = "<group>"; };
@@ -258,6 +260,7 @@
 				496E7E42283944B4004615B1 /* UIView+Condition.swift */,
 				49E131D82F7A8F7100D9A19E /* UIView+DynamicCondition.swift */,
 				4994C3E72D52B7E400100028 /* UIScrollView+InteractiveKeyboardDismissal.swift */,
+				33DB2C5BB1D71E5032954F33 /* UIScrollView+AdditionalContentInsets.swift */,
 				49F870812CF50520007A0710 /* UIView+NamedConstraintLists.swift */,
 				490DB00C2A02789A00DA4ABE /* UIView+NegativeLayoutGuides.swift */,
 			);
@@ -483,6 +486,7 @@
 				49B12A962F6C6B8E00217CD3 /* StickyFooterView.swift in Sources */,
 				49337D2F27D298D0006BDB1A /* AutoSizingTableHeaderFooterView.swift in Sources */,
 				4994C3E82D52B7E400100028 /* UIScrollView+InteractiveKeyboardDismissal.swift in Sources */,
+				C4805D660ACD1B12C8E1F186 /* UIScrollView+AdditionalContentInsets.swift in Sources */,
 				496E7E3F2837F811004615B1 /* UIView+TraitCollection.swift in Sources */,
 				49CD6C1E263A0C990024C330 /* NonAutoLayoutWrappingView.swift in Sources */,
 			);

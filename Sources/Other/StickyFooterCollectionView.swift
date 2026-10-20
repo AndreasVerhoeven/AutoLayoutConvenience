@@ -84,10 +84,16 @@ open class _NonObjectiveCWorkAroundStickyFooterCollectionView<FakeGenericUnusedP
 		}
 	}
 
+	open override var contentInset: UIEdgeInsets {
+		get { super.contentInset }
+		set { super.contentInset = stickyFooterView.scrollViewWillSetContentInset(newValue) }
+	}
+
 	// MARK: - UIView
 
 	public override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
 		super.init(frame: frame, collectionViewLayout: layout)
+		handlerForAdditionalContentInsets = stickyFooterView
 		stickyFooterView.addToScrollView(self)
 	}
 

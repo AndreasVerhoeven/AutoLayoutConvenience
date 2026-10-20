@@ -109,10 +109,16 @@ open class _NonObjectiveCWorkAroundStickyFooterTableView<FakeGenericUnusedParame
 		}
 	}
 
+	open override var contentInset: UIEdgeInsets {
+		get { super.contentInset }
+		set { super.contentInset = stickyFooterView.scrollViewWillSetContentInset(newValue) }
+	}
+
 	// MARK: - UIView
 
 	public override init(frame: CGRect, style: UITableView.Style) {
 		super.init(frame: frame, style: style)
+		handlerForAdditionalContentInsets = stickyFooterView
 		stickyFooterView.addToScrollView(self)
 	}
 

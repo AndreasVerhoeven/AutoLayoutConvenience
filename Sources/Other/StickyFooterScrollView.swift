@@ -23,10 +23,16 @@ open class StickyFooterScrollView: UIScrollView, StickyFooterView.Provider {
 		}
 	}
 
+	open override var contentInset: UIEdgeInsets {
+		get { super.contentInset }
+		set { super.contentInset = stickyFooterView.scrollViewWillSetContentInset(newValue) }
+	}
+
 	// MARK: - UIView
 
 	public override init(frame: CGRect) {
 		super.init(frame: frame)
+		handlerForAdditionalContentInsets = stickyFooterView
 		stickyFooterView.addToScrollView(self)
 	}
 

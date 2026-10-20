@@ -14,8 +14,9 @@ import UIKit
 /// Configure how you would like the sticky footer to behave and how it adjusts
 /// the scroll/table/collection view its part of.
 ///
-/// Note: Using this view will override`contentInset.bottom` and
-/// `contentInset.top`in the scroll view it is part of.
+/// Note: Using this view will manage `contentInset.top` and `contentInset.bottom` in the scroll
+/// view it is part of. Changes made by someone else to either (e.g. `self.contentInset.bottom = 32`)
+/// are preserved and added on top of our own contribution, rather than one side overwriting the other.
 ///
 /// **Implementation note:**
 /// This view has all the shared logic to modify and position itself inside
@@ -36,7 +37,7 @@ import UIKit
 ///  	correct position in the scrollview.
 ///  - We adjust the contentInset.bottom to make sure that our footer view is taken into
 ///  	account when scrolling.
-public final class StickyFooterView: UIView {
+public final class StickyFooterView: UIView, UIScrollView.AdditionalContentsInsetsHandler {
 	/// the state of our sticking
 	public enum State {
 		case followingContent /// we're not sticking to anything
@@ -196,6 +197,21 @@ public final class StickyFooterView: UIView {
 		}
 	}
 
+	/// Extra room to reserve at the top and bottom of the scroll view's content, on top of this footer's
+	/// own height. Lets other code that also needs scroll room - e.g. to reveal its own
+	/// overflowing content - cooperate with us instead of fighting over `contentInset`:
+	/// since we're the one unconditionally reasserting those values on every layout pass, anyone
+	/// else writing to them directly would just have their write immediately overridden, and
+	/// reacting to *that* by writing again would never converge. Set this instead and we'll
+	/// fold it into our own computation. Only `top` and `bottom` are used; `left` and `right` are ignored.
+	/// Changes can be animated when wrapped in an animation block.
+	public var additionalContentInsets = UIEdgeInsets.zero {
+		didSet {
+			guard additionalContentInsets != oldValue else { return }
+			reallyUpdateLayout(canAnimate: false)
+		}
+	}
+
 	// MARK: - Internals
 
 	internal init() {
@@ -229,12 +245,19 @@ public final class StickyFooterView: UIView {
 	/// should be called by the scrollview (subclass) to add the sticky footer to itself
 	internal func addToScrollView(_ scrollView: UIScrollView) {
 		self.scrollView = scrollView
+		additionalContentInsets = scrollView.additionalContentInsets
 
 		wrapperViewConstraintsList = scrollView.addSubview(wrapperView, pinning: .bottom, to: .bottom, of: .scrollFrame, horizontally: .filling(.scrollFrame))
 
 		updateKeyboardTracking()
 		updateScrollEdgeElementContainerInteraction(shouldShow: state.isSticking)
 		reallyUpdateLayout(canAnimate: false)
+	}
+
+	/// `UIScrollView.AdditionalContentsInsetsHandler` conformance: folds the scroll view's
+	/// `additionalContentInsets` into our own layout.
+	public func handleAdditionalContentInsets(_ insets: UIEdgeInsets) {
+		additionalContentInsets = insets
 	}
 
 	/// should be called by the scrollview (subclass) in all methods that change the order of views,
@@ -332,6 +355,34 @@ public final class StickyFooterView: UIView {
 		updateLayout()
 	}
 
+	/// should be called by the scrollview (subclass) right before it applies a new `contentInset`, wrapping
+	/// the `super.contentInset = ...` call, like:
+	/// ```
+	/// 	open override var contentInset: UIEdgeInsets {
+	///			get { super.contentInset }
+	///			set { super.contentInset = stickyFooterView.scrollViewWillSetContentInset(newValue) }
+	/// 	}
+	///```
+	/// This lets us fold our own `contentInset.top`/`contentInset.bottom` contribution into changes made
+	/// by someone else, instead of one side overwriting the other: if someone else changes `contentInset.top`
+	/// or `contentInset.bottom` to a value we didn't set ourselves, we treat that as *their* desired inset
+	/// and add our own contribution on top.
+	internal func scrollViewWillSetContentInset(_ insets: UIEdgeInsets) -> UIEdgeInsets {
+		guard let scrollView, isSettingContentInset == false else { return insets }
+
+		var insets = insets
+		let current = scrollView.contentInset
+		if insets.top != current.top {
+			externalContentInset.top = insets.top
+			insets.top = ownContentInset.top + externalContentInset.top
+		}
+		if insets.bottom != current.bottom {
+			externalContentInset.bottom = insets.bottom
+			insets.bottom = ownContentInset.bottom + externalContentInset.bottom
+		}
+		return insets
+	}
+
 	// MARK: - Privates
 
 	/// subclasses to be able to properly debug the view hierarchy by giving views an
@@ -343,6 +394,18 @@ public final class StickyFooterView: UIView {
 	private var updateLayoutCount = 0
 	private var isUpdatingScrollableContentCount = 0
 	private var ensureAtFrontCount = 0
+
+	/// the portion of `contentInset` (`top`/`bottom` only) that we need for ourselves
+	/// (the footer height and related insets).
+	private var ownContentInset = UIEdgeInsets.zero
+
+	/// the portion of `contentInset` (`top`/`bottom` only) that something other than us last set -
+	/// we add our own on top of this, instead of overwriting it.
+	private var externalContentInset = UIEdgeInsets.zero
+
+	/// true while we're the one assigning `contentInset`, so that `scrollViewWillSetContentInset()`
+	/// can tell our own changes apart from ones made by someone else.
+	private var isSettingContentInset = false
 	private var constraintsList: ConstraintsList!
 	private var wrapperViewConstraintsList: ConstraintsList?
 	private var keyboardTrackerCancellable: KeyboardTracker.Cancellable?
@@ -364,6 +427,12 @@ public final class StickyFooterView: UIView {
 		return UIScrollEdgeElementContainerInteraction.instancesRespond(to: selector)
 	}()
 
+	/// rounds `value` to the nearest pixel for the screen we're on, so we can compare/apply
+	/// layout values without fighting over sub-pixel differences.
+	private func scaleToPixels(_ value: CGFloat) -> CGFloat {
+		round(value * (window?.screen.scale ?? UIScreen.main.scale))
+	}
+
 	/// Updates layout with animation if `animationCount > 0`
 	private func updateLayout() {
 		if animationCount > 0 {
@@ -377,6 +446,37 @@ public final class StickyFooterView: UIView {
 		}
 	}
 
+	/// updates `contentInset.top`/`contentInset.bottom` with our own contribution, while preserving
+	/// whatever someone else last added to them (see `scrollViewWillSetContentInset()`). If someone
+	/// else has taken over as `handlerForAdditionalContentInsets`, we don't fight them over `contentInset`
+	/// directly - instead we report our own need via `additionalContentInsets` and let them fold it in.
+	private func updateOwnContentInset(top: CGFloat, bottom: CGFloat) {
+		guard let scrollView else { return }
+
+		ownContentInset.top = top
+		ownContentInset.bottom = bottom
+
+		if let handler = scrollView.handlerForAdditionalContentInsets, handler !== self {
+			scrollView.additionalContentInsets = ownContentInset
+			return
+		}
+
+		var insets = scrollView.contentInset
+		let totalTop = ownContentInset.top + externalContentInset.top
+		let totalBottom = ownContentInset.bottom + externalContentInset.bottom
+		guard
+			scaleToPixels(insets.top) != scaleToPixels(totalTop) ||
+			scaleToPixels(insets.bottom) != scaleToPixels(totalBottom)
+		else { return }
+
+		insets.top = totalTop
+		insets.bottom = totalBottom
+
+		isSettingContentInset = true
+		scrollView.contentInset = insets
+		isSettingContentInset = false
+	}
+
 	/// The real work horse - updates the layout by calculating where we should be and then updating the scroll view
 	/// and the wrapper and footer views constraint insets.
 	private func reallyUpdateLayout(canAnimate: Bool = true) {
@@ -387,9 +487,7 @@ public final class StickyFooterView: UIView {
 		defer { updateLayoutCount -= 1 }
 
 		// helper methods to scale and apply layout
-		let scale = (window?.screen.scale ?? UIScreen.main.scale)
-		func scaleToPixels(_ value: CGFloat) -> CGFloat { round(value * scale) }
-		func roundToPoints(_ value: CGFloat) -> CGFloat { scaleToPixels(value) / scale }
+		func roundToPoints(_ value: CGFloat) -> CGFloat { scaleToPixels(value) / (window?.screen.scale ?? UIScreen.main.scale) }
 		func set<T: AnyObject>(_ object: T, _ keyPath: ReferenceWritableKeyPath<T, CGFloat>, to value: CGFloat) {
 			guard scaleToPixels(object[keyPath: keyPath]) != scaleToPixels(value) else { return }
 			object[keyPath: keyPath] = value
@@ -484,7 +582,7 @@ public final class StickyFooterView: UIView {
 			}
 
 			// calculate bottom inset
-			layout.bottomInset = bounds.height
+			layout.bottomInset = bounds.height + additionalContentInsets.bottom
 			var baseBottomContentInset = CGFloat(0)
 			if isUsingKeyboardAsBottomBoundary == true && keyboardAvoidanceMode.contains(.contents) == true {
 				// if we are using the keyboard as bottom boundary, adjust the content
@@ -514,6 +612,7 @@ public final class StickyFooterView: UIView {
 				case .center: layout.topInset = roundToPoints(leftOverSpace * 0.5)
 				case .bottom: layout.topInset = roundToPoints(leftOverSpace)
 			}
+			layout.topInset += additionalContentInsets.top
 
 			if layout.isSticking == false {
 				// ensure translation makes sense by adjusting for the top inset
@@ -575,8 +674,7 @@ public final class StickyFooterView: UIView {
 			set(wrapperViewConstraintsList, \.insets.bottom, to: layout.wrapperViewBottomInset)
 		}
 		set(constraintsList, \.insets.bottom, to: layout.footerViewBottomInset)
-		set(scrollView, \.contentInset.bottom, to: layout.bottomInset)
-		set(scrollView, \.contentInset.top, to: layout.topInset)
+		updateOwnContentInset(top: layout.topInset, bottom: layout.bottomInset)
 
 		// if we change this, we want to do it with animation so that it smoothly transitions
 		if UIView.inheritedAnimationDuration == 0,
