@@ -219,7 +219,7 @@ public final class StickyFooterView: UIView, UIScrollView.AdditionalContentsInse
 		wrapperView
 	}
 
-	/// true if we're currently adjusting for alternative contents - see `beginAdjustingAlternativeContents()`.
+	/// true if we're currently adjusting for alternative contents - see `beginAdjustingForAlternativeContents()`.
 	public var isAdjustingForAlternativeContents: Bool {
 		adjustingForAlternativeContentsCount > 0
 	}
@@ -228,14 +228,14 @@ public final class StickyFooterView: UIView, UIScrollView.AdditionalContentsInse
 	/// (e.g. a snapshot used during a transition) for which we always want to be pinned to the bottom,
 	/// regardless of `mode`. Keeps an internal counter, so calls can be nested - balance each call
 	/// with a matching `endAdjustingForAlternativeContents()`.
-	public func beginAdjustingAlternativeContents() {
+	public func beginAdjustingForAlternativeContents() {
 		adjustingForAlternativeContentsCount += 1
 		if adjustingForAlternativeContentsCount == 1 {
 			reallyUpdateLayout(canAnimate: false)
 		}
 	}
 
-	/// Balances a call to `beginAdjustingAlternativeContents()`.
+	/// Balances a call to `beginAdjustingForAlternativeContents()`.
 	public func endAdjustingForAlternativeContents() {
 		adjustingForAlternativeContentsCount -= 1
 		if adjustingForAlternativeContentsCount == 0 {
